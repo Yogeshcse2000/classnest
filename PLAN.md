@@ -8,7 +8,10 @@ Project rules (stack, design, animations) are in [CLAUDE.md](CLAUDE.md).
 
 | Question | Decision |
 |---|---|
-| Batches per student | **One.** Stored as `users.batch_id`. No enrollments table. |
+| Admins vs students | **Two separate tables:** `admins` and `students`. Login checks both. |
+| Batches per student | **One.** Stored as `students.batch_id` (required). No enrollments table. |
+| Emails | Stored trimmed and lowercase. Must be unique across **both** tables (checked in code when adding a student). |
+| Deleting | Nothing is deleted automatically. A batch with students, lectures or assignments can't be deleted until those are removed. |
 | Re-uploading | Allowed. The newest file **replaces** the old one (old file is deleted). |
 | After the deadline | Uploads still allowed, but shown as **"Late"**. Never blocked. |
 | Grading | **None** for now. |
@@ -37,7 +40,8 @@ classnest/
 │   ├── middleware/
 │   │   └── auth.js          ← requireLogin, requireAdmin, requireStudent
 │   ├── models/              ← ALL SQL lives here
-│   │   ├── users.js
+│   │   ├── admins.js
+│   │   ├── students.js
 │   │   ├── batches.js
 │   │   ├── lectures.js
 │   │   ├── assignments.js
@@ -63,15 +67,19 @@ classnest/
 
 ## Database tables
 
+All tables are created in `server/db.js`. Every table also has `created_at` (or `submitted_at`), filled in by the model code.
+
 ```
-users
-  id, name, email (unique), password_hash,
-  role ('admin' | 'student'),
-  batch_id → batches.id      (students only; empty for admins)
-  created_at
+admins
+  id, name, email (unique), password_hash, created_at
 
 batches
   id, name, description, start_date, created_at
+
+students
+  id, name, email (unique), password_hash,
+  batch_id → batches.id      (required: one batch per student)
+  created_at
 
 lectures
   id, batch_id → batches.id, title, meet_link,
@@ -82,7 +90,7 @@ assignments
   due_at, created_at
 
 submissions
-  id, assignment_id → assignments.id, student_id → users.id,
+  id, assignment_id → assignments.id, student_id → students.id,
   file_path, original_name, submitted_at
   UNIQUE (assignment_id, student_id)   ← one row per student per assignment
 ```
@@ -115,8 +123,8 @@ Worked out by the server, not stored:
 
 - [x] **1. Setup:** Node.js, `package.json`, packages installed.
 - [x] **2. Hello server:** `server.js` serves `public/`. Test page at `localhost:3000`.
-- [ ] **3. Database:** `db.js` creates all tables.
-- [ ] **4. First admin + login:** `seed.js`, login/logout routes, bcrypt, sessions.
+- [x] **3. Database + seed:** `db.js` creates all tables. `npm run seed` creates the first admin (hashed password, from `.env`).
+- [ ] **4. Login:** login/logout routes (checks `admins` then `students`), bcrypt compare, sessions.
 - [ ] **5. Protection:** `requireAdmin` / `requireStudent` middleware.
 - [ ] **6. Design foundation:** `style.css` colours, fonts, cards, light/dark toggle, styled login page.
 - [ ] **7. Admin: batches:** create and list batches.

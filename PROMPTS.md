@@ -44,3 +44,13 @@ Update the plan with these answers, then start step 1.
 ```
 Yes, save the plan to PLAN.md. Then continue with step 2.
 ```
+
+## Prompt 5 - Database + seed admin (2026-10-30)
+
+```
+Server works, I can see the test page. Next, set up the SQLite database.
+
+Create the tables we planned (admins, batches, students, lectures, assignments, submissions), saved in the data folder so nothing is lost when the server restarts. Also make "npm run seed" create one admin account with a hashed password, and read the admin email and password from the .env file.
+
+Explain what a table and password hashing are, using my own tables as examples. Add this prompt to PROMPTS.md.
+```

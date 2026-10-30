@@ -4,6 +4,9 @@ require('dotenv').config({ quiet: true });
 const path = require('path');
 const express = require('express');
 
+// Open the database (creates data/classnest.db and the tables on first run)
+require('./db');
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
