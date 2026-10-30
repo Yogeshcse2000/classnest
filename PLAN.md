@@ -8,9 +8,12 @@ Project rules (stack, design, animations) are in [CLAUDE.md](CLAUDE.md).
 
 | Question | Decision |
 |---|---|
-| Admins vs students | **Two separate tables:** `admins` and `students`. Login checks both. |
+| Admins vs students | **Two separate tables:** `admins` and `students`. |
+| Logging in | One login page with an Admin/Student toggle. **Admins use email, students use username.** |
+| Sessions | Stored in the `sessions` table, so logins survive restarts. Cookie lasts 7 days. |
+| Wrong role / not logged in | Pages redirect (to login, or to your own dashboard). API routes answer 401 / 403 with an error. |
 | Batches per student | **One.** Stored as `students.batch_id` (required). No enrollments table. |
-| Emails | Stored trimmed and lowercase. Must be unique across **both** tables (checked in code when adding a student). |
+| Emails and usernames | Stored trimmed and lowercase, so capital letters don't matter at login. |
 | Deleting | Nothing is deleted automatically. A batch with students, lectures or assignments can't be deleted until those are removed. |
 | Re-uploading | Allowed. The newest file **replaces** the old one (old file is deleted). |
 | After the deadline | Uploads still allowed, but shown as **"Late"**. Never blocked. |
@@ -36,9 +39,10 @@ classnest/
 │   ├── server.js            ← starts the server, connects everything
 │   ├── db.js                ← opens SQLite, creates tables
 │   ├── seed.js              ← creates the first admin
+│   ├── session.js           ← login sessions, saved in the sessions table
 │   ├── storage.js           ← save / delete / get uploaded files
 │   ├── middleware/
-│   │   └── auth.js          ← requireLogin, requireAdmin, requireStudent
+│   │   └── auth.js          ← requireRoleApi, requireRolePage
 │   ├── models/              ← ALL SQL lives here
 │   │   ├── admins.js
 │   │   ├── students.js
@@ -47,17 +51,18 @@ classnest/
 │   │   ├── assignments.js
 │   │   └── submissions.js
 │   └── routes/              ← API routes (no SQL here)
-│       ├── auth.js
-│       ├── batches.js
-│       ├── students.js
-│       ├── lectures.js
-│       └── assignments.js
-├── public/                  ← frontend (HTML, CSS, JS)
-│   ├── index.html           ← login page
+│       ├── auth.js          ← /api/auth  (login, logout, me)
+│       ├── admin.js         ← /api/admin    (admins only)
+│       ├── student.js       ← /api/student  (students only)
+│       └── ...              ← batches, lectures, assignments added in later steps
+├── pages/                   ← protected pages, only reachable through the login checks
 │   ├── admin/               ← dashboard, batches, students, lectures, assignments
-│   ├── student/             ← dashboard, classes, assignments
-│   ├── css/style.css
-│   └── js/                  ← api.js, theme.js, animations.js, admin.js, student.js
+│   └── student/             ← dashboard, classes, assignments
+├── public/                  ← open to everyone
+│   ├── index.html           ← login page
+│   ├── favicon.svg
+│   ├── css/style.css        ← colours, fonts, cards, light/dark
+│   └── js/                  ← api.js, theme.js, animations.js, login.js, admin.js, student.js
 ├── data/                    ← classnest.db (git-ignored)
 ├── uploads/                 ← student .zip files (git-ignored)
 ├── .env                     ← secrets (git-ignored)
@@ -77,7 +82,7 @@ batches
   id, name, description, start_date, created_at
 
 students
-  id, name, email (unique), password_hash,
+  id, name, username (unique), email (optional, unique), password_hash,
   batch_id → batches.id      (required: one batch per student)
   created_at
 
@@ -93,6 +98,9 @@ submissions
   id, assignment_id → assignments.id, student_id → students.id,
   file_path, original_name, submitted_at
   UNIQUE (assignment_id, student_id)   ← one row per student per assignment
+
+sessions
+  sid, data, expires_at                ← who is logged in (used by session.js)
 ```
 
 Worked out by the server, not stored:
@@ -124,9 +132,9 @@ Worked out by the server, not stored:
 - [x] **1. Setup:** Node.js, `package.json`, packages installed.
 - [x] **2. Hello server:** `server.js` serves `public/`. Test page at `localhost:3000`.
 - [x] **3. Database + seed:** `db.js` creates all tables. `npm run seed` creates the first admin (hashed password, from `.env`).
-- [ ] **4. Login:** login/logout routes (checks `admins` then `students`), bcrypt compare, sessions.
-- [ ] **5. Protection:** `requireAdmin` / `requireStudent` middleware.
-- [ ] **6. Design foundation:** `style.css` colours, fonts, cards, light/dark toggle, styled login page.
+- [x] **4. Login:** login page with Admin/Student toggle, bcrypt compare, sessions, logout, placeholder dashboards.
+- [x] **5. Protection:** `requireRolePage` / `requireRoleApi` guard pages and API routes.
+- [x] **6. Design foundation:** `style.css` colours, fonts, cards, light/dark toggle, GSAP helpers, styled login page.
 - [ ] **7. Admin: batches:** create and list batches.
 - [ ] **8. Admin: students:** add students with a temporary password and pick their batch.
 - [ ] **9. Admin: lectures:** schedule lectures with a Meet link. "Live now" badge.

@@ -54,3 +54,23 @@ Create the tables we planned (admins, batches, students, lectures, assignments, 
 
 Explain what a table and password hashing are, using my own tables as examples. Add this prompt to PROMPTS.md.
 ```
+
+## Prompt 6 - Login, sessions, dashboards, protection (2026-10-30)
+
+```
+Now build : login for admin and students.
+
+1. Login page: one login screen with a toggle to choose Admin or Student. Admin logs in with email, student logs in with username. Show a clear error message if the credentials are wrong.
+
+2. Passwords: check passwords against the hashed passwords in the database using bcrypt. Never store or compare plain passwords.
+
+3. Sessions: use sessions (a login cookie) so the user stays logged in. Add a logout button that ends the session and sends the user back to the login page.
+
+4. Dashboards: after login, the admin lands on the admin dashboard and the student lands on the student dashboard. Make simple placeholder dashboards for now that show the user's name and the logout button.
+
+5. Protection: only a logged-in admin can open admin pages and call admin API routes. Only a logged-in student can open student pages and student API routes. An admin can't open student pages, and a student can't open admin pages. If someone isn't logged in, send them to the login page. Protected API routes should return an error instead of data.
+
+6. Design: follow CLAUDE.md, with a smooth GSAP entry animation on the login card and a smooth toggle between Admin and Student.
+
+Explain what a session, a cookie and an API route are in simple words. Add this prompt to PROMPTS.md.
+```

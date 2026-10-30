@@ -38,7 +38,8 @@ db.exec(`
   CREATE TABLE IF NOT EXISTS students (
     id            INTEGER PRIMARY KEY AUTOINCREMENT,
     name          TEXT    NOT NULL,
-    email         TEXT    NOT NULL UNIQUE,
+    username      TEXT    NOT NULL UNIQUE,
+    email         TEXT    UNIQUE,
     password_hash TEXT    NOT NULL,
     batch_id      INTEGER NOT NULL REFERENCES batches(id),
     created_at    TEXT    NOT NULL
@@ -71,6 +72,13 @@ db.exec(`
     original_name TEXT    NOT NULL,
     submitted_at  TEXT    NOT NULL,
     UNIQUE (assignment_id, student_id)
+  );
+
+  -- Who is logged in. expires_at is a time in milliseconds.
+  CREATE TABLE IF NOT EXISTS sessions (
+    sid        TEXT    PRIMARY KEY,
+    data       TEXT    NOT NULL,
+    expires_at INTEGER NOT NULL
   );
 `);
 

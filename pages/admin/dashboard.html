@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin dashboard · ClassNest</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+
+  <script src="/js/theme.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-left">
+      <a class="brand" href="/admin/dashboard">
+        <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="9" fill="currentColor"/><path d="M7 15h18a9 8 0 0 1-18 0Z" fill="#fff"/><circle cx="13" cy="12" r="3" fill="#fff"/><circle cx="19.5" cy="11.5" r="3" fill="#fff" opacity=".7"/></svg>
+        <span class="brand-text">ClassNest</span>
+      </a>
+      <span class="role-badge">Admin</span>
+    </div>
+    <div class="topbar-actions">
+      <span class="user-chip">
+        <span class="avatar" data-user-initial aria-hidden="true"></span>
+        <span class="user-name" data-user-name></span>
+      </span>
+      <button class="icon-btn" type="button" data-theme-toggle aria-label="Switch colour theme">
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      </button>
+      <button class="btn btn-ghost" type="button" data-logout>Log out</button>
+    </div>
+  </header>
+
+  <main class="page">
+    <section class="welcome">
+      <p class="eyebrow">Admin dashboard</p>
+      <h1>Hi, <span data-user-name>there</span> 👋</h1>
+      <p class="muted">This is where you'll manage batches, students, lectures and assignments.</p>
+    </section>
+
+    <section class="bento">
+      <article class="card lift span-4 empty-state">
+        <div class="empty-icon" aria-hidden="true">🪺</div>
+        <h2>Your nest is ready</h2>
+        <p>Batches, students, lectures and assignments will show up here as we build them, one step at a time.</p>
+      </article>
+    </section>
+  </main>
+
+  <script src="/js/animations.js"></script>
+  <script src="/js/api.js"></script>
+  <script src="/js/admin.js"></script>
+</body>
+</html>

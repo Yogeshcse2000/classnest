@@ -1,0 +1,495 @@
+/* ClassNest styles: colours, fonts, layout and components */
+
+/* ---------- Colours (light mode) ---------- */
+:root {
+  --bg: #f8f6f1; /* off-white page background */
+  --surface: #ffffff; /* cards */
+  --surface-2: #f0ede5; /* soft grey-beige for tracks and hovers */
+  --text: #1b2420;
+  --text-muted: #5e6b64;
+  --border: #e5e1d7;
+
+  --primary: #1e5b43; /* deep green */
+  --primary-hover: #174935;
+  --primary-soft: #e3eee7;
+  --primary-text: #1e5b43; /* green used for text */
+  --on-primary: #ffffff;
+
+  --accent: #d98a1c; /* warm amber: ONLY for "Live now" and deadlines */
+  --accent-soft: #fcefd9;
+
+  --danger: #b42318;
+  --danger-soft: #fdecea;
+
+  --shadow-sm: 0 1px 2px rgba(27, 36, 32, 0.05);
+  --shadow: 0 1px 2px rgba(27, 36, 32, 0.04), 0 8px 24px rgba(27, 36, 32, 0.07);
+  --shadow-lift: 0 2px 4px rgba(27, 36, 32, 0.05), 0 16px 36px rgba(27, 36, 32, 0.11);
+
+  --radius: 20px;
+  --radius-sm: 12px;
+  --font-head: 'Outfit', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+
+  color-scheme: light;
+}
+
+/* ---------- Colours (dark mode) ----------
+   Used when the person picked dark, or when their computer is set to dark and they haven't picked light. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --bg: #111714;
+    --surface: #19211d;
+    --surface-2: #232d28;
+    --text: #e7eee9;
+    --text-muted: #9daaa2;
+    --border: #2b3631;
+    --primary: #2e7d5b;
+    --primary-hover: #276b4e;
+    --primary-soft: #1d3329;
+    --primary-text: #7fd0a8;
+    --accent: #f0ae4b;
+    --accent-soft: #3a2d17;
+    --danger: #f2948a;
+    --danger-soft: #3a1e1b;
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.3);
+    --shadow-lift: 0 2px 4px rgba(0, 0, 0, 0.3), 0 16px 36px rgba(0, 0, 0, 0.4);
+    color-scheme: dark;
+  }
+}
+:root[data-theme='dark'] {
+  --bg: #111714;
+  --surface: #19211d;
+  --surface-2: #232d28;
+  --text: #e7eee9;
+  --text-muted: #9daaa2;
+  --border: #2b3631;
+  --primary: #2e7d5b;
+  --primary-hover: #276b4e;
+  --primary-soft: #1d3329;
+  --primary-text: #7fd0a8;
+  --accent: #f0ae4b;
+  --accent-soft: #3a2d17;
+  --danger: #f2948a;
+  --danger-soft: #3a1e1b;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.3);
+  --shadow-lift: 0 2px 4px rgba(0, 0, 0, 0.3), 0 16px 36px rgba(0, 0, 0, 0.4);
+  color-scheme: dark;
+}
+
+/* ---------- Basics ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  font-family: var(--font-head);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+h1 {
+  font-size: clamp(1.6rem, 1.2rem + 1.5vw, 2.1rem);
+}
+h2 {
+  font-size: 1.25rem;
+}
+p {
+  margin: 0;
+}
+
+button,
+input {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--primary-text);
+  outline-offset: 2px;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+.muted {
+  color: var(--text-muted);
+}
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  padding: 0 1.1rem;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.btn:disabled {
+  opacity: 0.65;
+  cursor: progress;
+}
+.btn-primary {
+  background: var(--primary);
+  color: var(--on-primary);
+  box-shadow: var(--shadow-sm);
+}
+.btn-primary:hover:not(:disabled) {
+  background: var(--primary-hover);
+  box-shadow: var(--shadow);
+}
+.btn-ghost {
+  background: transparent;
+  border-color: var(--border);
+}
+.btn-ghost:hover:not(:disabled) {
+  background: var(--surface-2);
+}
+.btn-block {
+  width: 100%;
+}
+
+/* Square icon button (used for the light/dark toggle) */
+.icon-btn {
+  display: inline-grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+.icon-btn:hover {
+  background: var(--surface-2);
+  color: var(--text);
+}
+.icon-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* Light mode shows the moon (switch to dark); dark mode shows the sun */
+.icon-sun {
+  display: none;
+}
+:root[data-theme='dark'] .icon-sun {
+  display: block;
+}
+:root[data-theme='dark'] .icon-moon {
+  display: none;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .icon-sun {
+    display: block;
+  }
+  :root:not([data-theme='light']) .icon-moon {
+    display: none;
+  }
+}
+
+/* ---------- Cards ---------- */
+.card {
+  padding: 1.5rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.card.lift:hover {
+  box-shadow: var(--shadow-lift);
+}
+
+/* ---------- Brand ---------- */
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--text);
+  font-family: var(--font-head);
+  font-size: 1.2rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+.brand-mark {
+  flex: none;
+  width: 32px;
+  height: 32px;
+  color: var(--primary);
+}
+
+/* ---------- Forms ---------- */
+.field {
+  display: grid;
+  gap: 0.4rem;
+}
+.field label {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+.field input {
+  width: 100%;
+  height: 46px;
+  padding: 0 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+}
+.field input::placeholder {
+  color: var(--text-muted);
+  opacity: 0.7;
+}
+.field input:focus {
+  outline: none;
+  border-color: var(--primary-text);
+  box-shadow: 0 0 0 3px var(--primary-soft);
+  background: var(--surface);
+}
+
+.alert {
+  padding: 0.7rem 0.9rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+}
+.alert-error {
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+
+/* ---------- Admin / Student toggle ---------- */
+.segmented {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 4px;
+  border-radius: 999px;
+  background: var(--surface-2);
+}
+/* The white "pill" that slides behind the active option */
+.segmented-pill {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 4px;
+  width: calc(50% - 4px);
+  border-radius: 999px;
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+}
+.segmented button {
+  position: relative;
+  z-index: 1;
+  height: 40px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.92rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+.segmented button[aria-pressed='true'] {
+  color: var(--text);
+}
+
+/* ---------- Login page ---------- */
+.auth-page {
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: 72px 16px 32px;
+  background-image: radial-gradient(60rem 28rem at 50% -8%, var(--primary-soft), transparent 70%);
+  background-repeat: no-repeat;
+}
+.auth-page > .icon-btn {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+}
+.auth-card {
+  display: grid;
+  gap: 1.25rem;
+  width: 100%;
+  max-width: 420px;
+  padding: 2rem;
+}
+.auth-head {
+  display: grid;
+  gap: 0.35rem;
+}
+.auth-head .brand {
+  margin-bottom: 0.75rem;
+}
+.auth-card form {
+  display: grid;
+  gap: 1rem;
+}
+.auth-hint {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+/* ---------- Dashboard layout ---------- */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 12px 24px;
+  border-bottom: 1px solid var(--border);
+  background: color-mix(in srgb, var(--bg) 85%, transparent);
+  backdrop-filter: blur(10px);
+}
+.topbar-left,
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.role-badge {
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  background: var(--primary-soft);
+  color: var(--primary-text);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+.user-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-right: 0.25rem;
+  font-size: 0.92rem;
+  font-weight: 500;
+}
+.avatar {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--primary-soft);
+  color: var(--primary-text);
+  font-family: var(--font-head);
+  font-weight: 600;
+}
+
+.page {
+  display: grid;
+  gap: 24px;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 32px 24px 64px;
+}
+.welcome {
+  display: grid;
+  gap: 0.4rem;
+}
+.eyebrow {
+  color: var(--primary-text);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* Bento grid: 4 columns on wide screens. Cards choose how many columns they cover. */
+.bento {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+.span-1 {
+  grid-column: span 1;
+}
+.span-2 {
+  grid-column: span 2;
+}
+.span-4 {
+  grid-column: span 4;
+}
+
+/* ---------- Friendly empty state ---------- */
+.empty-state {
+  display: grid;
+  justify-items: center;
+  gap: 0.5rem;
+  padding: 3rem 1.5rem;
+  text-align: center;
+}
+.empty-icon {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  margin-bottom: 0.5rem;
+  border-radius: var(--radius);
+  background: var(--primary-soft);
+  font-size: 2rem;
+}
+.empty-state p {
+  max-width: 42ch;
+  color: var(--text-muted);
+}
+
+/* ---------- Small screens ---------- */
+@media (max-width: 720px) {
+  .topbar {
+    padding: 10px 16px;
+  }
+  .page {
+    padding: 24px 16px 48px;
+  }
+  .bento {
+    grid-template-columns: 1fr;
+  }
+  .bento > * {
+    grid-column: auto;
+  }
+  .user-name {
+    display: none;
+  }
+}
+@media (max-width: 480px) {
+  .auth-card {
+    padding: 1.5rem;
+  }
+  .topbar .brand-text {
+    display: none;
+  }
+}
