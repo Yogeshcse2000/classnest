@@ -74,6 +74,7 @@ function setRole(newRole) {
 
   hideError();
   identifierInput.value = '';
+  passwordInput.value = ''; // a password the browser filled in for the other role must not stay behind
   updateToggleButtons();
   movePill(true);
 
@@ -108,6 +109,23 @@ function hideError() {
   errorBox.hidden = true;
   errorBox.textContent = '';
 }
+
+// ---------- Pasting login details ----------
+
+// If someone pastes "Username: ... Password: ..." into either box, fill in both boxes for them
+const LOGIN_DETAILS = /username:\s*(\S+)\s+(?:temporary\s+)?password:\s*(\S+)/i;
+
+[identifierInput, passwordInput].forEach((input) => {
+  input.addEventListener('paste', (event) => {
+    const match = event.clipboardData.getData('text').match(LOGIN_DETAILS);
+    if (!match) return;
+    event.preventDefault();
+    setRole('student');
+    identifierInput.value = match[1];
+    passwordInput.value = match[2];
+    hideError();
+  });
+});
 
 // ---------- Sending the form ----------
 

@@ -14,7 +14,12 @@ Project rules (stack, design, animations) are in [CLAUDE.md](CLAUDE.md).
 | Wrong role / not logged in | Pages redirect (to login, or to your own dashboard). API routes answer 401 / 403 with an error. |
 | Batches per student | **One.** Stored as `students.batch_id` (required). No enrollments table. |
 | Emails and usernames | Stored trimmed and lowercase, so capital letters don't matter at login. |
-| Deleting | Nothing is deleted automatically. A batch with students, lectures or assignments can't be deleted until those are removed. |
+| Deleting | Nothing is deleted automatically. Only **empty** batches (no students, lectures or assignments) can be deleted. |
+| Batch names | Must be unique (capital letters don't matter). Start date required, description optional. |
+| New students | Admin enters name + email + batch. Username comes from the name (`priya.sharma`, then `priya.sharma2`...). Temporary password is random (`k7mq-x4tz-p9wd`). |
+| Showing credentials | Only once, right after enrolling, with **Copy username**, **Copy password** and **Copy both** buttons. Only the hash is saved. |
+| Pasting at login | Spaces around the username or password are ignored. Pasting `Username: ... Password: ...` into either box fills in both. |
+| Duplicate emails | Rejected with a clear error (capital letters don't matter). |
 | Re-uploading | Allowed. The newest file **replaces** the old one (old file is deleted). |
 | After the deadline | Uploads still allowed, but shown as **"Late"**. Never blocked. |
 | Grading | **None** for now. |
@@ -41,6 +46,8 @@ classnest/
 │   ├── seed.js              ← creates the first admin
 │   ├── session.js           ← login sessions, saved in the sessions table
 │   ├── storage.js           ← save / delete / get uploaded files
+│   ├── utils/
+│   │   └── credentials.js   ← makes usernames and temporary passwords
 │   ├── middleware/
 │   │   └── auth.js          ← requireRoleApi, requireRolePage
 │   ├── models/              ← ALL SQL lives here
@@ -53,8 +60,11 @@ classnest/
 │   └── routes/              ← API routes (no SQL here)
 │       ├── auth.js          ← /api/auth  (login, logout, me)
 │       ├── admin.js         ← /api/admin    (admins only)
-│       ├── student.js       ← /api/student  (students only)
-│       └── ...              ← batches, lectures, assignments added in later steps
+│       ├── admin/
+│       │   ├── batches.js   ← /api/admin/batches
+│       │   ├── students.js  ← /api/admin/students
+│       │   └── ...          ← lectures, assignments added in later steps
+│       └── student.js       ← /api/student  (students only)
 ├── pages/                   ← protected pages, only reachable through the login checks
 │   ├── admin/               ← dashboard, batches, students, lectures, assignments
 │   └── student/             ← dashboard, classes, assignments
@@ -62,7 +72,8 @@ classnest/
 │   ├── index.html           ← login page
 │   ├── favicon.svg
 │   ├── css/style.css        ← colours, fonts, cards, light/dark
-│   └── js/                  ← api.js, theme.js, animations.js, login.js, admin.js, student.js
+│   └── js/                  ← api.js, ui.js, theme.js, animations.js, login.js,
+│                               admin.js, batches.js, students.js, student.js
 ├── data/                    ← classnest.db (git-ignored)
 ├── uploads/                 ← student .zip files (git-ignored)
 ├── .env                     ← secrets (git-ignored)
@@ -135,8 +146,8 @@ Worked out by the server, not stored:
 - [x] **4. Login:** login page with Admin/Student toggle, bcrypt compare, sessions, logout, placeholder dashboards.
 - [x] **5. Protection:** `requireRolePage` / `requireRoleApi` guard pages and API routes.
 - [x] **6. Design foundation:** `style.css` colours, fonts, cards, light/dark toggle, GSAP helpers, styled login page.
-- [ ] **7. Admin: batches:** create and list batches.
-- [ ] **8. Admin: students:** add students with a temporary password and pick their batch.
+- [x] **7. Admin: batches:** create, list and delete (empty) batches.
+- [x] **8. Admin: students:** enroll with name + email + batch, auto username + temporary password shown once with copy button.
 - [ ] **9. Admin: lectures:** schedule lectures with a Meet link. "Live now" badge.
 - [ ] **10. Admin: assignments:** post assignments with due dates.
 - [ ] **11. Student side:** dashboard, batch lectures with a "Join" button, assignments.

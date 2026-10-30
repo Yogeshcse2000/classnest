@@ -23,6 +23,11 @@
       </a>
       <span class="role-badge">Admin</span>
     </div>
+    <nav class="nav" aria-label="Admin pages">
+      <a href="/admin/dashboard" aria-current="page">Dashboard</a>
+      <a href="/admin/batches">Batches</a>
+      <a href="/admin/students">Students</a>
+    </nav>
     <div class="topbar-actions">
       <span class="user-chip">
         <span class="avatar" data-user-initial aria-hidden="true"></span>
@@ -44,11 +49,18 @@
     </section>
 
     <section class="bento">
-      <article class="card lift span-4 empty-state">
-        <div class="empty-icon" aria-hidden="true">🪺</div>
-        <h2>Your nest is ready</h2>
-        <p>Batches, students, lectures and assignments will show up here as we build them, one step at a time.</p>
-      </article>
+      <a class="card lift link-card span-2" href="/admin/batches">
+        <div class="link-icon" aria-hidden="true">🗂️</div>
+        <h2>Batches</h2>
+        <p class="muted">Create batches and see how many students are in each.</p>
+        <span class="link-go">Manage batches →</span>
+      </a>
+      <a class="card lift link-card span-2" href="/admin/students">
+        <div class="link-icon" aria-hidden="true">🎓</div>
+        <h2>Students</h2>
+        <p class="muted">Enroll students and get their login details to share.</p>
+        <span class="link-go">Enroll students →</span>
+      </a>
     </section>
   </main>
 

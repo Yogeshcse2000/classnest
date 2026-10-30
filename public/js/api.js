@@ -36,6 +36,13 @@ function showUserName(name) {
   document.querySelectorAll('[data-user-initial]').forEach((el) => (el.textContent = name.charAt(0).toUpperCase()));
 }
 
+// Shows the logged-in person's name in the top bar
+function showCurrentUser() {
+  loadPageData('/api/auth/me')
+    .then((data) => showUserName(data.user.name))
+    .catch(() => {});
+}
+
 // Makes every [data-logout] button end the session and return to the login page
 function setupLogout() {
   document.querySelectorAll('[data-logout]').forEach((button) => {

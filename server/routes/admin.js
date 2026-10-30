@@ -10,4 +10,7 @@ router.get('/dashboard', (req, res) => {
   res.json({ name: req.session.user.name });
 });
 
+router.use('/batches', require('./admin/batches')); // /api/admin/batches
+router.use('/students', require('./admin/students')); // /api/admin/students
+
 module.exports = router;

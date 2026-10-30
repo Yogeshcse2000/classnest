@@ -74,3 +74,41 @@ Now build : login for admin and students.
 
 Explain what a session, a cookie and an API route are in simple words. Add this prompt to PROMPTS.md.
 ```
+
+## Prompt 7 - Batches and students (2026-10-30)
+
+```
+Stage 3 works, I tested login, wrong password and protected pages. Now build Stage 4: batches and students.
+
+1. Batches page (admin): create a batch with name, start date and description. Show all batches in a list, and allow deleting a batch.
+
+2. Enroll students page (admin): add a student with name and email, and pick a batch. The app auto-generates a username and a temporary password, and saves the password hashed.
+
+3. Show the credentials only once, right after creating the student, with a copy button, so the admin can give them to the student.
+
+4. Prevent duplicate usernames and emails, and show a clear error if one already exists.
+
+5. Follow the design in CLAUDE.md, with smooth hover effects on cards and a nice success animation when credentials appear.
+
+Explain how the app generates the username and password. Add this prompt to PROMPTS.md.
+```
+
+## Prompt 8 - Fix student login and copy buttons (2026-10-30)
+
+```
+I found two bugs in Stage 4.
+
+Bug 1: Student login fails. I created a student and got a username and password, but I can't log in with them on the Student side of the login page.
+Check the whole flow: how the username and password are generated, how the password is hashed and saved, and how the student login checks it. Explain in simple words what was wrong, then fix it.
+
+Bug 2: The copy button copies the wrong text. When I click copy on the credentials, it copies a big block of extra text and formatting instead of only the username and password.
+Fix it with three buttons:
+- "Copy username" copies only the username.
+- "Copy password" copies only the password.
+- "Copy both" copies exactly this, as plain text with no extra spaces:
+Username: <username>
+Password: <password>
+Show a small "Copied!" animation after clicking.
+
+After fixing, tell me how to test both bugs. Add this prompt to PROMPTS.md.
+```

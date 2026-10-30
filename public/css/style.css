@@ -20,6 +20,7 @@
 
   --danger: #b42318;
   --danger-soft: #fdecea;
+  --on-danger: #ffffff;
 
   --shadow-sm: 0 1px 2px rgba(27, 36, 32, 0.05);
   --shadow: 0 1px 2px rgba(27, 36, 32, 0.04), 0 8px 24px rgba(27, 36, 32, 0.07);
@@ -51,6 +52,7 @@
     --accent-soft: #3a2d17;
     --danger: #f2948a;
     --danger-soft: #3a1e1b;
+  --on-danger: #2a0f0c;
     --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
     --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.3);
     --shadow-lift: 0 2px 4px rgba(0, 0, 0, 0.3), 0 16px 36px rgba(0, 0, 0, 0.4);
@@ -72,6 +74,7 @@
   --accent-soft: #3a2d17;
   --danger: #f2948a;
   --danger-soft: #3a1e1b;
+  --on-danger: #2a0f0c;
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
   --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.3);
   --shadow-lift: 0 2px 4px rgba(0, 0, 0, 0.3), 0 16px 36px rgba(0, 0, 0, 0.4);
@@ -116,9 +119,15 @@ p {
 }
 
 button,
-input {
+input,
+select,
+textarea {
   font: inherit;
   color: inherit;
+}
+
+.mono {
+  font-family: ui-monospace, 'Cascadia Code', Consolas, monospace;
 }
 
 :focus-visible {
@@ -170,6 +179,13 @@ input {
 .btn-ghost:hover:not(:disabled) {
   background: var(--surface-2);
 }
+.btn-danger {
+  background: var(--danger);
+  color: var(--on-danger);
+}
+.btn-danger:hover:not(:disabled) {
+  box-shadow: var(--shadow);
+}
 .btn-block {
   width: 100%;
 }
@@ -194,6 +210,10 @@ input {
 .icon-btn svg {
   width: 18px;
   height: 18px;
+}
+.icon-btn-danger:hover {
+  background: var(--danger-soft);
+  color: var(--danger);
 }
 
 /* Light mode shows the moon (switch to dark); dark mode shows the sun */
@@ -255,7 +275,13 @@ input {
   font-size: 0.9rem;
   font-weight: 500;
 }
-.field input {
+.field .optional {
+  color: var(--text-muted);
+  font-weight: 400;
+}
+.field input,
+.field select,
+.field textarea {
   width: 100%;
   height: 46px;
   padding: 0 0.9rem;
@@ -264,11 +290,20 @@ input {
   background: var(--bg);
   transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
 }
-.field input::placeholder {
+.field textarea {
+  height: auto;
+  min-height: 96px;
+  padding: 0.7rem 0.9rem;
+  resize: vertical;
+}
+.field input::placeholder,
+.field textarea::placeholder {
   color: var(--text-muted);
   opacity: 0.7;
 }
-.field input:focus {
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
   outline: none;
   border-color: var(--primary-text);
   box-shadow: 0 0 0 3px var(--primary-soft);
@@ -381,6 +416,30 @@ input {
   align-items: center;
   gap: 0.6rem;
 }
+
+/* Admin page links in the top bar */
+.nav {
+  display: flex;
+  gap: 0.25rem;
+}
+.nav a {
+  padding: 0.45rem 0.8rem;
+  border-radius: 999px;
+  color: var(--text-muted);
+  font-size: 0.92rem;
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+.nav a:hover {
+  background: var(--surface-2);
+  color: var(--text);
+}
+.nav a[aria-current='page'] {
+  background: var(--primary-soft);
+  color: var(--primary-text);
+}
 .role-badge {
   padding: 0.2rem 0.6rem;
   border-radius: 999px;
@@ -467,10 +526,326 @@ input {
   color: var(--text-muted);
 }
 
+/* ---------- Dashboard link cards ---------- */
+.link-card {
+  display: grid;
+  gap: 0.4rem;
+  align-content: start;
+  color: inherit;
+  text-decoration: none;
+}
+.link-icon {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin-bottom: 0.4rem;
+  border-radius: 14px;
+  background: var(--primary-soft);
+  font-size: 1.4rem;
+}
+.link-go {
+  margin-top: 0.3rem;
+  color: var(--primary-text);
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+/* ---------- Form + list pages (batches, students) ---------- */
+.split {
+  display: grid;
+  grid-template-columns: minmax(280px, 380px) 1fr;
+  gap: 24px;
+  align-items: start;
+}
+.form-card {
+  position: sticky;
+  top: 88px;
+  display: grid;
+  gap: 1rem;
+}
+.form-card form {
+  display: grid;
+  gap: 1rem;
+}
+.form-hint {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+.stack {
+  display: grid;
+  gap: 16px;
+  align-content: start;
+  min-width: 0;
+}
+.section-title {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  width: fit-content;
+  padding: 0.15rem 0.6rem;
+  border-radius: 999px;
+  background: var(--surface-2);
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.chip-green {
+  background: var(--primary-soft);
+  color: var(--primary-text);
+}
+
+/* Batch cards */
+.batch-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+}
+.batch-grid > .empty-state {
+  grid-column: 1 / -1;
+}
+.batch-card {
+  display: grid;
+  gap: 0.6rem;
+  align-content: start;
+  padding: 1.25rem;
+}
+.batch-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.batch-card h3 {
+  font-size: 1.1rem;
+  overflow-wrap: anywhere;
+}
+.batch-card .icon-btn {
+  width: 34px;
+  height: 34px;
+  flex: none;
+  border-color: transparent;
+}
+.batch-desc {
+  display: -webkit-box;
+  overflow: hidden;
+  color: var(--text-muted);
+  font-size: 0.92rem;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+.batch-card-foot {
+  padding-top: 0.7rem;
+  border-top: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 0.88rem;
+}
+
+/* Student list */
+.list-card {
+  padding: 0.5rem;
+}
+.list {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.list-row {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0.8rem 0.9rem;
+  border-radius: var(--radius-sm);
+  transition: background-color 0.3s ease;
+}
+.list-row:hover {
+  background: var(--surface-2);
+}
+.list-main {
+  flex: 1;
+  min-width: 0;
+}
+.list-main strong,
+.list-main span {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.list-main span {
+  color: var(--text-muted);
+  font-size: 0.88rem;
+}
+.list-meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.4rem;
+}
+
+/* New student's login details, shown once */
+.cred-card {
+  display: grid;
+  gap: 1rem;
+  border-color: var(--primary-soft);
+}
+.cred-head {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+.cred-head p {
+  color: var(--text-muted);
+  font-size: 0.92rem;
+}
+.success-check {
+  flex: none;
+  width: 48px;
+  height: 48px;
+  color: var(--primary-text);
+}
+.success-check circle,
+.success-check path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+}
+.cred-rows {
+  display: grid;
+  gap: 0.5rem;
+}
+.cred-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.25rem 1rem;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+}
+.cred-row span {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+.cred-row strong {
+  font-size: 1.05rem;
+  user-select: all;
+  overflow-wrap: anywhere;
+}
+.cred-note {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+.cred-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 1rem; /* room for the "Copied!" label, so it doesn't cover the note above */
+}
+.cred-actions .btn {
+  position: relative;
+}
+.cred-done {
+  margin-left: auto;
+}
+/* The small "Copied!" label above a copy button */
+.copied-pop {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 6px);
+  left: 0;
+  width: fit-content;
+  margin-inline: auto;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  background: var(--text);
+  color: var(--bg);
+  box-shadow: var(--shadow-sm);
+  font-size: 0.78rem;
+  font-weight: 600;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* ---------- Toast messages ---------- */
+.toasts {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  z-index: 100;
+  display: grid;
+  gap: 0.5rem;
+  width: max-content;
+  max-width: calc(100% - 32px);
+  transform: translateX(-50%);
+}
+.toast {
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-sm);
+  background: var(--text);
+  color: var(--bg);
+  box-shadow: var(--shadow-lift);
+  font-size: 0.92rem;
+  font-weight: 500;
+}
+.toast-error {
+  background: var(--danger);
+  color: var(--on-danger);
+}
+
+/* ---------- Confirm dialog ---------- */
+.dialog {
+  width: min(420px, calc(100% - 32px));
+  padding: 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: var(--shadow-lift);
+}
+.dialog::backdrop {
+  background: rgba(10, 15, 12, 0.45);
+}
+.dialog form {
+  display: grid;
+  gap: 0.75rem;
+}
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+  margin-top: 0.5rem;
+}
+
 /* ---------- Small screens ---------- */
+@media (max-width: 900px) {
+  .split {
+    grid-template-columns: 1fr;
+  }
+  .form-card {
+    position: static;
+  }
+}
 @media (max-width: 720px) {
   .topbar {
+    flex-wrap: wrap;
+    row-gap: 8px;
     padding: 10px 16px;
+  }
+  .nav {
+    order: 3;
+    width: 100%;
+    overflow-x: auto;
   }
   .page {
     padding: 24px 16px 48px;
@@ -483,6 +858,16 @@ input {
   }
   .user-name {
     display: none;
+  }
+}
+@media (max-width: 560px) {
+  .list-row {
+    flex-wrap: wrap;
+  }
+  .list-meta {
+    justify-content: flex-start;
+    width: 100%;
+    padding-left: calc(32px + 0.9rem);
   }
 }
 @media (max-width: 480px) {

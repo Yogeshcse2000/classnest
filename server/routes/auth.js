@@ -17,14 +17,15 @@ router.post('/login', async (req, res) => {
   if (role !== 'admin' && role !== 'student') {
     return res.status(400).json({ error: 'Please choose Admin or Student.' });
   }
-  if (typeof identifier !== 'string' || typeof password !== 'string' || !identifier.trim() || !password) {
+  if (typeof identifier !== 'string' || typeof password !== 'string' || !identifier.trim() || !password.trim()) {
     return res.status(400).json({ error: 'Please fill in both fields.' });
   }
 
   const account = role === 'admin' ? await findAdminByEmail(identifier) : await findStudentByUsername(identifier);
 
-  // bcrypt hashes the typed password and checks it against the saved hash
-  const passwordOk = account ? await bcrypt.compare(password, account.password_hash) : false;
+  // bcrypt hashes the typed password and checks it against the saved hash.
+  // trim() removes spaces around it, which easily sneak in when copying and pasting.
+  const passwordOk = account ? await bcrypt.compare(password.trim(), account.password_hash) : false;
 
   if (!passwordOk) {
     // Same message either way, so nobody can find out which emails/usernames exist

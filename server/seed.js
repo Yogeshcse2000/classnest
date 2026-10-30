@@ -9,7 +9,7 @@ const { findAdminByEmail, createAdmin } = require('./models/admins');
 async function main() {
   const name = process.env.ADMIN_NAME || 'Admin';
   const email = process.env.ADMIN_EMAIL;
-  const password = process.env.ADMIN_PASSWORD;
+  const password = (process.env.ADMIN_PASSWORD || '').trim(); // login ignores spaces around passwords too
 
   if (!email || !password) {
     console.error('Please set ADMIN_EMAIL and ADMIN_PASSWORD in your .env file.');

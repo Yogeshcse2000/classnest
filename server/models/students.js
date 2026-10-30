@@ -2,13 +2,51 @@
 
 const db = require('../db');
 
-// Usernames are stored trimmed and lowercase, so "Priya " matches "priya"
-function cleanUsername(username) {
-  return String(username).trim().toLowerCase();
+// Usernames and emails are stored trimmed and lowercase, so "Priya " matches "priya"
+function clean(value) {
+  return String(value).trim().toLowerCase();
 }
+
+// The columns that are safe to send to the browser (never the password hash)
+const SELECT_STUDENT = `
+  SELECT s.id, s.name, s.username, s.email, s.batch_id, b.name AS batch_name, s.created_at
+  FROM students s
+  JOIN batches b ON b.id = s.batch_id`;
 
 async function findStudentByUsername(username) {
-  return db.prepare('SELECT * FROM students WHERE username = ?').get(cleanUsername(username));
+  return db.prepare('SELECT * FROM students WHERE username = ?').get(clean(username));
 }
 
-module.exports = { findStudentByUsername };
+async function findStudentByEmail(email) {
+  return db.prepare('SELECT id FROM students WHERE email = ?').get(clean(email));
+}
+
+async function usernameTaken(username) {
+  return Boolean(db.prepare('SELECT 1 FROM students WHERE username = ?').get(clean(username)));
+}
+
+async function listStudents() {
+  return db.prepare(`${SELECT_STUDENT} ORDER BY s.id DESC`).all();
+}
+
+async function findStudentById(id) {
+  return db.prepare(`${SELECT_STUDENT} WHERE s.id = ?`).get(id);
+}
+
+async function createStudent({ name, username, email, passwordHash, batchId }) {
+  const result = db
+    .prepare(
+      'INSERT INTO students (name, username, email, password_hash, batch_id, created_at) VALUES (?, ?, ?, ?, ?, ?)'
+    )
+    .run(name, clean(username), clean(email), passwordHash, batchId, new Date().toISOString());
+  return result.lastInsertRowid;
+}
+
+module.exports = {
+  findStudentByUsername,
+  findStudentByEmail,
+  usernameTaken,
+  listStudents,
+  findStudentById,
+  createStudent,
+};
