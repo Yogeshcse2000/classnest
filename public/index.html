@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ClassNest</title>
+  <!-- Temporary test page for step 2. Becomes the login page in step 6. -->
+</head>
+<body>
+  <h1>ClassNest</h1>
+  <p>The page loaded, so the server is sending files from <code>public/</code>.</p>
+  <p>API check: <strong id="health">checking...</strong></p>
+
+  <script>
+    // Ask the server's /api/health route if it is alive
+    fetch('/api/health')
+      .then((res) => res.json())
+      .then((data) => {
+        document.getElementById('health').textContent = data.status === 'ok' ? 'working ✅' : 'unexpected reply';
+      })
+      .catch(() => {
+        document.getElementById('health').textContent = 'not reachable ❌';
+      });
+  </script>
+</body>
+</html>
