@@ -29,12 +29,15 @@
   function finish(step, focusTarget) {
     gsap.set([roleTitle, ...roleCards, loginCard, ...formParts], { clearProps: 'all' });
     panel.dataset.step = step;
+    if (step === 'role') removeForm();
     morphing = false;
     focusTarget.focus();
   }
 
   function openForm(roleCard) {
     if (morphing) return;
+
+    setRole(roleCard.dataset.role); // builds the form for this role
 
     if (!motionOK) {
       panel.dataset.step = 'form';
@@ -57,12 +60,12 @@
   function backToRoles() {
     if (morphing) return;
 
-    hideError();
-    passwordInput.value = '';
+    clearForm();
     const roleCard = document.querySelector('.role-card[aria-pressed="true"]');
 
     if (!motionOK) {
       panel.dataset.step = 'role';
+      removeForm();
       roleCard.focus();
       return;
     }

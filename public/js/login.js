@@ -2,10 +2,12 @@
 
 const ROLE_KEY = 'classnest-login-role';
 
-// What the first field looks like for each role
+// What the form looks like for each role
 const roleSettings = {
   admin: {
     name: 'Admin',
+    identifierId: 'admin-email',
+    passwordId: 'admin-password',
     label: 'Email',
     type: 'email',
     autocomplete: 'email',
@@ -14,6 +16,8 @@ const roleSettings = {
   },
   student: {
     name: 'Student',
+    identifierId: 'student-username',
+    passwordId: 'student-password',
     label: 'Username',
     type: 'text',
     autocomplete: 'username',
@@ -23,15 +27,17 @@ const roleSettings = {
 };
 
 const card = document.getElementById('login-card');
-const form = document.getElementById('login-form');
+const formSlot = document.getElementById('login-form-slot');
 const roleButtons = document.querySelectorAll('[data-role]');
 const roleChip = document.getElementById('login-role');
-const identifierLabel = document.getElementById('identifier-label');
-const identifierInput = document.getElementById('identifier');
-const passwordInput = document.getElementById('password');
-const errorBox = document.getElementById('login-error');
-const loginButton = document.getElementById('login-button');
 const hint = document.getElementById('login-hint');
+
+// Only the active role's form is in the page. Until a role is chosen there is no form at all,
+// so the browser has nothing to fill in.
+let identifierInput = null;
+let passwordInput = null;
+let errorBox = null;
+let loginButton = null;
 
 // Start with the role picked last time (Student if none)
 let role = 'student';
@@ -49,28 +55,77 @@ function updateRoleButtons() {
 function applyRoleSettings() {
   const settings = roleSettings[role];
   roleChip.textContent = settings.name;
-  identifierLabel.textContent = settings.label;
-  identifierInput.type = settings.type;
-  identifierInput.autocomplete = settings.autocomplete;
-  identifierInput.placeholder = settings.placeholder;
   hint.textContent = settings.hint;
 }
 
+// Build a fresh, empty form for the current role. It replaces any form that was there.
+function showForm() {
+  const settings = roleSettings[role];
+  formSlot.innerHTML = `
+    <form id="${role}-form" novalidate>
+      <div class="field">
+        <label for="${settings.identifierId}">${settings.label}</label>
+        <input id="${settings.identifierId}" name="${settings.identifierId}" type="${settings.type}"
+               autocomplete="${settings.autocomplete}" placeholder="${settings.placeholder}" required>
+      </div>
+      <div class="field">
+        <label for="${settings.passwordId}">Password</label>
+        <input id="${settings.passwordId}" name="${settings.passwordId}" type="password"
+               autocomplete="current-password" placeholder="Your password" required>
+      </div>
+
+      <p class="alert alert-error" id="login-error" role="alert" hidden></p>
+
+      <button class="btn btn-primary btn-block" type="submit" id="login-button">Sign in</button>
+    </form>`;
+
+  identifierInput = document.getElementById(settings.identifierId);
+  passwordInput = document.getElementById(settings.passwordId);
+  errorBox = document.getElementById('login-error');
+  loginButton = document.getElementById('login-button');
+
+  formSlot.querySelector('form').addEventListener('submit', sendForm);
+  [identifierInput, passwordInput].forEach((input) => input.addEventListener('paste', pasteLoginDetails));
+  addHoverLift(formSlot);
+}
+
+function clearForm() {
+  hideError();
+  identifierInput.value = '';
+  passwordInput.value = '';
+}
+
+// Take the form out of the page completely
+function removeForm() {
+  formSlot.replaceChildren();
+}
+
 function setRole(newRole) {
-  if (newRole === role) return;
   role = newRole;
   try {
     localStorage.setItem(ROLE_KEY, role);
   } catch (e) {}
 
-  hideError();
-  identifierInput.value = '';
-  passwordInput.value = ''; // a password the browser filled in for the other role must not stay behind
   updateRoleButtons();
   applyRoleSettings();
+  showForm();
 }
 
-roleButtons.forEach((button) => button.addEventListener('click', () => setRole(button.dataset.role)));
+// ---------- Browser autofill ----------
+
+// Browsers save logins per website, not per form, so separate names and ids don't stop Chrome filling the
+// admin's details into the student form. So style.css keeps anything the browser fills invisible, and starts a
+// tiny animation that tells us it happened. Details for this role are then shown, and any others are wiped.
+// Admins sign in with an email, and student usernames never contain an @.
+formSlot.addEventListener('animationstart', (event) => {
+  if (event.animationName !== 'browser-filled') return;
+  const identifier = identifierInput.value.trim();
+  if (identifier && identifier.includes('@') === (role === 'admin')) {
+    event.target.form.classList.add('fill-checked');
+  } else {
+    clearForm();
+  }
+});
 
 // ---------- Errors ----------
 
@@ -93,21 +148,20 @@ function hideError() {
 // If someone pastes "Username: ... Password: ..." into either box, fill in both boxes for them
 const LOGIN_DETAILS = /username:\s*(\S+)\s+(?:temporary\s+)?password:\s*(\S+)/i;
 
-[identifierInput, passwordInput].forEach((input) => {
-  input.addEventListener('paste', (event) => {
-    const match = event.clipboardData.getData('text').match(LOGIN_DETAILS);
-    if (!match) return;
-    event.preventDefault();
-    setRole('student');
-    identifierInput.value = match[1];
-    passwordInput.value = match[2];
-    hideError();
-  });
-});
+function pasteLoginDetails(event) {
+  const match = event.clipboardData.getData('text').match(LOGIN_DETAILS);
+  if (!match) return;
+  event.preventDefault();
+  if (role !== 'student') setRole('student');
+  identifierInput.value = match[1];
+  passwordInput.value = match[2];
+  hideError();
+  loginButton.focus(); // the form may be a new one, so keep the keyboard somewhere useful
+}
 
 // ---------- Sending the form ----------
 
-form.addEventListener('submit', async (event) => {
+async function sendForm(event) {
   event.preventDefault(); // stop the browser from reloading the page
   hideError();
 
@@ -136,7 +190,7 @@ form.addEventListener('submit', async (event) => {
     loginButton.disabled = false;
     loginButton.textContent = 'Sign in';
   }
-});
+}
 
 // ---------- Start ----------
 

@@ -164,3 +164,17 @@ After that, test admin login, student login, wrong password, creating a batch an
 
 Add this prompt to PROMPTS.md.
 ```
+
+## Prompt 12 - Stop admin autofill in the student form (2026-10-31)
+
+```
+Small fix on the login page: the browser autofills the saved admin email AND admin password into the student form.
+
+- Give the admin and student forms separate input names and ids (for example admin-email, admin-password, student-username, student-password).
+- Admin form: autocomplete="email" for the email, autocomplete="current-password" for the password.
+- Student form: autocomplete="username" for the username, autocomplete="current-password" for the password.
+- When switching between Admin and Student, or clicking Back, clear both fields.
+- Keep only the active form in the page (not just hidden), so the browser can't fill the other one.
+
+Don't change the login logic. Test that switching roles never shows the admin email or password in the student form. Add this prompt to PROMPTS.md.
+```

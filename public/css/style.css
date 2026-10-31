@@ -626,6 +626,24 @@ textarea {
 .auth-head h2 {
   font-size: 1.7rem;
 }
+/* Holds the form's space while it isn't in the page, so the heading stays still when it appears */
+.login-form-slot {
+  min-height: 233px;
+}
+/* Whatever the browser fills in stays invisible until login.js has checked it belongs to this role.
+   The animation shows nothing. It only tells login.js that the browser just filled in this box. */
+@keyframes browser-filled {
+  to {
+    opacity: 1;
+  }
+}
+.login-form-slot input:-webkit-autofill {
+  animation: browser-filled 1ms;
+  -webkit-text-fill-color: transparent;
+}
+.login-form-slot .fill-checked input:-webkit-autofill {
+  -webkit-text-fill-color: currentcolor;
+}
 .auth-card form {
   display: grid;
   gap: 1rem;

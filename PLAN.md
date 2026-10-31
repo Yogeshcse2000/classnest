@@ -10,6 +10,7 @@ Project rules (stack, design, animations) are in [CLAUDE.md](CLAUDE.md).
 |---|---|
 | Admins vs students | **Two separate tables:** `admins` and `students`. |
 | Logging in | One login page with Admin and Student role cards. The chosen card becomes the login form. **Admins use email, students use username.** |
+| Saved logins | Only the chosen role's form is in the page. Browsers save logins per website, so `login.js` also hides anything the browser fills until it has checked it fits the role (an email for admins, no `@` for students), and wipes it if not. |
 | Sessions | Stored in the `sessions` table, so logins survive restarts. Cookie lasts 7 days. |
 | Wrong role / not logged in | Pages redirect (to login, or to your own dashboard). API routes answer 401 / 403 with an error. |
 | Batches per student | **One.** Stored as `students.batch_id` (required). No enrollments table. |

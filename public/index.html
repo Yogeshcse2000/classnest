@@ -119,20 +119,8 @@
           <p class="muted" id="login-hint">Your username and password come from your admin.</p>
         </div>
 
-        <form id="login-form" novalidate>
-          <div class="field">
-            <label for="identifier" id="identifier-label">Username</label>
-            <input id="identifier" name="identifier" type="text" autocomplete="username" placeholder="e.g. priya.sharma" required>
-          </div>
-          <div class="field">
-            <label for="password">Password</label>
-            <input id="password" name="password" type="password" autocomplete="current-password" placeholder="Your password" required>
-          </div>
-
-          <p class="alert alert-error" id="login-error" role="alert" hidden></p>
-
-          <button class="btn btn-primary btn-block" type="submit" id="login-button">Sign in</button>
-        </form>
+        <!-- login.js puts the chosen role's form here, and removes it again on Back -->
+        <div class="login-form-slot" id="login-form-slot"></div>
       </main>
     </div>
   </div>
