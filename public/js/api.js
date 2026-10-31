@@ -3,11 +3,17 @@
 // Calls an API route and returns its JSON reply.
 // If the server answers with an error, this throws an Error with the server's message.
 async function api(path, { method = 'GET', body } = {}) {
-  const response = await fetch(path, {
-    method,
-    headers: body ? { 'Content-Type': 'application/json' } : {},
-    body: body ? JSON.stringify(body) : undefined,
-  });
+  let response;
+  try {
+    response = await fetch(path, {
+      method,
+      headers: body ? { 'Content-Type': 'application/json' } : {},
+      body: body ? JSON.stringify(body) : undefined,
+    });
+  } catch (error) {
+    // fetch only fails like this when the server can't be reached at all
+    throw new Error("Can't reach ClassNest right now. Please check your connection and try again.");
+  }
   const data = await response.json().catch(() => ({}));
 
   if (!response.ok) {

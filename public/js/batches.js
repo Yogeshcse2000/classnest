@@ -37,13 +37,13 @@ function batchCardHtml(batch) {
       </div>
       <span class="chip chip-green">${startLabel(batch.start_date)}</span>
       ${description}
-      <div class="batch-card-foot">👥 ${plural(batch.student_count, 'student')}</div>
+      <div class="batch-card-foot">${plural(batch.student_count, 'student')}</div>
     </article>`;
 }
 
 const EMPTY_HTML = `
   <div class="card empty-state">
-    <div class="empty-icon" aria-hidden="true">🌱</div>
+    <div class="empty-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 3 8l9 5 9-5z"/><path d="m3 13 9 5 9-5"/></svg></div>
     <h2>No batches yet</h2>
     <p>Create your first batch with the form. Then you can start enrolling students into it.</p>
   </div>`;
@@ -51,6 +51,7 @@ const EMPTY_HTML = `
 function render() {
   countLabel.textContent = batches.length ? plural(batches.length, 'batch', 'batches') : '';
   list.innerHTML = batches.length ? batches.map(batchCardHtml).join('') : EMPTY_HTML;
+  list.removeAttribute('aria-busy');
   addHoverLift(list);
 }
 
@@ -78,7 +79,7 @@ form.addEventListener('submit', async (event) => {
     });
     batches.unshift(batch);
     render();
-    if (motionOK) gsap.from(list.firstElementChild, { opacity: 0, scale: 0.94, y: 10, duration: 0.35, ease: 'back.out(1.6)' });
+    if (motionOK) gsap.from(list.firstElementChild, { opacity: 0, scale: 0.94, y: 10, duration: 0.3, ease: 'back.out(1.6)' });
     form.reset();
     showToast(`Batch "${batch.name}" created.`);
   } catch (error) {
@@ -137,5 +138,6 @@ loadPageData('/api/admin/batches')
     enterAnimation('#batch-list > *');
   })
   .catch((error) => {
+    list.removeAttribute('aria-busy');
     list.innerHTML = `<p class="alert alert-error">${escapeHtml(error.message)}</p>`;
   });

@@ -1,84 +1,84 @@
-/* ClassNest styles: colours, fonts, layout and components */
+/* ClassNest styles: colours, fonts, layout and components.
+   Design rules are in .claude/skills/classnest-ui/SKILL.md */
 
-/* ---------- Colours (light mode) ---------- */
+/* ---------- Colours (dark is the default) ---------- */
 :root {
-  --bg: #f8f6f1; /* off-white page background */
-  --surface: #ffffff; /* cards */
-  --surface-2: #f0ede5; /* soft grey-beige for tracks and hovers */
-  --text: #1b2420;
-  --text-muted: #5e6b64;
-  --border: #e5e1d7;
+  --bg: #060b08; /* near-black green */
+  --surface: rgba(19, 30, 24, 0.74); /* glass cards: the page shows faintly through */
+  --surface-solid: #101913; /* pop-ups, where nothing should show through */
+  --surface-2: rgba(255, 255, 255, 0.06); /* soft tracks and hovers */
+  --field: rgba(255, 255, 255, 0.05);
+  --text: #eaf2ed;
+  --text-muted: #a0b1a7;
+  --border: rgba(170, 225, 195, 0.13);
+  --edge: rgba(255, 255, 255, 0.06); /* the thin light along the top of a glass card */
 
-  --primary: #1e5b43; /* deep green */
-  --primary-hover: #174935;
-  --primary-soft: #e3eee7;
-  --primary-text: #1e5b43; /* green used for text */
+  --primary: #1e7a54; /* deep green */
+  --primary-soft: rgba(63, 174, 125, 0.15);
+  --primary-text: #84d7af; /* green used for text */
   --on-primary: #ffffff;
+  --glow: rgba(127, 208, 168, 0.4);
 
-  --accent: #d98a1c; /* warm amber: ONLY for "Live now" and deadlines */
+  --accent: #f0ae4b; /* warm amber: ONLY for "Live now" and deadlines */
+  --accent-soft: rgba(240, 174, 75, 0.15);
+
+  --danger: #f2948a;
+  --danger-soft: rgba(242, 148, 138, 0.14);
+  --on-danger: #2a0f0c;
+
+  --dot: rgba(170, 225, 195, 0.1); /* the faint dot grid */
+  --ambient-a: rgba(46, 125, 91, 0.3); /* the breathing glows */
+  --ambient-b: rgba(30, 100, 80, 0.22);
+  --spot: rgba(127, 208, 168, 0.1); /* the spotlight that follows the mouse */
+  --shine: rgba(255, 255, 255, 0.07); /* skeleton shimmer */
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 12px 32px rgba(0, 0, 0, 0.3);
+  --shadow-lift: 0 2px 4px rgba(0, 0, 0, 0.3), 0 20px 44px rgba(0, 0, 0, 0.45), 0 0 32px rgba(63, 174, 125, 0.1);
+
+  --radius: 18px;
+  --radius-sm: 12px;
+  --font-head: 'Outfit', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+
+  color-scheme: dark;
+}
+
+/* ---------- Colours (light mode, picked with the toggle) ---------- */
+:root[data-theme='light'] {
+  --bg: #f6f4ee;
+  --surface: rgba(255, 255, 255, 0.8);
+  --surface-solid: #ffffff;
+  --surface-2: rgba(27, 36, 32, 0.05);
+  --field: #ffffff;
+  --text: #1b2420;
+  --text-muted: #55625b;
+  --border: rgba(27, 36, 32, 0.11);
+  --edge: rgba(255, 255, 255, 0.7);
+
+  --primary: #1e5b43;
+  --primary-soft: #e3eee7;
+  --primary-text: #1e5b43;
+  --glow: rgba(30, 91, 67, 0.28);
+
+  --accent: #b86f0e;
   --accent-soft: #fcefd9;
 
   --danger: #b42318;
   --danger-soft: #fdecea;
   --on-danger: #ffffff;
 
-  --shadow-sm: 0 1px 2px rgba(27, 36, 32, 0.05);
-  --shadow: 0 1px 2px rgba(27, 36, 32, 0.04), 0 8px 24px rgba(27, 36, 32, 0.07);
-  --shadow-lift: 0 2px 4px rgba(27, 36, 32, 0.05), 0 16px 36px rgba(27, 36, 32, 0.11);
+  --dot: rgba(30, 91, 67, 0.12);
+  --ambient-a: rgba(46, 125, 91, 0.13);
+  --ambient-b: rgba(46, 125, 91, 0.09);
+  --spot: rgba(30, 91, 67, 0.06);
+  --shine: rgba(255, 255, 255, 0.6);
 
-  --radius: 20px;
-  --radius-sm: 12px;
-  --font-head: 'Outfit', system-ui, sans-serif;
-  --font-body: 'Inter', system-ui, sans-serif;
+  --shadow-sm: 0 1px 2px rgba(27, 36, 32, 0.05);
+  --shadow: 0 1px 2px rgba(27, 36, 32, 0.04), 0 10px 28px rgba(27, 36, 32, 0.07);
+  --shadow-lift: 0 2px 4px rgba(27, 36, 32, 0.05), 0 18px 40px rgba(27, 36, 32, 0.12);
 
   color-scheme: light;
-}
-
-/* ---------- Colours (dark mode) ----------
-   Used when the person picked dark, or when their computer is set to dark and they haven't picked light. */
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme='light']) {
-    --bg: #111714;
-    --surface: #19211d;
-    --surface-2: #232d28;
-    --text: #e7eee9;
-    --text-muted: #9daaa2;
-    --border: #2b3631;
-    --primary: #2e7d5b;
-    --primary-hover: #276b4e;
-    --primary-soft: #1d3329;
-    --primary-text: #7fd0a8;
-    --accent: #f0ae4b;
-    --accent-soft: #3a2d17;
-    --danger: #f2948a;
-    --danger-soft: #3a1e1b;
-  --on-danger: #2a0f0c;
-    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
-    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.3);
-    --shadow-lift: 0 2px 4px rgba(0, 0, 0, 0.3), 0 16px 36px rgba(0, 0, 0, 0.4);
-    color-scheme: dark;
-  }
-}
-:root[data-theme='dark'] {
-  --bg: #111714;
-  --surface: #19211d;
-  --surface-2: #232d28;
-  --text: #e7eee9;
-  --text-muted: #9daaa2;
-  --border: #2b3631;
-  --primary: #2e7d5b;
-  --primary-hover: #276b4e;
-  --primary-soft: #1d3329;
-  --primary-text: #7fd0a8;
-  --accent: #f0ae4b;
-  --accent-soft: #3a2d17;
-  --danger: #f2948a;
-  --danger-soft: #3a1e1b;
-  --on-danger: #2a0f0c;
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
-  --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.3);
-  --shadow-lift: 0 2px 4px rgba(0, 0, 0, 0.3), 0 16px 36px rgba(0, 0, 0, 0.4);
-  color-scheme: dark;
 }
 
 /* ---------- Basics ---------- */
@@ -96,7 +96,6 @@ body {
   font-size: 16px;
   line-height: 1.55;
   -webkit-font-smoothing: antialiased;
-  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 h1,
@@ -105,14 +104,16 @@ h3 {
   margin: 0;
   font-family: var(--font-head);
   font-weight: 600;
-  line-height: 1.2;
-  letter-spacing: -0.01em;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
 }
 h1 {
-  font-size: clamp(1.6rem, 1.2rem + 1.5vw, 2.1rem);
+  font-size: clamp(2.25rem, 1.7rem + 2.4vw, 3.5rem);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
 }
 h2 {
-  font-size: 1.25rem;
+  font-size: 1.35rem;
 }
 p {
   margin: 0;
@@ -143,21 +144,73 @@ textarea {
   color: var(--text-muted);
 }
 
-/* ---------- Buttons ---------- */
+/* ---------- Ambient background: a faint dot grid and two soft glows that breathe ---------- */
+.ambient {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  background-image: radial-gradient(var(--dot) 1px, transparent 1.5px);
+  background-size: 26px 26px;
+  pointer-events: none;
+}
+.ambient-glow {
+  position: absolute;
+  width: 110vmax;
+  height: 110vmax;
+  will-change: transform, opacity;
+}
+.ambient-glow-a {
+  top: -60vmax;
+  left: -35vmax;
+  background: radial-gradient(closest-side, var(--ambient-a), transparent);
+}
+.ambient-glow-b {
+  right: -50vmax;
+  bottom: -65vmax;
+  background: radial-gradient(closest-side, var(--ambient-b), transparent);
+}
+
+/* ---------- Buttons ----------
+   Hover and glow are ready-made layers that fade in. Only their opacity changes, which stays smooth at 60fps.
+   Press uses the "scale" property because GSAP already uses "transform" for the hover lift. */
 .btn {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  min-height: 44px;
-  padding: 0 1.1rem;
+  min-height: 46px;
+  padding: 0 1.4rem;
   border: 1px solid transparent;
-  border-radius: var(--radius-sm);
+  border-radius: 999px;
   font-size: 0.95rem;
   font-weight: 600;
   text-decoration: none;
   cursor: pointer;
-  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  transition: scale 0.15s ease;
+}
+.btn::before,
+.btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+.btn::before {
+  background: currentColor;
+}
+.btn:hover:not(:disabled)::before {
+  opacity: 0.08;
+}
+.btn:active:not(:disabled) {
+  scale: 0.97;
+}
+.btn:active:not(:disabled)::before {
+  opacity: 0.14;
 }
 .btn:disabled {
   opacity: 0.65;
@@ -168,44 +221,44 @@ textarea {
   color: var(--on-primary);
   box-shadow: var(--shadow-sm);
 }
-.btn-primary:hover:not(:disabled) {
-  background: var(--primary-hover);
-  box-shadow: var(--shadow);
+.btn-primary::after {
+  box-shadow: 0 0 14px var(--glow), 0 0 34px var(--primary-soft);
+}
+.btn-primary:hover:not(:disabled)::after,
+.btn-primary:focus-visible::after {
+  opacity: 1;
 }
 .btn-ghost {
   background: transparent;
   border-color: var(--border);
 }
-.btn-ghost:hover:not(:disabled) {
-  background: var(--surface-2);
-}
 .btn-danger {
   background: var(--danger);
   color: var(--on-danger);
-}
-.btn-danger:hover:not(:disabled) {
-  box-shadow: var(--shadow);
 }
 .btn-block {
   width: 100%;
 }
 
-/* Square icon button (used for the light/dark toggle) */
+/* Round icon button (light/dark toggle, delete, command palette) */
 .icon-btn {
   display: inline-grid;
   place-items: center;
   width: 40px;
   height: 40px;
   border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
+  border-radius: 50%;
   background: var(--surface);
   color: var(--text-muted);
   cursor: pointer;
-  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  transition: scale 0.15s ease;
 }
 .icon-btn:hover {
   background: var(--surface-2);
   color: var(--text);
+}
+.icon-btn:active {
+  scale: 0.94;
 }
 .icon-btn svg {
   width: 18px;
@@ -216,36 +269,117 @@ textarea {
   color: var(--danger);
 }
 
-/* Light mode shows the moon (switch to dark); dark mode shows the sun */
-.icon-sun {
+/* Dark mode shows the sun (switch to light); light mode shows the moon */
+.icon-moon {
   display: none;
 }
-:root[data-theme='dark'] .icon-sun {
+:root[data-theme='light'] .icon-moon {
   display: block;
 }
-:root[data-theme='dark'] .icon-moon {
+:root[data-theme='light'] .icon-sun {
   display: none;
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme='light']) .icon-sun {
-    display: block;
-  }
-  :root:not([data-theme='light']) .icon-moon {
-    display: none;
-  }
 }
 
 /* ---------- Cards ---------- */
 .card {
-  padding: 1.5rem;
+  position: relative;
+  padding: 1.75rem;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: var(--shadow), inset 0 1px 0 var(--edge);
 }
-.card.lift:hover {
+/* A deeper shadow that fades in under a hovered card */
+.card.lift::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  z-index: -1;
+  border-radius: inherit;
   box-shadow: var(--shadow-lift);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+.card.lift:hover::after {
+  opacity: 1;
+}
+
+/* Spotlight: one soft light that follows the mouse across a card (moved by animations.js) */
+.spot {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+.card:hover > .spot {
+  opacity: 1;
+}
+.spot span {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 420px;
+  height: 420px;
+  background: radial-gradient(closest-side, var(--spot), transparent);
+  will-change: transform;
+}
+
+/* ---------- Skeleton loaders: grey shapes that stand in for content while it loads ---------- */
+.skeleton {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  border-radius: 8px;
+  background: var(--surface-2);
+}
+.skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, var(--shine), transparent);
+  transform: translateX(-100%);
+  animation: shimmer 1.2s ease-in-out infinite;
+}
+@keyframes shimmer {
+  to {
+    transform: translateX(100%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .skeleton::after {
+    display: none;
+  }
+}
+.sk-line {
+  width: 100%;
+  height: 12px;
+}
+.sk-short {
+  width: 55%;
+}
+.sk-title {
+  width: 70%;
+  height: 18px;
+}
+.sk-chip {
+  width: 96px;
+  height: 22px;
+  border-radius: 999px;
+}
+.sk-number {
+  width: 88px;
+  height: 56px;
+  border-radius: 12px;
+}
+.sk-avatar {
+  flex: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
 }
 
 /* ---------- Brand ---------- */
@@ -257,6 +391,7 @@ textarea {
   font-family: var(--font-head);
   font-size: 1.2rem;
   font-weight: 600;
+  letter-spacing: -0.02em;
   text-decoration: none;
 }
 .brand-mark {
@@ -269,7 +404,7 @@ textarea {
 /* ---------- Forms ---------- */
 .field {
   display: grid;
-  gap: 0.4rem;
+  gap: 0.45rem;
 }
 .field label {
   font-size: 0.9rem;
@@ -283,23 +418,25 @@ textarea {
 .field select,
 .field textarea {
   width: 100%;
-  height: 46px;
-  padding: 0 0.9rem;
+  height: 48px;
+  padding: 0 1rem;
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
-  background: var(--bg);
-  transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+  background: var(--field);
 }
 .field textarea {
   height: auto;
-  min-height: 96px;
-  padding: 0.7rem 0.9rem;
+  min-height: 104px;
+  padding: 0.75rem 1rem;
   resize: vertical;
+}
+.field select option {
+  background: var(--surface-solid);
 }
 .field input::placeholder,
 .field textarea::placeholder {
   color: var(--text-muted);
-  opacity: 0.7;
+  opacity: 0.75;
 }
 .field input:focus,
 .field select:focus,
@@ -307,7 +444,6 @@ textarea {
   outline: none;
   border-color: var(--primary-text);
   box-shadow: 0 0 0 3px var(--primary-soft);
-  background: var(--surface);
 }
 
 .alert {
@@ -320,80 +456,431 @@ textarea {
   color: var(--danger);
 }
 
-/* ---------- Admin / Student toggle ---------- */
-.segmented {
-  position: relative;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  padding: 4px;
-  border-radius: 999px;
-  background: var(--surface-2);
-}
-/* The white "pill" that slides behind the active option */
-.segmented-pill {
-  position: absolute;
-  top: 4px;
-  bottom: 4px;
-  left: 4px;
-  width: calc(50% - 4px);
-  border-radius: 999px;
-  background: var(--surface);
-  box-shadow: var(--shadow-sm);
-}
-.segmented button {
-  position: relative;
-  z-index: 1;
-  height: 40px;
-  border: 0;
-  border-radius: 999px;
-  background: transparent;
-  color: var(--text-muted);
-  font-size: 0.92rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: color 0.3s ease;
-}
-.segmented button[aria-pressed='true'] {
-  color: var(--text);
-}
-
-/* ---------- Login page ---------- */
+/* ---------- Login page ----------
+   Always dark (index.html sets data-theme="dark"). The stage is the moving background, the shell holds the
+   heading and the role cards or form. This is the finished look: login-intro.js only animates things into these
+   positions, so the page still works with no animation at all. */
 .auth-page {
   display: grid;
   place-items: center;
   min-height: 100vh;
   min-height: 100dvh;
-  padding: 72px 16px 32px;
-  background-image: radial-gradient(60rem 28rem at 50% -8%, var(--primary-soft), transparent 70%);
-  background-repeat: no-repeat;
+  padding: 32px 16px;
+  background: #050806;
 }
-.auth-page > .icon-btn {
-  position: fixed;
-  top: 16px;
-  right: 16px;
+.auth-shell {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  justify-items: center;
+  gap: 1.75rem;
+  width: 100%;
+  max-width: 460px;
 }
+
+/* The role cards and the form share one spot, so the heading stays still when one turns into the other */
+.auth-panel {
+  display: grid;
+  width: 100%;
+}
+.auth-panel > * {
+  grid-area: 1 / 1;
+  min-width: 0;
+}
+.auth-panel[data-step='role'] .auth-card,
+.auth-panel[data-step='form'] .role-picker {
+  visibility: hidden;
+}
+
+/* See-through glass: the blur softens whatever is moving behind the card */
+.auth-page .auth-card,
+.role-card {
+  border: 1px solid rgba(127, 208, 168, 0.22);
+  background: rgba(14, 20, 17, 0.68);
+  box-shadow: 0 0 0 1px rgba(127, 208, 168, 0.05), 0 0 44px rgba(63, 174, 125, 0.16), 0 24px 60px rgba(0, 0, 0, 0.5);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  backdrop-filter: blur(18px) saturate(140%);
+}
+
+/* Role cards */
+.role-picker {
+  display: grid;
+  gap: 1rem;
+  align-self: start;
+}
+.role-title {
+  font-size: 1.15rem;
+  font-weight: 500;
+  text-align: center;
+}
+.role-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+.role-card {
+  position: relative;
+  display: grid;
+  gap: 0.3rem;
+  align-content: start;
+  justify-items: start;
+  padding: 1.4rem;
+  border-radius: var(--radius);
+  text-align: left;
+  cursor: pointer;
+  transition: scale 0.15s ease;
+}
+.role-card:active {
+  scale: 0.98;
+}
+.role-card::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  box-shadow: 0 0 0 1px rgba(127, 208, 168, 0.5), 0 0 34px rgba(63, 174, 125, 0.35);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+.role-card:hover::after,
+.role-card:focus-visible::after {
+  opacity: 1;
+}
+/* The role used last time */
+.role-card[aria-pressed='true'] {
+  border-color: rgba(127, 208, 168, 0.45);
+}
+.role-icon {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin-bottom: 0.5rem;
+  border-radius: 50%;
+  background: var(--primary-soft);
+  color: var(--primary-text);
+}
+.role-icon svg {
+  width: 22px;
+  height: 22px;
+}
+.role-card strong {
+  font-family: var(--font-head);
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+.role-note {
+  color: var(--text-muted);
+  font-size: 0.88rem;
+  line-height: 1.4;
+}
+
+/* The form */
 .auth-card {
+  z-index: 1;
   display: grid;
   gap: 1.25rem;
+  align-self: start;
   width: 100%;
-  max-width: 420px;
   padding: 2rem;
+}
+.auth-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-height: 36px;
+  margin-left: -0.7rem;
+  padding: 0 0.7rem;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: scale 0.15s ease;
+}
+.back-link:hover {
+  background: var(--surface-2);
+  color: var(--text);
+}
+.back-link:active {
+  scale: 0.96;
+}
+.back-link svg {
+  width: 16px;
+  height: 16px;
 }
 .auth-head {
   display: grid;
   gap: 0.35rem;
 }
-.auth-head .brand {
-  margin-bottom: 0.75rem;
+.auth-head h2 {
+  font-size: 1.7rem;
 }
 .auth-card form {
   display: grid;
   gap: 1rem;
 }
-.auth-hint {
-  color: var(--text-muted);
-  font-size: 0.85rem;
+.auth-page .field input {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* Heading above the card */
+.hero {
+  display: grid;
+  justify-items: center;
+  gap: 0.2rem;
   text-align: center;
+}
+.hero-logo {
+  width: 56px;
+  height: 56px;
+}
+.hero-word {
+  position: relative;
+  color: #f1f7f3;
+  font-size: clamp(2.75rem, 2.1rem + 3vw, 3.75rem);
+  font-weight: 700;
+  font-kerning: none; /* keeps the single letters and the sweep's copy of the word lined up */
+  letter-spacing: -0.03em;
+  text-shadow: 0 0 28px rgba(63, 174, 125, 0.5);
+  white-space: nowrap;
+}
+.word-letters span {
+  display: inline-block;
+}
+/* The light sweep: a soft-edged window slides across while the bright word inside slides the other way,
+   so the word stands still and only the light moves */
+.word-sweep {
+  position: absolute;
+  top: -0.7em; /* taller than the word, so its glow fades out instead of being cut off */
+  bottom: -0.7em;
+  left: 0;
+  width: 40%;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 50%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 50%, transparent);
+}
+.word-sweep-text {
+  position: absolute;
+  top: 0.7em;
+  left: 0;
+  color: #ffffff;
+  text-shadow: 0 0 14px #ffffff, 0 0 24px #f0ae4b;
+}
+.hero-tagline {
+  color: var(--text-muted);
+  font-size: 1rem;
+}
+.hero-tagline span {
+  display: inline-block;
+}
+.hero-tagline span:last-child {
+  color: var(--primary-text);
+  font-weight: 500;
+}
+
+/* Skip button */
+.intro-skip {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 3;
+  min-height: 40px;
+  padding: 0 1.1rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.07);
+  color: var(--text);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* ---------- Login background ---------- */
+.stage {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.stage-particles {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.stage-dot {
+  position: absolute;
+  top: calc(50% - 7px);
+  left: calc(50% - 7px);
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #7fd0a8;
+  box-shadow: 0 0 14px 3px rgba(63, 174, 125, 0.9), 0 0 44px 12px rgba(46, 125, 91, 0.6);
+  visibility: hidden;
+}
+.stage-light {
+  position: absolute;
+  top: calc(50% - 60vmax);
+  left: calc(50% - 60vmax);
+  width: 120vmax;
+  height: 120vmax;
+  background: radial-gradient(closest-side, rgba(46, 125, 91, 0.34), rgba(46, 125, 91, 0.1) 45%, transparent 72%);
+}
+
+/* The tilted grid of blurred UI cards.
+   The blur comes from soft text-shadow and box-shadow, not filter: blur(). A shadow is painted once, then the
+   finished picture just moves. A filter would be worked out again on every frame, which made this page very slow. */
+.stage-grid {
+  position: absolute;
+  inset: 0;
+  perspective: 1000px;
+}
+.grid-plane {
+  position: absolute;
+  top: -24%;
+  left: calc(50% - 680px);
+  display: flex;
+  gap: 20px;
+  width: 1360px;
+  opacity: 0.6;
+  transform: rotateX(56deg) rotateZ(-10deg);
+  transform-origin: 50% 100%;
+}
+.grid-col {
+  display: grid;
+  flex: 1;
+  gap: 20px;
+  align-content: start;
+  will-change: transform;
+}
+.grid-col:nth-child(even) {
+  margin-top: 70px;
+}
+.mock {
+  display: grid;
+  gap: 0.6rem;
+  align-content: start;
+  min-height: 170px;
+  padding: 1.3rem;
+  border-radius: var(--radius);
+  background: rgba(25, 40, 33, 0.85);
+  box-shadow: 0 0 7px 2px rgba(25, 40, 33, 0.85), 0 0 5px 3px rgba(127, 208, 168, 0.12);
+  color: transparent; /* only the soft shadow of the text shows */
+  text-shadow: 0 0 4px #cfe3d7;
+}
+.mock strong {
+  font-family: var(--font-head);
+  font-size: 1.25rem;
+}
+.mock-label {
+  font-size: 0.9rem;
+  text-shadow: 0 0 4px #9daaa2;
+}
+.mock-number {
+  font-family: var(--font-head);
+  font-size: 2.6rem;
+  font-weight: 700;
+  line-height: 1;
+  text-shadow: 0 0 5px #7fd0a8;
+}
+.mock-live,
+.mock-due {
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-shadow: 0 0 4px #f0ae4b;
+}
+.mock-btn {
+  width: fit-content;
+  padding: 0.35rem 0.9rem;
+  border-radius: var(--radius-sm);
+  background: var(--primary);
+  box-shadow: 0 0 5px 1px var(--primary);
+  font-weight: 600;
+  text-shadow: 0 0 4px #ffffff;
+}
+.mock-line,
+.mock-bar {
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(127, 208, 168, 0.22);
+  box-shadow: 0 0 4px 1px rgba(127, 208, 168, 0.22);
+}
+.mock-line.short {
+  width: 60%;
+}
+.mock-bar {
+  background: linear-gradient(90deg, #3fae7d 68%, rgba(127, 208, 168, 0.18) 68%);
+}
+.mock-avatars {
+  display: flex;
+  gap: 0.4rem;
+}
+.mock-avatars i {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #2e7d5b;
+  box-shadow: 0 0 5px 1px #2e7d5b;
+}
+
+/* The horizon: a huge dark circle whose top edge shows at the bottom of the screen */
+.stage-arc {
+  --arc-size: max(1700px, 190vw);
+  position: absolute;
+  top: 68%;
+  left: calc(50% - var(--arc-size) / 2);
+  width: var(--arc-size);
+  height: var(--arc-size);
+}
+.arc-body {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: #040705;
+  box-shadow: 0 0 0 1.5px #7fd0a8;
+}
+/* A wide soft ring of green. Plain gradients are painted once, so breathing only changes opacity and scale. */
+.arc-glow {
+  position: absolute;
+  inset: -6%;
+  background: radial-gradient(closest-side, transparent 84%, rgba(63, 174, 125, 0.75) 89.3%, rgba(63, 174, 125, 0.22) 91.5%, transparent 99%);
+  will-change: transform, opacity;
+}
+/* The warm amber sunrise at the top of the arc */
+.arc-amber {
+  position: absolute;
+  top: -110px;
+  left: calc(50% - 420px);
+  width: 840px;
+  height: 220px;
+  background: radial-gradient(closest-side, rgba(240, 174, 75, 0.9), rgba(240, 174, 75, 0.28) 50%, transparent);
+  will-change: transform, opacity;
+}
+/* The ends of the arc melt into the dark */
+.stage-arc::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(90deg, #050806, transparent 24%, transparent 76%, #050806);
+}
+
+/* Hidden until the intro takes over (see the small script in index.html) */
+.intro-pending .stage > *,
+.intro-pending .auth-shell {
+  visibility: hidden;
 }
 
 /* ---------- Dashboard layout ---------- */
@@ -405,10 +892,11 @@ textarea {
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  padding: 12px 24px;
+  padding: 12px 32px;
   border-bottom: 1px solid var(--border);
-  background: color-mix(in srgb, var(--bg) 85%, transparent);
-  backdrop-filter: blur(10px);
+  background: color-mix(in srgb, var(--bg) 78%, transparent);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
 }
 .topbar-left,
 .topbar-actions {
@@ -416,21 +904,24 @@ textarea {
   align-items: center;
   gap: 0.6rem;
 }
+.topbar .btn {
+  min-height: 40px;
+  padding: 0 1.1rem;
+}
 
-/* Admin page links in the top bar */
+/* Page links in the top bar */
 .nav {
   display: flex;
   gap: 0.25rem;
 }
 .nav a {
-  padding: 0.45rem 0.8rem;
+  padding: 0.45rem 0.9rem;
   border-radius: 999px;
   color: var(--text-muted);
   font-size: 0.92rem;
   font-weight: 500;
   text-decoration: none;
   white-space: nowrap;
-  transition: background-color 0.3s ease, color 0.3s ease;
 }
 .nav a:hover {
   background: var(--surface-2);
@@ -458,6 +949,7 @@ textarea {
 }
 .avatar {
   display: grid;
+  flex: none;
   place-items: center;
   width: 32px;
   height: 32px;
@@ -468,16 +960,58 @@ textarea {
   font-weight: 600;
 }
 
+/* The button that opens the command palette */
+.palette-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  height: 40px;
+  padding: 0 0.7rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: scale 0.15s ease;
+}
+.palette-btn:hover {
+  background: var(--surface-2);
+  color: var(--text);
+}
+.palette-btn:active {
+  scale: 0.96;
+}
+.palette-btn svg {
+  width: 18px;
+  height: 18px;
+}
+kbd {
+  padding: 0.05rem 0.4rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface-2);
+  color: var(--text-muted);
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
 .page {
   display: grid;
-  gap: 24px;
-  max-width: 1120px;
+  gap: 40px;
+  max-width: 1180px;
   margin: 0 auto;
-  padding: 32px 24px 64px;
+  padding: 56px 32px 88px;
 }
 .welcome {
   display: grid;
-  gap: 0.4rem;
+  gap: 0.65rem;
+}
+.welcome > .muted {
+  max-width: 58ch;
+  font-size: 1.05rem;
 }
 .eyebrow {
   color: var(--primary-text);
@@ -491,7 +1025,7 @@ textarea {
 .bento {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
+  gap: 20px;
 }
 .span-1 {
   grid-column: span 1;
@@ -507,8 +1041,8 @@ textarea {
 .empty-state {
   display: grid;
   justify-items: center;
-  gap: 0.5rem;
-  padding: 3rem 1.5rem;
+  gap: 0.6rem;
+  padding: 3.5rem 1.5rem;
   text-align: center;
 }
 .empty-icon {
@@ -517,16 +1051,20 @@ textarea {
   width: 64px;
   height: 64px;
   margin-bottom: 0.5rem;
-  border-radius: var(--radius);
+  border-radius: 50%;
   background: var(--primary-soft);
-  font-size: 2rem;
+  color: var(--primary-text);
+}
+.empty-icon svg {
+  width: 28px;
+  height: 28px;
 }
 .empty-state p {
   max-width: 42ch;
   color: var(--text-muted);
 }
 
-/* ---------- Dashboard link cards ---------- */
+/* ---------- Dashboard cards ---------- */
 .link-card {
   display: grid;
   gap: 0.4rem;
@@ -539,30 +1077,43 @@ textarea {
   place-items: center;
   width: 44px;
   height: 44px;
-  margin-bottom: 0.4rem;
-  border-radius: 14px;
+  margin-bottom: 0.6rem;
+  border-radius: 50%;
   background: var(--primary-soft);
-  font-size: 1.4rem;
+  color: var(--primary-text);
+}
+.link-icon svg {
+  width: 22px;
+  height: 22px;
 }
 .link-go {
-  margin-top: 0.3rem;
+  margin-top: 0.5rem;
   color: var(--primary-text);
   font-size: 0.92rem;
   font-weight: 600;
+}
+.stat-number {
+  display: block;
+  min-height: 3.5rem;
+  font-family: var(--font-head);
+  font-size: clamp(3rem, 2.4rem + 2vw, 3.5rem);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.03em;
 }
 
 /* ---------- Form + list pages (batches, students) ---------- */
 .split {
   display: grid;
   grid-template-columns: minmax(280px, 380px) 1fr;
-  gap: 24px;
+  gap: 32px;
   align-items: start;
 }
 .form-card {
   position: sticky;
-  top: 88px;
+  top: 96px;
   display: grid;
-  gap: 1rem;
+  gap: 1.1rem;
 }
 .form-card form {
   display: grid;
@@ -574,7 +1125,7 @@ textarea {
 }
 .stack {
   display: grid;
-  gap: 16px;
+  gap: 20px;
   align-content: start;
   min-width: 0;
 }
@@ -590,7 +1141,7 @@ textarea {
   align-items: center;
   gap: 0.3rem;
   width: fit-content;
-  padding: 0.15rem 0.6rem;
+  padding: 0.15rem 0.65rem;
   border-radius: 999px;
   background: var(--surface-2);
   color: var(--text-muted);
@@ -607,16 +1158,16 @@ textarea {
 .batch-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 16px;
+  gap: 20px;
 }
 .batch-grid > .empty-state {
   grid-column: 1 / -1;
 }
 .batch-card {
   display: grid;
-  gap: 0.6rem;
+  gap: 0.7rem;
   align-content: start;
-  padding: 1.25rem;
+  padding: 1.4rem;
 }
 .batch-card-top {
   display: flex;
@@ -625,14 +1176,20 @@ textarea {
   gap: 0.5rem;
 }
 .batch-card h3 {
-  font-size: 1.1rem;
+  font-size: 1.15rem;
   overflow-wrap: anywhere;
 }
 .batch-card .icon-btn {
+  position: relative; /* stays clickable above the spotlight layer */
+  z-index: 1;
   width: 34px;
   height: 34px;
   flex: none;
   border-color: transparent;
+  background: transparent;
+}
+.batch-card .icon-btn:hover {
+  background: var(--danger-soft);
 }
 .batch-desc {
   display: -webkit-box;
@@ -663,15 +1220,19 @@ textarea {
   display: flex;
   align-items: center;
   gap: 0.9rem;
-  padding: 0.8rem 0.9rem;
+  padding: 0.85rem 1rem;
   border-radius: var(--radius-sm);
-  transition: background-color 0.3s ease;
 }
 .list-row:hover {
   background: var(--surface-2);
 }
+.list-row-loading:hover {
+  background: none;
+}
 .list-main {
+  display: grid;
   flex: 1;
+  gap: 0.15rem;
   min-width: 0;
 }
 .list-main strong,
@@ -685,6 +1246,9 @@ textarea {
   color: var(--text-muted);
   font-size: 0.88rem;
 }
+.list-row-loading .list-main {
+  gap: 0.5rem;
+}
 .list-meta {
   display: flex;
   flex-wrap: wrap;
@@ -696,7 +1260,7 @@ textarea {
 .cred-card {
   display: grid;
   gap: 1rem;
-  border-color: var(--primary-soft);
+  border-color: var(--glow);
 }
 .cred-head {
   display: flex;
@@ -713,11 +1277,6 @@ textarea {
   height: 48px;
   color: var(--primary-text);
 }
-.success-check circle,
-.success-check path {
-  stroke-dasharray: 1;
-  stroke-dashoffset: 0;
-}
 .cred-rows {
   display: grid;
   gap: 0.5rem;
@@ -728,10 +1287,10 @@ textarea {
   align-items: center;
   justify-content: space-between;
   gap: 0.25rem 1rem;
-  padding: 0.7rem 0.9rem;
+  padding: 0.75rem 1rem;
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
-  background: var(--bg);
+  background: var(--field);
 }
 .cred-row span {
   color: var(--text-muted);
@@ -747,13 +1306,12 @@ textarea {
   font-size: 0.85rem;
 }
 .cred-actions {
+  position: relative;
+  z-index: 1; /* above the spotlight layer */
   display: flex;
   flex-wrap: wrap;
   gap: 0.6rem;
   margin-top: 1rem; /* room for the "Copied!" label, so it doesn't cover the note above */
-}
-.cred-actions .btn {
-  position: relative;
 }
 .cred-done {
   margin-left: auto;
@@ -790,15 +1348,18 @@ textarea {
   transform: translateX(-50%);
 }
 .toast {
-  padding: 0.75rem 1rem;
-  border-radius: var(--radius-sm);
-  background: var(--text);
-  color: var(--bg);
+  padding: 0.75rem 1.2rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface-solid);
+  color: var(--text);
   box-shadow: var(--shadow-lift);
   font-size: 0.92rem;
   font-weight: 500;
 }
 .toast-error {
+  border-color: transparent;
+  border-radius: var(--radius-sm);
   background: var(--danger);
   color: var(--on-danger);
 }
@@ -806,15 +1367,15 @@ textarea {
 /* ---------- Confirm dialog ---------- */
 .dialog {
   width: min(420px, calc(100% - 32px));
-  padding: 1.5rem;
+  padding: 1.75rem;
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  background: var(--surface);
+  background: var(--surface-solid);
   color: var(--text);
   box-shadow: var(--shadow-lift);
 }
 .dialog::backdrop {
-  background: rgba(10, 15, 12, 0.45);
+  background: rgba(3, 6, 4, 0.6);
 }
 .dialog form {
   display: grid;
@@ -827,28 +1388,125 @@ textarea {
   margin-top: 0.5rem;
 }
 
+/* ---------- Command palette (Ctrl+K) ---------- */
+.palette {
+  width: min(560px, calc(100% - 32px));
+  margin-top: 14vh;
+  padding: 0;
+  overflow: hidden;
+}
+.palette-search {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.5rem 1.1rem;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-muted);
+}
+.palette-search svg {
+  flex: none;
+  width: 18px;
+  height: 18px;
+}
+.palette-search input {
+  flex: 1;
+  min-width: 0;
+  height: 44px;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: var(--text);
+}
+.palette-search input::placeholder {
+  color: var(--text-muted);
+}
+.palette-list {
+  display: grid;
+  gap: 2px;
+  max-height: 320px;
+  margin: 0;
+  padding: 0.5rem;
+  overflow-y: auto;
+  list-style: none;
+}
+.palette-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.65rem 0.8rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+.palette-item[aria-selected='true'] {
+  background: var(--primary-soft);
+  color: var(--primary-text);
+}
+.palette-kind {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+}
+.palette-empty {
+  padding: 1.5rem 0.8rem;
+  color: var(--text-muted);
+  font-size: 0.92rem;
+  text-align: center;
+}
+
 /* ---------- Small screens ---------- */
-@media (max-width: 900px) {
+@media (max-width: 960px) {
   .split {
     grid-template-columns: 1fr;
   }
   .form-card {
     position: static;
   }
-}
-@media (max-width: 720px) {
   .topbar {
     flex-wrap: wrap;
     row-gap: 8px;
-    padding: 10px 16px;
+    padding: 10px 24px;
   }
   .nav {
     order: 3;
     width: 100%;
     overflow-x: auto;
   }
+  .palette-btn kbd {
+    display: none;
+  }
+}
+@media (max-width: 720px) {
+  /* Phones: half the grid and a lighter blur, so the login background stays smooth */
+  .grid-col:nth-child(1),
+  .grid-col:nth-child(4) {
+    display: none;
+  }
+  .grid-plane {
+    left: calc(50% - 340px);
+    width: 680px;
+  }
+  .stage-arc {
+    --arc-size: 1100px;
+    top: 76%;
+  }
+  .arc-amber {
+    top: -70px;
+    left: calc(50% - 240px);
+    width: 480px;
+    height: 140px;
+  }
+  .auth-page .auth-card,
+  .role-card {
+    -webkit-backdrop-filter: blur(10px) saturate(130%);
+    backdrop-filter: blur(10px) saturate(130%);
+  }
+  .topbar {
+    padding: 10px 16px;
+  }
   .page {
-    padding: 24px 16px 48px;
+    gap: 28px;
+    padding: 32px 16px 56px;
   }
   .bento {
     grid-template-columns: 1fr;
@@ -870,11 +1528,33 @@ textarea {
     padding-left: calc(32px + 0.9rem);
   }
 }
+/* Short screens: a smaller heading, so the whole login fits without scrolling */
+@media (max-height: 720px) {
+  .auth-shell {
+    gap: 1rem;
+  }
+  .hero-logo {
+    width: 40px;
+    height: 40px;
+  }
+  .hero-word {
+    font-size: 2.2rem;
+  }
+  .auth-card {
+    gap: 1rem;
+    padding: 1.5rem;
+  }
+}
 @media (max-width: 480px) {
   .auth-card {
     padding: 1.5rem;
   }
-  .topbar .brand-text {
+  .role-card {
+    padding: 1.1rem;
+  }
+  /* Phones: logo and actions on one row, page links on the next. The page itself greets the user by name. */
+  .topbar .brand-text,
+  .topbar .user-chip {
     display: none;
   }
 }

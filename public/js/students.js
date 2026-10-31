@@ -39,9 +39,12 @@ function studentRowHtml(student) {
     </li>`;
 }
 
+const BATCH_ICON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 3 8l9 5 9-5z"/><path d="m3 13 9 5 9-5"/></svg>`;
+const STUDENT_ICON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m2 9 10-5 10 5-10 5z"/><path d="M6 11v5c2 2 10 2 12 0v-5"/></svg>`;
+
 const EMPTY_HTML = `
   <li class="empty-state">
-    <div class="empty-icon" aria-hidden="true">🐣</div>
+    <div class="empty-icon" aria-hidden="true">${STUDENT_ICON}</div>
     <h2>No students yet</h2>
     <p>Enroll your first student with the form. Their login details will appear right here.</p>
   </li>`;
@@ -49,6 +52,7 @@ const EMPTY_HTML = `
 function render() {
   countLabel.textContent = students.length ? plural(students.length, 'student') : '';
   list.innerHTML = students.length ? students.map(studentRowHtml).join('') : EMPTY_HTML;
+  list.removeAttribute('aria-busy');
 }
 
 // ---------- Batch dropdown ----------
@@ -58,7 +62,7 @@ function fillBatchSelect(batches) {
     // No batches yet: replace the form with a friendly pointer to the Batches page
     formCard.innerHTML = `
       <div class="empty-state">
-        <div class="empty-icon" aria-hidden="true">🌱</div>
+        <div class="empty-icon" aria-hidden="true">${BATCH_ICON}</div>
         <h2>Create a batch first</h2>
         <p>Every student belongs to a batch. Make one, then come back to enroll students.</p>
         <a class="btn btn-primary" href="/admin/batches">Go to Batches</a>
@@ -80,13 +84,12 @@ function showCredentials(student, credentials) {
   credCard.hidden = false;
 
   if (!motionOK) return;
-  // Success animation: the card pops in, the tick draws itself, then the details slide in
+  // Success animation: the card pops in, the tick pops up, then the details slide in
   gsap
     .timeline()
-    .fromTo(credCard, { opacity: 0, y: 16, scale: 0.97 }, { opacity: 1, y: 0, scale: 1, duration: 0.35, ease: 'back.out(1.5)' })
-    .fromTo('#cred-card .success-check circle', { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 0.35, ease: 'power2.out' }, '-=0.15')
-    .fromTo('#cred-card .success-check path', { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 0.25, ease: 'power2.out' })
-    .from('#cred-card .cred-row, #cred-card .cred-note, #cred-card .cred-actions', { opacity: 0, y: 8, duration: 0.25, stagger: 0.06, clearProps: 'opacity,transform' }, '-=0.2');
+    .fromTo(credCard, { opacity: 0, y: 16, scale: 0.97 }, { opacity: 1, y: 0, scale: 1, duration: 0.3, ease: 'back.out(1.5)' })
+    .fromTo('#cred-card .success-check', { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.25, ease: 'back.out(2)' }, '-=0.15')
+    .from('#cred-card .cred-row, #cred-card .cred-note, #cred-card .cred-actions', { opacity: 0, y: 8, duration: 0.2, stagger: 0.04, clearProps: 'opacity,transform' }, '-=0.2');
 }
 
 // "Done" hides the card and wipes the password from the page for good
@@ -198,5 +201,6 @@ Promise.all([loadPageData('/api/admin/batches'), loadPageData('/api/admin/studen
     enterAnimation('#student-list > *');
   })
   .catch((error) => {
+    list.removeAttribute('aria-busy');
     list.innerHTML = `<li class="alert alert-error">${escapeHtml(error.message)}</li>`;
   });

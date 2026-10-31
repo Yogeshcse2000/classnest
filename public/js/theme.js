@@ -10,15 +10,12 @@
       document.documentElement.dataset.theme = saved;
     }
   } catch (e) {
-    // localStorage can be blocked (e.g. private mode). Then we just follow the computer's setting.
+    // localStorage can be blocked (e.g. private mode). Then the page just stays dark.
   }
 
-  // The theme in use right now: the one picked, or else the computer's setting
+  // The theme in use right now: the one picked, or else dark
   function currentTheme() {
-    return (
-      document.documentElement.dataset.theme ||
-      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
-    );
+    return document.documentElement.dataset.theme || 'dark';
   }
 
   document.addEventListener('DOMContentLoaded', function () {

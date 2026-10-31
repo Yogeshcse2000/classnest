@@ -1,10 +1,11 @@
-// Login page: the Admin/Student toggle, sending the form, and showing errors.
+// Login page: choosing Admin or Student, sending the form, and showing errors.
 
 const ROLE_KEY = 'classnest-login-role';
 
 // What the first field looks like for each role
 const roleSettings = {
   admin: {
+    name: 'Admin',
     label: 'Email',
     type: 'email',
     autocomplete: 'email',
@@ -12,6 +13,7 @@ const roleSettings = {
     hint: 'Admins sign in with their email address.',
   },
   student: {
+    name: 'Student',
     label: 'Username',
     type: 'text',
     autocomplete: 'username',
@@ -22,8 +24,8 @@ const roleSettings = {
 
 const card = document.getElementById('login-card');
 const form = document.getElementById('login-form');
-const pill = document.getElementById('role-pill');
 const roleButtons = document.querySelectorAll('[data-role]');
+const roleChip = document.getElementById('login-role');
 const identifierLabel = document.getElementById('identifier-label');
 const identifierInput = document.getElementById('identifier');
 const passwordInput = document.getElementById('password');
@@ -38,26 +40,15 @@ try {
   if (roleSettings[saved]) role = saved;
 } catch (e) {}
 
-// ---------- Toggle ----------
+// ---------- Choosing a role ----------
 
-function updateToggleButtons() {
+function updateRoleButtons() {
   roleButtons.forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.role === role)));
-}
-
-// Slide the pill behind the active option: Admin is position 0, Student is position 1
-function movePill(animate) {
-  const position = role === 'admin' ? 0 : 1;
-  if (animate && motionOK) {
-    gsap.to(pill, { xPercent: position * 100, duration: 0.3, ease: 'power3.out' });
-  } else if (window.gsap) {
-    gsap.set(pill, { xPercent: position * 100 });
-  } else {
-    pill.style.transform = `translateX(${position * 100}%)`;
-  }
 }
 
 function applyRoleSettings() {
   const settings = roleSettings[role];
+  roleChip.textContent = settings.name;
   identifierLabel.textContent = settings.label;
   identifierInput.type = settings.type;
   identifierInput.autocomplete = settings.autocomplete;
@@ -75,21 +66,8 @@ function setRole(newRole) {
   hideError();
   identifierInput.value = '';
   passwordInput.value = ''; // a password the browser filled in for the other role must not stay behind
-  updateToggleButtons();
-  movePill(true);
-
-  // Fade the email/username field out, swap its text, and fade it back in (about 300ms)
-  const changing = [identifierLabel, identifierInput, hint];
-  if (motionOK) {
-    gsap.killTweensOf(changing);
-    gsap
-      .timeline()
-      .to(changing, { opacity: 0, y: -4, duration: 0.12, ease: 'power1.in' })
-      .add(applyRoleSettings)
-      .to(changing, { opacity: 1, y: 0, duration: 0.18, ease: 'power2.out' });
-  } else {
-    applyRoleSettings();
-  }
+  updateRoleButtons();
+  applyRoleSettings();
 }
 
 roleButtons.forEach((button) => button.addEventListener('click', () => setRole(button.dataset.role)));
@@ -162,18 +140,5 @@ form.addEventListener('submit', async (event) => {
 
 // ---------- Start ----------
 
-updateToggleButtons();
+updateRoleButtons();
 applyRoleSettings();
-movePill(false);
-
-// Entry animation: the card rises in, then its parts follow one by one
-if (motionOK) {
-  gsap
-    .timeline()
-    .from(card, { opacity: 0, y: 24, scale: 0.98, duration: 0.45, ease: 'power3.out', clearProps: 'opacity,transform' })
-    .from(
-      card.querySelectorAll('.auth-head, .segmented, .field, #login-button, .auth-hint'),
-      { opacity: 0, y: 10, duration: 0.3, stagger: 0.04, ease: 'power2.out', clearProps: 'opacity,transform' },
-      '-=0.25'
-    );
-}

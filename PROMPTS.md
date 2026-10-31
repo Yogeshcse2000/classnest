@@ -112,3 +112,55 @@ Show a small "Copied!" animation after clicking.
 
 After fixing, tell me how to test both bugs. Add this prompt to PROMPTS.md.
 ```
+
+## Prompt 9 - Cinematic login intro (2026-10-30)
+
+```
+Make the login page a fully cinematic, next-level intro experience, like a modern product launch video. Use GSAP timelines (and canvas for particles). ClassNest style from CLAUDE.md: deep green with amber glow, on a dark background.
+
+Scene 1 (0-0.8s): black screen, a small green dot in the center pulses like a heartbeat, light slowly spreads out.
+Scene 2 (0.8-2s): the dot bursts into glowing particles that fly and form the ClassNest nest logo, with a subtle camera zoom-in feel.
+Scene 3 (2-3.2s): a big glowing green-to-amber horizon arc rises from the bottom. Behind it, a tilted 3D grid of blurred ClassNest UI cards (made in HTML/CSS) drifts in. The word "ClassNest" appears letter by letter with a light sweep shining across it.
+Scene 4 (3.2-4s): the heading moves up and a glass login card (blur, soft border glow) reveals with a smooth scale and fade. Tagline: "Your batch. Your classes. One nest."
+
+After the intro: background stays alive, with slow floating particles, the arc gently breathing, and the card tilting slightly with the mouse. Buttons glow on hover, and the Admin/Student toggle slides smoothly.
+
+Rules:
+- A visible "Skip" button, and click anywhere to skip.
+- Full intro only on the first visit in a session, after that a quick 0.5s version.
+- Must stay smooth at 60fps: use transform and opacity only, limit particles, pause the animation when the tab is hidden.
+- Respect prefers-reduced-motion. Make it look good on mobile too.
+- No external images or paid assets, everything in code.
+- Don't change any login logic.
+Add this prompt to PROMPTS.md.
+```
+
+## Prompt 10 - ClassNest UI skill (2026-10-31)
+
+```
+Create a Claude Code skill at .claude/skills/classnest-ui/SKILL.md.
+
+Name: classnest-ui
+Description: Design system for ClassNest. Use it whenever creating or changing any page, component or style.
+
+Put these rules in the skill:
+- Identity: dark, rich, ambient theme. Near-black green background, deep green primary, warm amber accent only for "Live now" and deadlines, soft breathing glows, faint dot grid, glass cards. Light mode stays available.
+- Apple-level discipline: Outfit for headings, Inter for body, big headings with slight negative letter spacing, generous spacing, consistent 18px card radius, pill-shaped buttons with press and focus states.
+- Login page: cinematic intro, then the Admin and Student role cards, and the chosen card morphs into the login form.
+- Inner pages: calm, only short micro-interactions (150-300ms): spotlight hover, toasts, skeleton loaders, empty states, Ctrl+K command palette.
+- Rules: no external images or paid assets, everything in code. 60fps, only transform and opacity. Respect prefers-reduced-motion. Works on mobile (375px to 1920px). Never break app logic, APIs or the database.
+
+Then mention this skill in CLAUDE.md. Add this prompt to PROMPTS.md.
+```
+
+## Prompt 11 - Redesign all pages with the skill (2026-10-31)
+
+```
+/classnest-ui Read CLAUDE.md and PLAN.md first.
+
+Redesign all existing pages (login, admin dashboard, batches, students, student dashboard) using this skill's rules. Don't change the backend, the database, the API routes or the login logic.
+
+After that, test admin login, student login, wrong password, creating a batch and enrolling a student, on desktop and mobile size. Fix any errors you find, then give me a short report of what you changed and tested.
+
+Add this prompt to PROMPTS.md.
+```

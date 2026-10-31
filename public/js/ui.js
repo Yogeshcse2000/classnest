@@ -71,6 +71,6 @@ function confirmDialog({ title, message, confirmText = 'Delete' }) {
 
     dialog.showModal();
     addHoverLift(dialog);
-    if (motionOK) gsap.from(dialog, { opacity: 0, scale: 0.96, duration: 0.25, ease: 'power2.out' });
+    popIn(dialog);
   });
 }

@@ -16,6 +16,7 @@
 - Everything must be **100% free**: no paid services, APIs, libraries or hosting.
 
 ## Design
+- Use the **classnest-ui** skill ([SKILL.md](.claude/skills/classnest-ui/SKILL.md)) whenever creating or changing any page, component or style. Where it differs from this file, the skill wins.
 - Style: clean, modern and friendly. Not flashy.
 - Background: off-white.
 - Primary colour: deep green.

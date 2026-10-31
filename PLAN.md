@@ -9,7 +9,7 @@ Project rules (stack, design, animations) are in [CLAUDE.md](CLAUDE.md).
 | Question | Decision |
 |---|---|
 | Admins vs students | **Two separate tables:** `admins` and `students`. |
-| Logging in | One login page with an Admin/Student toggle. **Admins use email, students use username.** |
+| Logging in | One login page with Admin and Student role cards. The chosen card becomes the login form. **Admins use email, students use username.** |
 | Sessions | Stored in the `sessions` table, so logins survive restarts. Cookie lasts 7 days. |
 | Wrong role / not logged in | Pages redirect (to login, or to your own dashboard). API routes answer 401 / 403 with an error. |
 | Batches per student | **One.** Stored as `students.batch_id` (required). No enrollments table. |
@@ -19,6 +19,9 @@ Project rules (stack, design, animations) are in [CLAUDE.md](CLAUDE.md).
 | New students | Admin enters name + email + batch. Username comes from the name (`priya.sharma`, then `priya.sharma2`...). Temporary password is random (`k7mq-x4tz-p9wd`). |
 | Showing credentials | Only once, right after enrolling, with **Copy username**, **Copy password** and **Copy both** buttons. Only the hash is saved. |
 | Pasting at login | Spaces around the username or password are ignored. Pasting `Username: ... Password: ...` into either box fills in both. |
+| Login page | Always dark, with no light/dark toggle (dashboards keep theirs). First visit in a browser tab plays a 4-second intro, later visits a 0.5-second version. Skip button, any click or any key skips it. The form always appears within 6 seconds. |
+| Design exceptions | The login page may use an amber glow and animations longer than 300ms. Everywhere else, the `classnest-ui` skill applies. |
+| Theme | Dark by default. The toggle on inner pages switches to light, and the choice is remembered. |
 | Duplicate emails | Rejected with a clear error (capital letters don't matter). |
 | Re-uploading | Allowed. The newest file **replaces** the old one (old file is deleted). |
 | After the deadline | Uploads still allowed, but shown as **"Late"**. Never blocked. |
@@ -72,7 +75,8 @@ classnest/
 │   ├── index.html           ← login page
 │   ├── favicon.svg
 │   ├── css/style.css        ← colours, fonts, cards, light/dark
-│   └── js/                  ← api.js, ui.js, theme.js, animations.js, login.js,
+│   └── js/                  ← api.js, ui.js, theme.js, animations.js, palette.js, login.js,
+│                               login-roles.js, login-intro.js, login-particles.js,
 │                               admin.js, batches.js, students.js, student.js
 ├── data/                    ← classnest.db (git-ignored)
 ├── uploads/                 ← student .zip files (git-ignored)
