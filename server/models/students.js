@@ -33,13 +33,22 @@ async function findStudentById(id) {
   return db.prepare(`${SELECT_STUDENT} WHERE s.id = ?`).get(id);
 }
 
+// The database's unique rules have the final say. If they refuse this student, the error
+// gets a "duplicate" field saying what clashed ('email' or 'username'), so routes never need to know about SQLite.
 async function createStudent({ name, username, email, passwordHash, batchId }) {
-  const result = db
-    .prepare(
-      'INSERT INTO students (name, username, email, password_hash, batch_id, created_at) VALUES (?, ?, ?, ?, ?, ?)'
-    )
-    .run(name, clean(username), clean(email), passwordHash, batchId, new Date().toISOString());
-  return result.lastInsertRowid;
+  try {
+    const result = db
+      .prepare(
+        'INSERT INTO students (name, username, email, password_hash, batch_id, created_at) VALUES (?, ?, ?, ?, ?, ?)'
+      )
+      .run(name, clean(username), clean(email), passwordHash, batchId, new Date().toISOString());
+    return result.lastInsertRowid;
+  } catch (error) {
+    if (error.code === 'SQLITE_CONSTRAINT_UNIQUE') {
+      error.duplicate = error.message.includes('students.email') ? 'email' : 'username';
+    }
+    throw error;
+  }
 }
 
 module.exports = {

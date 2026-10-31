@@ -228,3 +228,21 @@ Its job:
 
 Mention this agent in CLAUDE.md and PLAN.md. Add this prompt to PROMPTS.md.
 ```
+
+## Prompt 16 - Fix the tester's 4 bugs (2026-10-31)
+
+```
+Fix the 4 bugs from the tester report. Don't change the design, the database tables or any working feature.
+
+1. Error handler in server.js: respect each error's own status. Broken JSON returns 400, a body that's too big returns 413, with a short clear message. Never print request bodies or passwords in the terminal logs.
+
+2. Enrolling at the same time: make enrolling safe when two requests come together. Let the database's unique rules be the final check, and if a duplicate slips through, return the clear "already exists" error instead of a 500. Same name should still get different usernames.
+
+3. Logged-in users opening /index.html should be sent to their own dashboard, just like /.
+
+4. Reduced motion: double-clicking Back must stay on the role cards and never open the Admin form. Ignore clicks while the screen is changing.
+
+Also test the "Not tested" items you can: logins surviving a server restart, and npm start and npm run dev both starting correctly.
+
+Then use the tester agent to check only these 4 fixes and the restart test. Give me a short report. Add this prompt to PROMPTS.md.
+```

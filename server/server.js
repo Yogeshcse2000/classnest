@@ -44,7 +44,7 @@ app.use('/api', (req, res) => {
 // ---------- Pages ----------
 
 // Login page: if already logged in, skip straight to the dashboard
-app.get('/', (req, res, next) => {
+app.get(['/', '/index.html'], (req, res, next) => {
   if (req.session.user) {
     return res.redirect(dashboards[req.session.user.role]);
   }
@@ -60,9 +60,20 @@ app.use('/student', requireRolePage('student'), express.static(path.join(ROOT, '
 // Everything in public/ (login page, CSS, JS) is open to everyone
 app.use(express.static(path.join(ROOT, 'public')));
 
-// If something breaks inside a route, log it and send a friendly error
+// Short messages for requests the server can't accept
+const REQUEST_ERRORS = {
+  400: 'That request could not be read. Please try again.',
+  413: 'That request is too big.',
+};
+
+// Sends a short, friendly error. A 4xx error means the request was bad, so the server has nothing to log.
+// Only the stack trace is logged, never the whole error: it can hold the request body, and so a password.
 app.use((err, req, res, next) => {
-  console.error(err);
+  const status = err.status || err.statusCode;
+  if (status >= 400 && status < 500) {
+    return res.status(status).json({ error: REQUEST_ERRORS[status] || 'That request could not be processed.' });
+  }
+  console.error(err.stack);
   res.status(500).json({ error: 'Something went wrong on the server. Please try again.' });
 });
 

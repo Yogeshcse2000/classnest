@@ -19,6 +19,8 @@ const text = (value) => (typeof value === 'string' ? value.trim() : '');
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+const emailTakenMessage = (email) => `A student with the email ${email} already exists.`;
+
 // GET /api/admin/students - all students, newest first
 router.get('/', async (req, res) => {
   res.json({ students: await listStudents() });
@@ -45,27 +47,37 @@ router.post('/', async (req, res) => {
     return res.status(400).json({ error: 'Please choose a batch.' });
   }
   if (await findStudentByEmail(email)) {
-    return res.status(409).json({ error: `A student with the email ${email} already exists.` });
-  }
-
-  // Find a free username: priya.sharma, then priya.sharma2, priya.sharma3, ...
-  const base = usernameBase(name);
-  let username = base;
-  let number = 2;
-  while (await usernameTaken(username)) {
-    username = `${base}${number}`;
-    number++;
+    return res.status(409).json({ error: emailTakenMessage(email) });
   }
 
   // Only the hash is saved. The plain password is sent back this one time so the admin can hand it over.
   const password = generateTempPassword();
   const passwordHash = await bcrypt.hash(password, 10);
-  const id = await createStudent({ name, username, email, passwordHash, batchId });
 
-  res.status(201).json({
-    student: await findStudentById(id),
-    credentials: { username, password },
-  });
+  // Find a free username: priya.sharma, then priya.sharma2, priya.sharma3, ...
+  // This comes after the slow hashing, and the database still has the final say, because two enrolls
+  // can arrive together. If one takes a username first, the other simply moves on to the next number.
+  const base = usernameBase(name);
+  let username = base;
+  let number = 2;
+  while (true) {
+    if (!(await usernameTaken(username))) {
+      try {
+        const id = await createStudent({ name, username, email, passwordHash, batchId });
+        return res.status(201).json({
+          student: await findStudentById(id),
+          credentials: { username, password },
+        });
+      } catch (error) {
+        if (error.duplicate === 'email') {
+          return res.status(409).json({ error: emailTakenMessage(email) });
+        }
+        if (error.duplicate !== 'username') throw error;
+      }
+    }
+    username = `${base}${number}`;
+    number++;
+  }
 });
 
 module.exports = router;

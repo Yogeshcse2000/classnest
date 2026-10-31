@@ -11,7 +11,7 @@
   const roleCards = [...document.querySelectorAll('.role-card')];
   const backButton = document.getElementById('role-back');
 
-  let morphing = false;
+  let changing = false; // true while the screen is changing, so clicks are ignored
 
   // How to place the form so it sits exactly over a role card. It then animates back to its own spot.
   // Only transform changes, so the size change stays smooth.
@@ -30,22 +30,30 @@
     gsap.set([roleTitle, ...roleCards, loginCard, ...formParts], { clearProps: 'all' });
     panel.dataset.step = step;
     if (step === 'role') removeForm();
-    morphing = false;
+    changing = false;
     focusTarget.focus();
   }
 
+  // With no animation the screen changes instantly, under the pointer. Ignore clicks for the same moment
+  // an animation would take, so the second click of a double-click can't land on what just appeared.
+  function ignoreClicksBriefly() {
+    changing = true;
+    setTimeout(() => (changing = false), MORPH_SECONDS * 1000);
+  }
+
   function openForm(roleCard) {
-    if (morphing) return;
+    if (changing) return;
 
     setRole(roleCard.dataset.role); // builds the form for this role
 
     if (!motionOK) {
       panel.dataset.step = 'form';
       identifierInput.focus();
+      ignoreClicksBriefly();
       return;
     }
 
-    morphing = true;
+    changing = true;
     const start = formOverCard(roleCard);
     panel.dataset.step = 'morph';
 
@@ -58,7 +66,7 @@
   }
 
   function backToRoles() {
-    if (morphing) return;
+    if (changing) return;
 
     clearForm();
     const roleCard = document.querySelector('.role-card[aria-pressed="true"]');
@@ -67,10 +75,11 @@
       panel.dataset.step = 'role';
       removeForm();
       roleCard.focus();
+      ignoreClicksBriefly();
       return;
     }
 
-    morphing = true;
+    changing = true;
     gsap.set(loginCard, { transformOrigin: '0 0' });
     const end = formOverCard(roleCard);
     const others = [roleTitle, ...roleCards.filter((other) => other !== roleCard)];
