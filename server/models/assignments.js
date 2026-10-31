@@ -12,6 +12,11 @@ async function listAssignments() {
   return db.prepare(`${SELECT_ASSIGNMENT} ORDER BY a.due_at, a.id`).all();
 }
 
+// One batch's assignments, earliest deadline first
+async function listBatchAssignments(batchId) {
+  return db.prepare(`${SELECT_ASSIGNMENT} WHERE a.batch_id = ? ORDER BY a.due_at, a.id`).all(batchId);
+}
+
 async function findAssignmentById(id) {
   return db.prepare(`${SELECT_ASSIGNMENT} WHERE a.id = ?`).get(id);
 }
@@ -50,6 +55,7 @@ async function deleteAssignment(id) {
 
 module.exports = {
   listAssignments,
+  listBatchAssignments,
   findAssignmentById,
   countAssignments,
   createAssignment,

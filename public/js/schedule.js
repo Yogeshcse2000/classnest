@@ -16,11 +16,6 @@ function rowButtonsHtml(item) {
     <button class="icon-btn icon-btn-danger" type="button" data-delete="${item.id}" aria-label="Delete ${title}" title="Delete">${BIN_ICON}</button>`;
 }
 
-// The chip with a pulsing dot
-function liveChipHtml(text) {
-  return `<span class="chip chip-amber"><span class="live-dot" aria-hidden="true"><i></i></span>${text}</span>`;
-}
-
 // name: 'lecture' or 'assignment'. The page's elements are found from it, like #lecture-form and #lecture-list.
 // fields: form field -> input id, like { title: 'lecture-title' }
 // formValues(item): what each form field holds while editing an item

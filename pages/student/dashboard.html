@@ -52,21 +52,47 @@
     <section class="welcome">
       <p class="eyebrow">My dashboard</p>
       <h1>Hi, <span data-user-name>there</span></h1>
-      <p class="muted">Your classes and assignments will live here.</p>
+      <p class="muted">Your live classes, upcoming lectures and assignments. All times are India time (IST).</p>
     </section>
 
     <section class="bento">
-      <article class="card lift span-4 empty-state">
-        <div class="empty-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5a2 2 0 0 1 2-2h14v15H6a2 2 0 0 0-2 2z"/><path d="M4 20a2 2 0 0 0 2 2h14v-4"/></svg></div>
-        <h2>Nothing here yet</h2>
-        <p>Once your admin schedules lectures and posts assignments, you'll see them right here.</p>
+      <article class="card lift span-4">
+        <div class="live-body" id="live-body" aria-live="polite" aria-busy="true">
+          <span class="skeleton sk-title"></span>
+          <span class="skeleton sk-line sk-short"></span>
+        </div>
       </article>
+
+      <section class="stack span-2 dash-panel">
+        <div class="section-title">
+          <h2>Upcoming lectures</h2>
+        </div>
+        <div class="card list-card">
+          <ul class="list" id="upcoming-list" aria-busy="true">
+            <li class="list-row list-row-loading"><div class="list-main"><span class="skeleton sk-line"></span><span class="skeleton sk-line sk-short"></span></div></li>
+            <li class="list-row list-row-loading"><div class="list-main"><span class="skeleton sk-line"></span><span class="skeleton sk-line sk-short"></span></div></li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="stack span-2 dash-panel">
+        <div class="section-title">
+          <h2>Assignments</h2>
+        </div>
+        <div class="card list-card">
+          <ul class="list" id="assignment-list" aria-busy="true">
+            <li class="list-row list-row-loading"><div class="list-main"><span class="skeleton sk-line"></span><span class="skeleton sk-line sk-short"></span></div></li>
+            <li class="list-row list-row-loading"><div class="list-main"><span class="skeleton sk-line"></span><span class="skeleton sk-line sk-short"></span></div></li>
+          </ul>
+        </div>
+      </section>
     </section>
   </main>
 
   <script src="/js/animations.js"></script>
   <script src="/js/api.js"></script>
   <script src="/js/palette.js"></script>
+  <script src="/js/ui.js"></script>
   <script src="/js/student.js"></script>
 </body>
 </html>

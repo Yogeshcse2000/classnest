@@ -2,20 +2,6 @@
 
 const CLIPBOARD_ICON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 2h6v4H9zM9 12h6M9 16h4"/></svg>`;
 
-// 3000 -> "2 days 2 hours left"
-function timeLeftText(minutes) {
-  if (minutes < 1) return 'Less than a minute left';
-  const days = Math.floor(minutes / (24 * 60));
-  const hours = Math.floor(minutes / 60) % 24;
-  const mins = minutes % 60;
-
-  const parts = [];
-  if (days) parts.push(plural(days, 'day'));
-  if (hours) parts.push(plural(hours, 'hour'));
-  if (mins && !days) parts.push(`${mins} min`);
-  return `${parts.join(' ')} left`;
-}
-
 // Amber for the last 24 hours, "Closed" once the deadline has passed
 function statusHtml(assignment) {
   if (assignment.deadline_status === 'closed') return '<span class="chip chip-quiet">Closed</span>';

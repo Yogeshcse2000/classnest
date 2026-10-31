@@ -12,6 +12,11 @@ async function listLectures() {
   return db.prepare(`${SELECT_LECTURE} ORDER BY l.starts_at, l.id`).all();
 }
 
+// One batch's lectures, earliest first
+async function listBatchLectures(batchId) {
+  return db.prepare(`${SELECT_LECTURE} WHERE l.batch_id = ? ORDER BY l.starts_at, l.id`).all(batchId);
+}
+
 async function findLectureById(id) {
   return db.prepare(`${SELECT_LECTURE} WHERE l.id = ?`).get(id);
 }
@@ -50,6 +55,7 @@ async function deleteLecture(id) {
 
 module.exports = {
   listLectures,
+  listBatchLectures,
   findLectureById,
   countLectures,
   findNextLecture,

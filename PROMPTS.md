@@ -286,3 +286,45 @@ Build Stage 5: lectures and assignments (admin side only). Student pages come in
 
 Then give me a short report: what you built, what you tested, and how dates are saved, explained simply. Add this prompt to PROMPTS.md.
 ```
+
+## Prompt 18 - Tester: current stage only by default (2026-10-31)
+
+```
+Update .claude/agents/tester.md: by default, test only the features from the current stage or fix, not the whole app. Run a full test only when I say "full test". Keep reports short. Add this prompt to PROMPTS.md.
+```
+
+## Prompt 19 - Stage 6: student dashboard (2026-10-31)
+
+```
+/classnest-ui Read CLAUDE.md and PLAN.md first. Build Stage 6: the student dashboard. Don't change admin features, the database tables, the login, or the design of existing pages.
+
+1. Data and security:
+- Student API routes read the batch only from the logged-in session, never from the URL or request body.
+- Return only what the page needs (no password hashes, no other batches' data).
+- All time checks use the server clock. The API also sends the server's current time so countdowns on the page stay correct even if the student's computer clock is wrong.
+
+2. "Live now" card (top of the dashboard):
+- A lecture is live from its start time until 1 hour after. Use the same rule as the admin "Live now" status, from one shared function.
+- Show title, start time (IST), a pulsing amber dot and a "Join live" button that opens the Meet link in a new tab (target="_blank" rel="noopener noreferrer").
+- If more than one is live, show all of them, earliest first.
+- If nothing is live, show the next lecture with "Starts in ..." instead.
+
+3. Upcoming lectures: the student's batch lectures that haven't started yet, sorted by time, with title, date and time (IST) and time until start. Hide finished lectures.
+
+4. Assignments: the student's batch assignments sorted by deadline, with title, short description, deadline (IST) and time left. Amber when less than 24 hours are left, "Closed" after the deadline. Don't add a Submit button yet, Stage 7 adds it.
+
+5. Live updates: refresh the data every 30 seconds and update countdowns every minute without reloading the page, so a lecture moves into "Live now" by itself. Pause when the tab is hidden.
+
+6. Search: for students, clicking a lecture or assignment result scrolls to that item on the dashboard and highlights it briefly.
+
+7. Empty states: friendly messages when there are no lectures or assignments. If the student's batch has nothing yet, the page must still load without errors.
+
+8. Test it yourself (no tester agent), on a copy of the database so my real data stays clean:
+- A student sees only their own batch's lectures and assignments. Create a second batch and student for this test.
+- A lecture moves from upcoming to "Live now" without reloading.
+- "Join live" opens the Meet link in a new tab.
+- Countdowns and "Closed" are correct.
+- No errors in the browser console or server terminal, on desktop and mobile size.
+
+Then give me a short report of what you built and tested. Add this prompt to PROMPTS.md.
+```

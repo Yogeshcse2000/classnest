@@ -36,6 +36,30 @@ function formatDateTime(isoDate) {
   return `${text} IST`;
 }
 
+// 3000 -> "2 days 2 hours"
+function durationText(minutes) {
+  if (minutes < 1) return 'less than a minute';
+  const days = Math.floor(minutes / (24 * 60));
+  const hours = Math.floor(minutes / 60) % 24;
+  const mins = minutes % 60;
+
+  const parts = [];
+  if (days) parts.push(plural(days, 'day'));
+  if (hours) parts.push(plural(hours, 'hour'));
+  if (mins && !days) parts.push(`${mins} min`);
+  return parts.join(' ');
+}
+
+// 3000 -> "2 days 2 hours left"
+function timeLeftText(minutes) {
+  return minutes < 1 ? 'Less than a minute left' : `${durationText(minutes)} left`;
+}
+
+// The chip with a pulsing dot
+function liveChipHtml(text) {
+  return `<span class="chip chip-amber"><span class="live-dot" aria-hidden="true"><i></i></span>${text}</span>`;
+}
+
 // Search results link to an item in a list, like /admin/batches#batch-3. The list is built after the page
 // loads, so the browser can't jump there by itself. Bring the item into view and light it up for a moment.
 function showLinkedItem() {

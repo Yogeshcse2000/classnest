@@ -17,7 +17,7 @@ function contains(query) {
 }
 
 const SELECT_LECTURE = `
-  SELECT l.id, l.title, l.starts_at, l.batch_id, b.name AS batch_name
+  SELECT l.id, l.title, l.starts_at, l.duration_minutes, l.batch_id, b.name AS batch_name
   FROM lectures l
   JOIN batches b ON b.id = l.batch_id`;
 

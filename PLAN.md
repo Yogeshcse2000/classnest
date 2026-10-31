@@ -17,7 +17,8 @@ Project rules are in [CLAUDE.md](CLAUDE.md). Design and animation rules are in t
 | Emails and usernames | Stored trimmed and lowercase, so capital letters don't matter at login. |
 | Deleting | Nothing is deleted automatically. Only **empty** batches (no students, lectures or assignments) can be deleted, so no lecture or assignment can lose its batch. The Batches page warns the admin what is still inside before anything happens, and the server refuses as well. An assignment with student submissions can't be deleted. |
 | Dates and times | Saved as ISO text in UTC. Admins type India time (IST), and `server/utils/dates.js` converts it (IST is always UTC + 5:30). Pages always show IST with the label "IST", whatever the computer is set to. |
-| Time checks | The server's clock only. It sends each lecture's status, each assignment's time left and whether a batch has started. The past-date warning comes from `/api/admin/lectures/check-time`, and the lecture and assignment pages ask again every 30 seconds so statuses stay correct. |
+| Time checks | The server's clock only. It sends each lecture's status, each assignment's time left and whether a batch has started. The past-date warning comes from `/api/admin/lectures/check-time`, and the lecture and assignment pages ask again every 30 seconds so statuses stay correct. The student dashboard also receives the server's time, so its countdowns stay right even if the student's computer clock is wrong. |
+| Student dashboard | The login session says who the student is, and the database says which batch they are in. A batch in the URL or body is ignored. Meet links are only sent while a lecture is live, and finished lectures aren't sent at all. The page refreshes every 30 seconds, updates countdowns every minute, pauses both while the tab is hidden, and refreshes as soon as the tab is shown again. |
 | Lecture length | Always 60 minutes, saved in `duration_minutes`. **Live now** runs from the start time up to, but not including, 1 hour after. |
 | Past dates | Lectures: a plain warning (amber is only for "Live now" and deadlines), and saving is still allowed. Assignments: a new deadline must be in the future. Editing may keep or set a past deadline, so a closed assignment can still be corrected. |
 | Form errors | The server checks everything and sends one message per wrong field in `fields`. Lecture and assignment forms show each one under its field. |
@@ -26,7 +27,7 @@ Project rules are in [CLAUDE.md](CLAUDE.md). Design and animation rules are in t
 | Showing credentials | Only once, right after enrolling, with **Copy username**, **Copy password** and **Copy both** buttons. Only the hash is saved. |
 | Pasting at login | Spaces around the username or password are ignored. Pasting `Username: ... Password: ...` into either box fills in both. |
 | Login page | Always dark, with no light/dark toggle (dashboards keep theirs). The first visit in a browser session plays the full 4-second intro, which can't be skipped. Later visits, in any tab, play a 0.5-second version (remembered with a cookie that ends when the browser closes). A stalled computer still reaches the login after 6 seconds of visible time. |
-| Search (Ctrl+K) | Read-only. Admins find students, batches, lectures, assignments and pages through `/api/admin/search`. Students find only their own batch's lectures and assignments through `/api/student/search`. Their batch comes from the database, never from the browser. Admin lecture and assignment results open `/admin/lectures` and `/admin/assignments`. Student results link to the dashboard until their own pages exist: update the links in the student search route in step 11. |
+| Search (Ctrl+K) | Read-only. Admins find students, batches, lectures, assignments and pages through `/api/admin/search`. Students find only their own batch's lectures and assignments through `/api/student/search`. Their batch comes from the database, never from the browser. Admin lecture and assignment results open `/admin/lectures` and `/admin/assignments`. Student results scroll to the item on the dashboard and highlight it (`/student/dashboard#lecture-3`). Finished lectures are hidden there, so search leaves them out too. |
 | Design exceptions | The login page may use an amber glow and animations longer than 300ms. Everywhere else, the `classnest-ui` skill applies. |
 | Theme | Dark by default. The toggle on inner pages switches to light, and the choice is remembered. |
 | Duplicate emails | Rejected with a clear error (capital letters don't matter). |
@@ -82,7 +83,7 @@ classnest/
 │       └── student.js       ← /api/student  (students only)
 ├── pages/                   ← protected pages, only reachable through the login checks
 │   ├── admin/               ← dashboard, batches, students, lectures, assignments
-│   └── student/             ← dashboard, classes, assignments
+│   └── student/             ← dashboard
 ├── public/                  ← open to everyone
 │   ├── index.html           ← login page
 │   ├── favicon.svg
@@ -169,7 +170,7 @@ When a stage is finished, run the [tester subagent](.claude/agents/tester.md), a
 - [x] **8. Admin: students:** enroll with name + email + batch, auto username + temporary password shown once with copy button.
 - [x] **9. Admin: lectures:** schedule lectures with a Meet link. "Live now" badge.
 - [x] **10. Admin: assignments:** post assignments with due dates.
-- [ ] **11. Student side:** dashboard, batch lectures with a "Join" button, assignments.
+- [x] **11. Student side:** dashboard, batch lectures with a "Join" button, assignments.
 - [ ] **12. Uploads:** `.zip` submit and re-upload (replaces old file), "Late" badge, admin can see and download.
 - [ ] **13. Dashboards + polish:** bento grid, GSAP count-up, hover lift, pulsing live dot, friendly empty states.
 - [ ] **14. Final check:** test as admin and student, security review, README.
