@@ -21,15 +21,6 @@ async function findLectureById(id) {
   return db.prepare(`${SELECT_LECTURE} WHERE l.id = ?`).get(id);
 }
 
-async function countLectures() {
-  return db.prepare('SELECT COUNT(*) AS n FROM lectures').get().n;
-}
-
-// The first lecture that starts after this moment
-async function findNextLecture(after) {
-  return db.prepare(`${SELECT_LECTURE} WHERE l.starts_at > ? ORDER BY l.starts_at, l.id LIMIT 1`).get(after);
-}
-
 async function createLecture({ batchId, title, meetLink, startsAt, durationMinutes }) {
   const result = db
     .prepare(
@@ -57,8 +48,6 @@ module.exports = {
   listLectures,
   listBatchLectures,
   findLectureById,
-  countLectures,
-  findNextLecture,
   createLecture,
   updateLecture,
   deleteLecture,

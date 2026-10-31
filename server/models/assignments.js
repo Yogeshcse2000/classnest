@@ -8,8 +8,21 @@ const SELECT_ASSIGNMENT = `
   FROM assignments a
   JOIN batches b ON b.id = a.batch_id`;
 
+// Every assignment, with how many students in its batch have handed in work
 async function listAssignments() {
-  return db.prepare(`${SELECT_ASSIGNMENT} ORDER BY a.due_at, a.id`).all();
+  return db
+    .prepare(
+      `SELECT a.id, a.batch_id, b.name AS batch_name, a.title, a.description, a.due_at, a.created_at,
+              (SELECT COUNT(*) FROM students s WHERE s.batch_id = a.batch_id) AS student_count,
+              (SELECT COUNT(*)
+               FROM submissions su
+               JOIN students s ON s.id = su.student_id
+               WHERE su.assignment_id = a.id AND s.batch_id = a.batch_id) AS submitted_count
+       FROM assignments a
+       JOIN batches b ON b.id = a.batch_id
+       ORDER BY a.due_at, a.id`
+    )
+    .all();
 }
 
 // One batch's assignments, earliest deadline first
@@ -19,10 +32,6 @@ async function listBatchAssignments(batchId) {
 
 async function findAssignmentById(id) {
   return db.prepare(`${SELECT_ASSIGNMENT} WHERE a.id = ?`).get(id);
-}
-
-async function countAssignments() {
-  return db.prepare('SELECT COUNT(*) AS n FROM assignments').get().n;
 }
 
 async function createAssignment({ batchId, title, description, dueAt }) {
@@ -57,7 +66,6 @@ module.exports = {
   listAssignments,
   listBatchAssignments,
   findAssignmentById,
-  countAssignments,
   createAssignment,
   updateAssignment,
   deleteAssignment,

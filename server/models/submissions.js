@@ -81,6 +81,11 @@ async function listLatestSubmissions(limit) {
   return rows.map(withLate);
 }
 
+// How much work has been handed in across all batches, for the admin dashboard
+async function countSubmissions() {
+  return db.prepare('SELECT COUNT(*) AS total, COALESCE(SUM(is_late), 0) AS late FROM submissions').get();
+}
+
 // What a download needs. This is the only function that reads file_path for sending.
 async function findSubmissionFile(id) {
   return db
@@ -101,5 +106,6 @@ module.exports = {
   countAssignmentSubmissions,
   listAssignmentRoster,
   listLatestSubmissions,
+  countSubmissions,
   findSubmissionFile,
 };

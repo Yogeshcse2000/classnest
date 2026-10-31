@@ -7,23 +7,23 @@ const LINK_ICON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" st
 const CAMERA_ICON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="14" height="12" rx="2"/><path d="m16 10 6-3v10l-6-3"/></svg>`;
 
 function statusHtml(lecture) {
-  if (lecture.status === 'Live now') return liveChipHtml('Live now');
-  if (lecture.status === 'Upcoming') return '<span class="chip chip-green">Upcoming</span>';
-  return '<span class="chip chip-quiet">Done</span>';
+  if (lecture.status === 'Live now') return liveTagHtml('Live now');
+  return lecture.status === 'Upcoming' ? tagHtml('Upcoming', 'green') : tagHtml('Done', 'quiet');
 }
 
 function lectureRowHtml(lecture) {
   const title = escapeHtml(lecture.title);
   const batch = escapeHtml(lecture.batch_name);
+  const today = istDay(Date.now());
   return `
-    <li class="list-row schedule-row" id="lecture-${lecture.id}">
-      <div class="list-main">
-        <strong title="${title}">${title}</strong>
-        <span>${formatDateTime(lecture.starts_at)}</span>
+    <li class="row-card${istDay(lecture.starts_at) === today ? ' is-today' : ''}" id="lecture-${lecture.id}">
+      ${dateBlockHtml(lecture.starts_at, today)}
+      <div class="row-main">
+        <strong>${title}</strong>
+        <span>${batch} · ${formatTime(lecture.starts_at)} IST</span>
       </div>
-      <div class="list-meta">
-        <span class="status-spot" data-status></span>
-        <span class="chip chip-batch" title="${batch}">${batch}</span>
+      <div class="row-side">
+        <span data-status></span>
       </div>
       <div class="row-buttons">
         <a class="icon-btn" href="${escapeHtml(lecture.meet_link)}" target="_blank" rel="noopener noreferrer"

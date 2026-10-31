@@ -25,6 +25,18 @@ function istToday(now) {
   return utcToIst(new Date(now).toISOString()).slice(0, 10);
 }
 
+// The first moment of this month in India, as UTC. Used to count what is new this month.
+function istMonthStart(now) {
+  return istToUtc(`${istToday(now).slice(0, 7)}-01T00:00`);
+}
+
+// "Good morning", "Good afternoon" or "Good evening", by the time in India
+function istGreeting(now) {
+  const hour = Number(utcToIst(new Date(now).toISOString()).slice(11, 13));
+  if (hour < 12) return 'Good morning';
+  return hour < 17 ? 'Good afternoon' : 'Good evening';
+}
+
 // Upcoming before the start time, Live now until the lecture's length has passed, then Done
 function lectureStatus(startsAt, durationMinutes, now) {
   const start = new Date(startsAt).getTime();
@@ -39,6 +51,13 @@ function deadlineStatus(dueAt, now) {
   return timeLeft <= DAY ? 'soon' : 'open';
 }
 
+// Open assignments first with the nearest deadline on top, then closed ones with the most recently closed on top.
+// Expects the earliest deadline first, which is the order the models give.
+function openFirst(assignments, now) {
+  const closed = (assignment) => deadlineStatus(assignment.due_at, now) === 'closed';
+  return [...assignments.filter((assignment) => !closed(assignment)), ...assignments.filter(closed).reverse()];
+}
+
 // Whole minutes until the deadline, and never below 0
 function minutesLeft(dueAt, now) {
   return Math.max(0, Math.floor((new Date(dueAt).getTime() - now) / MINUTE));
@@ -49,10 +68,28 @@ function isLate(dueAt, now) {
   return now > new Date(dueAt).getTime();
 }
 
+// Whole minutes between the deadline and a late upload. 0 if the deadline was moved later than the upload.
+function minutesLate(dueAt, submittedAt) {
+  return Math.max(0, Math.floor((new Date(submittedAt).getTime() - new Date(dueAt).getTime()) / MINUTE));
+}
+
 // The words shown for a student's work on an assignment. submittedAt is empty if they haven't handed anything in.
 function submissionStatus(submittedAt, late) {
   if (!submittedAt) return 'Not submitted';
   return late ? 'Late' : 'Submitted';
 }
 
-module.exports = { utcToIst, istToUtc, istToday, lectureStatus, deadlineStatus, minutesLeft, isLate, submissionStatus };
+module.exports = {
+  utcToIst,
+  istToUtc,
+  istToday,
+  istMonthStart,
+  istGreeting,
+  lectureStatus,
+  deadlineStatus,
+  openFirst,
+  minutesLeft,
+  isLate,
+  minutesLate,
+  submissionStatus,
+};

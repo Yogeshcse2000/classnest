@@ -131,7 +131,8 @@
     const result = results[active];
     if (!result) return;
     dialog.close();
-    const alreadyHere = result.url === window.location.pathname + window.location.hash;
+    const { pathname, search, hash } = window.location;
+    const alreadyHere = result.url === pathname + search + hash;
     window.location.href = result.url;
     if (alreadyHere) window.dispatchEvent(new HashChangeEvent('hashchange'));
   }

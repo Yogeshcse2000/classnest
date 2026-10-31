@@ -29,6 +29,15 @@ async function listStudents() {
   return db.prepare(`${SELECT_STUDENT} ORDER BY s.id DESC`).all();
 }
 
+async function countStudents() {
+  return db.prepare('SELECT COUNT(*) AS n FROM students').get().n;
+}
+
+// created_at is saved in one ISO format, so comparing it as text gives the right answer
+async function countStudentsSince(date) {
+  return db.prepare('SELECT COUNT(*) AS n FROM students WHERE created_at >= ?').get(date).n;
+}
+
 async function findStudentById(id) {
   return db.prepare(`${SELECT_STUDENT} WHERE s.id = ?`).get(id);
 }
@@ -56,6 +65,8 @@ module.exports = {
   findStudentByEmail,
   usernameTaken,
   listStudents,
+  countStudents,
+  countStudentsSince,
   findStudentById,
   createStudent,
 };

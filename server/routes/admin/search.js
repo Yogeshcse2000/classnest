@@ -66,7 +66,7 @@ router.get('/', async (req, res) => {
         title: assignment.title,
         detail: assignment.batch_name,
         date: assignment.due_at,
-        url: `/admin/assignments#assignment-${assignment.id}`,
+        url: `/admin/assignments?assignment=${assignment.id}`,
       })),
       ...pages,
     ],

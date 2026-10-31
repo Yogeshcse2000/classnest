@@ -1,5 +1,5 @@
-// Shared by the Lectures and Assignments pages, which work the same way: a form on one side, a filtered list on the
-// other. Each page passes in only what is different about it. The server sends every status and time left, because
+// Shared by the Lectures and Assignments pages, which work the same way: a form and a filtered list. The Lectures form
+// sits beside its list. The Assignments form is in a pop-up. Each page passes in only what is different about it. The server sends every status and time left, because
 // its clock is the one that counts. This file only shows them.
 
 const REFRESH_MS = 30000; // statuses change as time passes, so ask the server again every 30 seconds
@@ -23,6 +23,8 @@ function rowButtonsHtml(item) {
 // statusHtml(item): what goes in that element
 // newTitle, saveText, savedText(item, edited), emptyTitle, emptyText, emptyIcon: the words and icon for this page
 // onFormChange(): runs after the form is filled or emptied
+// onRender(rows): runs after the list changes or is refreshed
+// onSaved(item): runs after an item is saved
 function setupSchedulePage({
   name,
   fields,
@@ -36,10 +38,16 @@ function setupSchedulePage({
   emptyIcon,
   newTitle,
   onFormChange = () => {},
+  onRender = () => {},
+  onSaved = () => {},
 }) {
   const apiPath = `/api/admin/${name}s`;
   const element = (suffix) => document.getElementById(`${name}-${suffix}`);
+  // The dashboard's "+ Release lecture" and "+ Post assignment" buttons land here with #new in the address
+  const openedForNew = window.location.hash === '#new';
+  if (openedForNew) window.history.replaceState(null, '', window.location.pathname);
 
+  const dialog = element('dialog'); // only when the form is in a pop-up
   const formCard = element('form-card');
   const form = element('form');
   const formTitle = element('form-title');
@@ -90,13 +98,14 @@ function setupSchedulePage({
 
   function render() {
     const rows = visibleItems();
-    countLabel.textContent = rows.length ? plural(rows.length, name) : '';
+    countLabel.textContent = `(${rows.length})`;
     stopLiveDots(list);
     list.innerHTML = rows.length ? rows.map(rowHtml).join('') : emptyHtml();
     list.removeAttribute('aria-busy');
     shownRows = rows.map(rowHtml).join('');
     showStatuses();
     addHoverLift(list);
+    onRender(rows);
   }
 
   // Asks the server for the list. Rows only rebuild if something other than a status changed,
@@ -106,8 +115,12 @@ function setupSchedulePage({
     const data = await loadPageData(apiPath);
     if (thisLoad !== latestLoad) return; // a newer change has happened, so this answer is out of date
     items = data[`${name}s`];
-    if (visibleItems().map(rowHtml).join('') === shownRows) showStatuses();
-    else render();
+    if (visibleItems().map(rowHtml).join('') === shownRows) {
+      showStatuses();
+      onRender(visibleItems());
+    } else {
+      render();
+    }
   }
 
   function highlightRow(id) {
@@ -150,7 +163,25 @@ function setupSchedulePage({
     entry.input.addEventListener('input', () => clearError(entry));
   });
 
-  // ---------- Editing ----------
+  // ---------- The form ----------
+
+  function showForm() {
+    if (!dialog || dialog.open) return;
+    dialog.showModal();
+    popIn(dialog);
+  }
+
+  function hideForm() {
+    if (dialog?.open) dialog.close();
+  }
+
+  // The "+ New" buttons on the page. The Lectures form is already showing, so the cursor just moves into it.
+  function startNew() {
+    if (editingId) stopEditing();
+    showForm();
+    if (!dialog) formCard.scrollIntoView({ block: 'nearest', behavior: motionOK ? 'smooth' : 'auto' });
+    inputs[0].input.focus({ preventScroll: true });
+  }
 
   // Back to adding a new item. The batch stays chosen, so adding several to one batch is quick.
   function stopEditing({ keepBatch = false } = {}) {
@@ -160,7 +191,7 @@ function setupSchedulePage({
     if (keepBatch) batchInput.value = batchId;
     formTitle.textContent = newTitle;
     saveButton.textContent = saveText;
-    cancelButton.hidden = true;
+    cancelButton.hidden = !dialog; // a pop-up always needs a way out
     clearErrors();
     onFormChange();
   }
@@ -170,15 +201,20 @@ function setupSchedulePage({
     clearErrors();
     const values = formValues(item);
     inputs.forEach(({ field, input }) => (input.value = values[field]));
+    refreshPickers(form);
     formTitle.textContent = `Edit ${name}`;
     saveButton.textContent = 'Save changes';
     cancelButton.hidden = false;
     onFormChange();
-    formCard.scrollIntoView({ block: 'nearest', behavior: motionOK ? 'smooth' : 'auto' });
+    showForm();
+    if (!dialog) formCard.scrollIntoView({ block: 'nearest', behavior: motionOK ? 'smooth' : 'auto' });
     inputs[0].input.focus({ preventScroll: true });
   }
 
-  cancelButton.addEventListener('click', () => stopEditing());
+  cancelButton.addEventListener('click', () => {
+    stopEditing();
+    hideForm();
+  });
 
   // ---------- Saving ----------
 
@@ -200,7 +236,9 @@ function setupSchedulePage({
 
       if (filter.value && Number(filter.value) !== saved.batch_id) filter.value = ''; // so the saved item is on show
       stopEditing({ keepBatch: !wasEditing });
+      hideForm();
       await load().catch(() => {}); // it is saved either way: the next refresh will show it
+      onSaved(saved);
       highlightRow(saved.id);
       showToast(data.warning || savedText(saved, wasEditing));
     } catch (error) {
@@ -208,6 +246,7 @@ function setupSchedulePage({
         showFieldErrors(error.fields);
       } else if (error.status === 404) {
         stopEditing();
+        hideForm();
         showToast(error.message, 'error');
         load().catch(() => {});
       } else {
@@ -221,7 +260,7 @@ function setupSchedulePage({
 
   // ---------- Edit and delete buttons ----------
 
-  async function deleteItem(item, row) {
+  async function deleteItem(item) {
     const confirmed = await confirmDialog({
       title: `Delete "${item.title}"?`,
       message: "This can't be undone.",
@@ -237,7 +276,8 @@ function setupSchedulePage({
         items = items.filter((other) => other.id !== item.id);
         render();
       };
-      if (motionOK) {
+      const row = document.getElementById(`${name}-${item.id}`);
+      if (motionOK && row) {
         gsap.to(row, { opacity: 0, x: 12, duration: 0.25, ease: 'power2.in', onComplete: removeFromList });
       } else {
         removeFromList();
@@ -249,14 +289,29 @@ function setupSchedulePage({
     }
   }
 
-  list.addEventListener('click', (event) => {
+  // These buttons can be in the list or beside it
+  document.querySelector('main').addEventListener('click', (event) => {
     const button = event.target.closest('[data-edit], [data-delete]');
     if (!button) return;
     const item = items.find((other) => other.id === Number(button.dataset.edit || button.dataset.delete));
     if (!item) return;
     if (button.dataset.edit) startEditing(item);
-    else deleteItem(item, button.closest('.list-row'));
+    else deleteItem(item);
   });
+
+  element('new')?.addEventListener('click', startNew);
+
+  if (dialog) {
+    element('close').addEventListener('click', hideForm);
+    // A click on the dimmed area outside the form lands on the dialog itself
+    dialog.addEventListener('click', (event) => {
+      if (event.target === dialog) hideForm();
+    });
+    // Closing with Esc while editing also ends the edit, so the next "+ New" starts with an empty form
+    dialog.addEventListener('close', () => {
+      if (editingId) stopEditing();
+    });
+  }
 
   // ---------- Batches ----------
 
@@ -285,10 +340,7 @@ function setupSchedulePage({
 
   setupLogout();
   showCurrentUser();
-  enterAnimation('.welcome, .split > *');
-
-  // On a phone the page links scroll sideways, so bring this page's link into view
-  document.querySelector('.nav [aria-current]')?.scrollIntoView({ block: 'nearest', inline: 'center' });
+  enterAnimation('.page-head, .split > *');
 
   // A search result can point at a row the batch filter is hiding, so show everything again
   window.addEventListener('hashchange', () => {
@@ -305,6 +357,8 @@ function setupSchedulePage({
       fillBatchSelects(batchData.batches);
       enterAnimation(`#${name}-list`); // the list as one piece: row by row takes seconds on a long list
       showLinkedItem();
+
+      if (openedForNew) startNew();
 
       setInterval(() => {
         if (!document.hidden) load().catch(() => {});

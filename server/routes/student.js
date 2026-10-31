@@ -9,17 +9,29 @@ const { listBatchLectures } = require('../models/lectures');
 const { listBatchAssignments, findAssignmentById } = require('../models/assignments');
 const { findSubmission, listStudentSubmissions, saveSubmission } = require('../models/submissions');
 const { cleanQuery, searchBatchLectures, searchBatchAssignments } = require('../models/search');
-const { lectureStatus, deadlineStatus, isLate, submissionStatus } = require('../utils/dates');
+const { lectureStatus, deadlineStatus, openFirst, isLate, submissionStatus } = require('../utils/dates');
 const { toId } = require('../utils/ids');
 const { receiveZip } = require('../middleware/upload');
 const { saveFile, deleteFile } = require('../storage');
 
 const router = express.Router();
 
-// Open assignments first with the nearest deadline on top, then closed ones with the most recently closed on top
-function dashboardOrder(assignments, now) {
-  const closed = (assignment) => deadlineStatus(assignment.due_at, now) === 'closed';
-  return [...assignments.filter((assignment) => !closed(assignment)), ...assignments.filter(closed).reverse()];
+// One batch's assignments for a student's pages, open ones first, each with that student's own status
+async function assignmentList(student, now) {
+  const [assignments, submissions] = await Promise.all([
+    listBatchAssignments(student.batch_id),
+    listStudentSubmissions(student.id),
+  ]);
+  return openFirst(assignments, now).map(({ id, title, due_at }) => {
+    const submission = submissions.find((item) => item.assignment_id === id);
+    return {
+      id,
+      title,
+      due_at,
+      deadline_status: deadlineStatus(due_at, now),
+      submission_status: submissionStatus(submission?.submitted_at, submission?.is_late),
+    };
+  });
 }
 
 // What the page shows about a student's own work. The saved file's path is never sent, and neither is any way to download it.
@@ -42,52 +54,64 @@ async function findOwnAssignment(req, res, next) {
   next();
 }
 
+// GET /api/student/me - who is logged in, for the sidebar
+router.get('/me', async (req, res) => {
+  const student = await findStudentById(req.session.user.id);
+  res.json({ user: { name: req.session.user.name, batch_name: student?.batch_name ?? '' } });
+});
+
 // GET /api/student/dashboard - everything on the student dashboard.
 // The server works out every status, and sends its own time so the page's countdowns follow the server's clock.
 router.get('/dashboard', async (req, res) => {
   const student = await findStudentById(req.session.user.id);
-  const [lectures, assignments, submissions] = student
-    ? await Promise.all([
-        listBatchLectures(student.batch_id),
-        listBatchAssignments(student.batch_id),
-        listStudentSubmissions(student.id),
-      ])
-    : [[], [], []];
-
   const now = Date.now();
+  const [lectures, assignments] = student
+    ? await Promise.all([listBatchLectures(student.batch_id), assignmentList(student, now)])
+    : [[], []];
+
   const lecturesWithStatus = (status) =>
     lectures.filter((lecture) => lectureStatus(lecture.starts_at, lecture.duration_minutes, now) === status);
-  const submissionFor = (assignment) => submissions.find((submission) => submission.assignment_id === assignment.id);
 
   // Only the fields the page shows. The Meet link is only sent while a lecture is live, and finished lectures not at all.
   res.json({
     name: req.session.user.name,
+    batch_name: student?.batch_name ?? '',
     now: new Date(now).toISOString(),
-    live: lecturesWithStatus('Live now').map(({ id, title, starts_at, meet_link }) => ({ id, title, starts_at, meet_link })),
-    upcoming: lecturesWithStatus('Upcoming').map(({ id, title, starts_at }) => ({ id, title, starts_at })),
-    assignments: dashboardOrder(assignments, now).map((assignment) => {
-      const { id, title, description, due_at } = assignment;
-      const submission = submissionFor(assignment);
-      return {
-        id,
-        title,
-        description,
-        due_at,
-        deadline_status: deadlineStatus(due_at, now),
-        submission_status: submissionStatus(submission?.submitted_at, submission?.is_late),
-      };
-    }),
+    live: lecturesWithStatus('Live now').map(({ id, title, starts_at, duration_minutes, meet_link }) => ({
+      id,
+      title,
+      starts_at,
+      duration_minutes,
+      meet_link,
+    })),
+    upcoming: lecturesWithStatus('Upcoming').map(({ id, title, starts_at, duration_minutes }) => ({
+      id,
+      title,
+      starts_at,
+      duration_minutes,
+    })),
+    assignments,
   });
 });
 
-// GET /api/student/assignments/:id - everything on the submit page
+// GET /api/student/assignments - the list on the Assignments page
+router.get('/assignments', async (req, res) => {
+  const student = await findStudentById(req.session.user.id);
+  const now = Date.now();
+  res.json({
+    now: new Date(now).toISOString(),
+    assignments: student ? await assignmentList(student, now) : [],
+  });
+});
+
+// GET /api/student/assignments/:id - one assignment on the Assignments page, with the student's own work
 router.get('/assignments/:id', findOwnAssignment, async (req, res) => {
-  const { id, title, description, due_at } = req.assignment;
+  const { id, title, description, due_at, batch_name } = req.assignment;
   const submission = await findSubmission(id, req.student.id);
   res.json({
     name: req.student.name,
     now: new Date().toISOString(),
-    assignment: { id, title, description, due_at },
+    assignment: { id, title, description, due_at, batch_name },
     submission: submissionView(submission),
   });
 });
@@ -137,7 +161,8 @@ router.get('/search', async (req, res) => {
     searchBatchAssignments(query, student.batch_id),
   ]);
 
-  // Each result opens its item on the dashboard. Finished lectures are hidden there, so they are left out here too.
+  // Lectures open on the dashboard, where finished ones are hidden, so they are left out here too.
+  // Assignments open on the Assignments page.
   const now = Date.now();
   const onDashboard = lectures.filter((lecture) => lectureStatus(lecture.starts_at, lecture.duration_minutes, now) !== 'Done');
 
@@ -153,7 +178,7 @@ router.get('/search', async (req, res) => {
         type: 'Assignment',
         title: assignment.title,
         date: assignment.due_at,
-        url: `/student/dashboard#assignment-${assignment.id}`,
+        url: `/student/assignments?assignment=${assignment.id}`,
       })),
     ],
   });

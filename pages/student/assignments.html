@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Assignments · ClassNest</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+
+  <script src="/js/theme.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+</head>
+<body class="app">
+  <div class="ambient" aria-hidden="true">
+    <div class="ambient-glow ambient-glow-a"></div>
+    <div class="ambient-glow ambient-glow-b"></div>
+  </div>
+
+  <script src="/js/sidebar.js"></script>
+
+  <main class="page">
+<div class="split fill">
+      <section class="stack">
+        <h1>Assignments</h1>
+        <ul class="rows" id="assignment-list" aria-busy="true">
+          <li class="row-card"><div class="row-main"><span class="skeleton sk-line"></span><span class="skeleton sk-line sk-short"></span></div></li>
+          <li class="row-card"><div class="row-main"><span class="skeleton sk-line"></span><span class="skeleton sk-line sk-short"></span></div></li>
+          <li class="row-card"><div class="row-main"><span class="skeleton sk-line"></span><span class="skeleton sk-line sk-short"></span></div></li>
+        </ul>
+      </section>
+
+      <section class="card panel detail" id="detail">
+        <div class="empty-state" id="unavailable" hidden>
+          <div class="empty-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 2h6v4H9zM9 12h6M9 16h4"/></svg></div>
+          <h2 id="unavailable-title">This assignment isn't available</h2>
+          <p id="unavailable-text"></p>
+        </div>
+
+        <div class="stack" id="detail-content">
+          <div class="detail-head">
+            <div class="detail-heading">
+              <p class="eyebrow" id="assignment-batch">Assignment</p>
+              <h2 class="detail-title" id="assignment-title"><span class="skeleton sk-title"></span></h2>
+              <p class="detail-due" id="assignment-due"></p>
+            </div>
+            <div class="time-box" id="time-box">
+              <span>Time left</span>
+              <strong id="countdown" role="timer" aria-label="Time left"></strong>
+            </div>
+          </div>
+
+          <p class="full-text" id="assignment-description"><span class="skeleton sk-line"></span></p>
+          <p class="form-hint" id="late-note" hidden>The deadline has passed. You can still upload, but your work will be marked Late.</p>
+
+          <div class="current-work" id="current-work" aria-live="polite" hidden>
+            <svg class="success-check" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="24" cy="24" r="21"/><path d="m15 25 6 6 12-13"/></svg>
+            <div class="file-main">
+              <strong id="current-name"></strong>
+              <span id="current-time"></span>
+            </div>
+            <span class="tag tag-peach" id="current-late" hidden>Late</span>
+          </div>
+
+          <div class="dropzone" id="dropzone">
+            <svg class="drop-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>
+            <p class="drop-title">Drag your .zip here, or choose a file</p>
+            <p class="form-hint">Only .zip files · up to 10 MB · uploading again replaces your file</p>
+            <div class="drop-buttons">
+              <button class="btn btn-primary" type="button" id="choose-file">Choose .zip file</button>
+              <button class="btn btn-ghost" type="button" id="try-png">Try a .png instead</button>
+            </div>
+            <input type="file" id="file-input" accept=".zip" aria-label="Choose a .zip file" hidden>
+          </div>
+
+          <div class="chosen-file" id="chosen-file" hidden>
+            <div class="file-main">
+              <strong id="chosen-name"></strong>
+              <span id="chosen-size"></span>
+            </div>
+            <button class="btn btn-ghost btn-small" type="button" id="remove-file">Remove</button>
+          </div>
+
+          <div class="upload-progress" id="upload-progress" hidden>
+            <div class="progress-track" id="progress-track" role="progressbar" aria-label="Upload progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+              <div class="progress-fill" id="progress-fill"></div>
+            </div>
+            <p class="form-hint" id="progress-text"></p>
+          </div>
+
+          <p class="alert alert-error" id="upload-error" role="alert" hidden></p>
+
+          <button class="btn btn-primary btn-block" type="button" id="upload-button" hidden>Upload</button>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script src="/js/animations.js"></script>
+  <script src="/js/api.js"></script>
+  <script src="/js/palette.js"></script>
+  <script src="/js/ui.js"></script>
+  <script src="/js/student-assignments.js"></script>
+</body>
+</html>

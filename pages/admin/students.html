@@ -8,56 +8,22 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css">
 
   <script src="/js/theme.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 </head>
-<body>
+<body class="app">
   <div class="ambient" aria-hidden="true">
     <div class="ambient-glow ambient-glow-a"></div>
     <div class="ambient-glow ambient-glow-b"></div>
   </div>
 
-  <header class="topbar">
-    <div class="topbar-left">
-      <a class="brand" href="/admin/dashboard">
-        <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="9" fill="currentColor"/><path d="M7 15h18a9 8 0 0 1-18 0Z" fill="#fff"/><circle cx="13" cy="12" r="3" fill="#fff"/><circle cx="19.5" cy="11.5" r="3" fill="#fff" opacity=".7"/></svg>
-        <span class="brand-text">ClassNest</span>
-      </a>
-      <span class="role-badge">Admin</span>
-    </div>
-    <nav class="nav" aria-label="Admin pages">
-      <a href="/admin/dashboard">Dashboard</a>
-      <a href="/admin/batches">Batches</a>
-      <a href="/admin/students" aria-current="page">Students</a>
-      <a href="/admin/lectures">Lectures</a>
-      <a href="/admin/assignments">Assignments</a>
-    </nav>
-    <div class="topbar-actions">
-      <span class="user-chip">
-        <span class="avatar" data-user-initial aria-hidden="true"></span>
-        <span class="user-name" data-user-name></span>
-      </span>
-      <button class="palette-btn" type="button" data-palette-open aria-label="Search" title="Search (Ctrl+K)">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-        <kbd>Ctrl K</kbd>
-      </button>
-      <button class="icon-btn" type="button" data-theme-toggle aria-label="Switch colour theme">
-        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
-        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
-      </button>
-      <button class="btn btn-ghost" type="button" data-logout>Log out</button>
-    </div>
-  </header>
+  <script src="/js/sidebar.js"></script>
 
   <main class="page">
-    <section class="welcome">
-      <p class="eyebrow">Admin</p>
-      <h1>Students</h1>
-      <p class="muted">Enroll students into a batch. ClassNest creates their username and a temporary password.</p>
-    </section>
+<h1 class="visually-hidden">Students</h1>
 
     <div class="split">
       <section class="card form-card" id="student-form-card">
@@ -65,7 +31,7 @@
         <form id="student-form" novalidate>
           <div class="field">
             <label for="student-name">Full name</label>
-            <input id="student-name" type="text" maxlength="80" autocomplete="off" placeholder="e.g. Priya Sharma" required>
+            <input id="student-name" type="text" maxlength="80" autocomplete="off" placeholder="e.g. Priya Nair" required>
           </div>
           <div class="field">
             <label for="student-email">Email</label>
@@ -80,8 +46,7 @@
 
           <p class="alert alert-error" id="student-error" role="alert" hidden></p>
 
-          <button class="btn btn-primary btn-block" type="submit" id="student-save">Enroll student</button>
-          <p class="form-hint">A username and temporary password are created automatically.</p>
+          <button class="btn btn-primary btn-block" type="submit" id="student-save">Enroll &amp; generate login</button>
         </form>
       </section>
 
@@ -111,17 +76,31 @@
           </div>
         </article>
 
-        <div class="section-title">
-          <h2>All students</h2>
-          <span class="muted" id="student-count"></span>
-        </div>
-        <div class="card list-card">
-          <ul class="list" id="student-list" aria-busy="true">
-            <li class="list-row list-row-loading"><span class="skeleton sk-avatar"></span><div class="list-main"><span class="skeleton sk-line"></span><span class="skeleton sk-line sk-short"></span></div></li>
-            <li class="list-row list-row-loading"><span class="skeleton sk-avatar"></span><div class="list-main"><span class="skeleton sk-line"></span><span class="skeleton sk-line sk-short"></span></div></li>
-            <li class="list-row list-row-loading"><span class="skeleton sk-avatar"></span><div class="list-main"><span class="skeleton sk-line"></span><span class="skeleton sk-line sk-short"></span></div></li>
-          </ul>
-        </div>
+        <article class="card panel">
+          <div class="panel-head">
+            <h2>Students <span class="count" id="student-count"></span></h2>
+            <div class="search-field">
+              <label class="visually-hidden" for="student-search">Search students</label>
+              <input id="student-search" type="search" autocomplete="off" placeholder="Search...">
+            </div>
+          </div>
+          <table class="table">
+            <caption class="visually-hidden">All students</caption>
+            <thead>
+              <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Email</th>
+                <th scope="col">Batch</th>
+                <th scope="col">Username</th>
+              </tr>
+            </thead>
+            <tbody id="student-list" aria-busy="true">
+              <tr><td colspan="4"><span class="skeleton sk-line"></span></td></tr>
+              <tr><td colspan="4"><span class="skeleton sk-line"></span></td></tr>
+              <tr><td colspan="4"><span class="skeleton sk-line"></span></td></tr>
+            </tbody>
+          </table>
+        </article>
       </section>
     </div>
   </main>

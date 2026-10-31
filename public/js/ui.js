@@ -15,25 +15,49 @@ function plural(count, word, pluralWord = `${word}s`) {
   return `${count} ${count === 1 ? word : pluralWord}`;
 }
 
-// "2026-11-03" -> "3 Nov 2026"
+// "2026-11-03" -> "Nov 3, 2026"
 function formatDate(isoDate) {
   const [year, month, day] = isoDate.split('-').map(Number);
-  return new Date(year, month - 1, day).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+  return new Date(year, month - 1, day).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
 }
 
-// "2026-10-30T14:00:00.000Z" -> "Fri, 30 Oct 2026, 7:30 pm IST". Always India time, whatever the computer is set to.
+// Everything below shows India time, whatever the computer is set to.
+
+// "2026-10-30T14:00:00.000Z" -> "2026-10-30", the day in India
+function istDay(isoDate) {
+  return new Date(isoDate).toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' });
+}
+
+// "2026-10-30T14:00:00.000Z" -> "7:30 PM"
+function formatTime(isoDate) {
+  return new Date(isoDate).toLocaleTimeString('en-US', { timeZone: 'Asia/Kolkata', hour: 'numeric', minute: '2-digit' });
+}
+
+// "2026-10-30T14:00:00.000Z" -> "Oct 30, 7:30 PM IST". The year is added when it isn't this year.
 function formatDateTime(isoDate) {
-  const text = new Date(isoDate).toLocaleString('en-GB', {
-    timeZone: 'Asia/Kolkata',
-    weekday: 'short',
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-    hour: 'numeric',
-    minute: '2-digit',
-    hour12: true,
-  });
-  return `${text} IST`;
+  const options = { timeZone: 'Asia/Kolkata', day: 'numeric', month: 'short' };
+  if (istDay(isoDate).slice(0, 4) !== istDay(Date.now()).slice(0, 4)) options.year = 'numeric';
+  return `${new Date(isoDate).toLocaleDateString('en-US', options)}, ${formatTime(isoDate)} IST`;
+}
+
+// How long ago something happened: "10 min ago", "1 h ago", "Yesterday", "2 days ago"
+function timeAgo(isoDate, now) {
+  const minutes = Math.max(0, Math.floor((new Date(now).getTime() - new Date(isoDate).getTime()) / 60000));
+  if (minutes < 1) return 'Just now';
+  if (minutes < 60) return `${minutes} min ago`;
+  const days = Math.round((new Date(istDay(now)).getTime() - new Date(istDay(isoDate)).getTime()) / (24 * 60 * 60 * 1000));
+  if (days === 0) return `${Math.floor(minutes / 60)} h ago`;
+  if (days === 1) return 'Yesterday';
+  return days < 30 ? `${days} days ago` : formatDateTime(isoDate);
+}
+
+// The small calendar block on a lecture row: OCT over 31, or TODAY over 29
+function dateBlockHtml(isoDate, today) {
+  const date = new Date(isoDate);
+  const options = { timeZone: 'Asia/Kolkata' };
+  const month = date.toLocaleDateString('en-US', { ...options, month: 'short' });
+  const day = date.toLocaleDateString('en-US', { ...options, day: '2-digit' });
+  return `<span class="date-block"><span>${istDay(isoDate) === today ? 'Today' : month}</span><strong>${day}</strong></span>`;
 }
 
 // 3000 -> "2 days 2 hours"
@@ -55,15 +79,34 @@ function timeLeftText(minutes) {
   return minutes < 1 ? 'Less than a minute left' : `${durationText(minutes)} left`;
 }
 
-// The chip with a pulsing dot
-function liveChipHtml(text) {
-  return `<span class="chip chip-amber"><span class="live-dot" aria-hidden="true"><i></i></span>${text}</span>`;
+// Every status in the app is a tag. style is green, amber, peach, red or quiet.
+function tagHtml(text, style) {
+  return `<span class="tag tag-${style}">${text}</span>`;
 }
 
-// A student's work on an assignment. "Late" is about a deadline, so it may use amber.
-function submissionChipHtml(status) {
-  const styles = { Submitted: 'chip-green', Late: 'chip-amber', 'Not submitted': 'chip-quiet' };
-  return `<span class="chip ${styles[status]}">${status}</span>`;
+// The tag with a pulsing dot
+function liveTagHtml(text) {
+  return `<span class="tag tag-amber"><span class="live-dot" aria-hidden="true"><i></i></span>${text}</span>`;
+}
+
+// 120 -> "2h", 45 -> "45m", 2880 -> "2d"
+function shortDuration(minutes) {
+  if (minutes < 60) return `${minutes}m`;
+  return minutes < 24 * 60 ? `${Math.floor(minutes / 60)}h` : `${Math.floor(minutes / (24 * 60))}d`;
+}
+
+// A student's work as the admin sees it. minutesLate adds how late it was, like "Late · 2h".
+function submissionTagHtml(status, minutesLate = 0) {
+  if (status === 'Submitted') return tagHtml('On time', 'green');
+  if (status === 'Late') return tagHtml(minutesLate ? `Late · ${shortDuration(minutesLate)}` : 'Late', 'peach');
+  return tagHtml('Missing', 'red');
+}
+
+// An assignment as a student sees it: their work first, then the deadline
+function assignmentTagHtml({ submission_status, deadline_status }) {
+  if (submission_status === 'Submitted') return tagHtml('Submitted', 'green');
+  if (submission_status === 'Late') return tagHtml('Late', 'peach');
+  return deadline_status === 'closed' ? tagHtml('Closed', 'quiet') : tagHtml('Pending', 'amber');
 }
 
 // Search results link to an item in a list, like /admin/batches#batch-3. The list is built after the page

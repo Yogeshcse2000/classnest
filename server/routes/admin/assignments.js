@@ -10,7 +10,15 @@ const {
 } = require('../../models/assignments');
 const { findBatchById } = require('../../models/batches');
 const { countAssignmentSubmissions, listAssignmentRoster } = require('../../models/submissions');
-const { utcToIst, istToUtc, deadlineStatus, minutesLeft, submissionStatus } = require('../../utils/dates');
+const {
+  utcToIst,
+  istToUtc,
+  deadlineStatus,
+  openFirst,
+  minutesLeft,
+  minutesLate,
+  submissionStatus,
+} = require('../../utils/dates');
 const { toId } = require('../../utils/ids');
 
 const router = express.Router();
@@ -64,10 +72,10 @@ function sendFieldErrors(res, fields) {
   res.status(400).json({ error: 'Please check the highlighted fields.', fields });
 }
 
-// GET /api/admin/assignments - all assignments, earliest deadline first
+// GET /api/admin/assignments - all assignments, open ones first
 router.get('/', async (req, res) => {
   const now = Date.now();
-  const assignments = await listAssignments();
+  const assignments = openFirst(await listAssignments(), now);
   res.json({ assignments: assignments.map((assignment) => assignmentView(assignment, now)) });
 });
 
@@ -79,7 +87,11 @@ router.get('/:id/submissions', async (req, res) => {
   }
 
   const roster = await listAssignmentRoster(assignment.id, assignment.batch_id);
-  const students = roster.map((student) => ({ ...student, status: submissionStatus(student.submitted_at, student.is_late) }));
+  const students = roster.map((student) => ({
+    ...student,
+    status: submissionStatus(student.submitted_at, student.is_late),
+    minutes_late: student.is_late ? minutesLate(assignment.due_at, student.submitted_at) : 0,
+  }));
   const count = (status) => students.filter((student) => student.status === status).length;
 
   res.json({

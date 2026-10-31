@@ -1,10 +1,12 @@
-// Student dashboard: lectures that are live now, upcoming lectures and assignments, kept fresh without reloading.
+// Student dashboard: the live or next lecture, upcoming lectures and assignments, kept fresh without reloading.
 // The server decides what is live, upcoming or closed, and the order of the assignments, because its clock is the one
 // that counts. This file only shows it.
 
 const REFRESH_MS = 30000; // statuses change as time passes, so ask the server again every 30 seconds
-const COUNTDOWN_MS = 60000; // the "Starts in" and "left" texts are in minutes, so they change every minute
+const COUNTDOWN_MS = 60000; // the "starts in" and "left" texts are in minutes, so they change every minute
 
+const hello = document.getElementById('hello');
+const liveCard = document.getElementById('live-card');
 const liveBody = document.getElementById('live-body');
 const upcomingList = document.getElementById('upcoming-list');
 const assignmentList = document.getElementById('assignment-list');
@@ -19,93 +21,104 @@ const shownHtml = new Map();
 
 // ---------- Countdowns ----------
 
-// Whole minutes until a time, by the server's clock. A wrong clock on this computer changes nothing,
+// Whole minutes between now and a time, by the server's clock. A wrong clock on this computer changes nothing,
 // because clockGap cancels it out.
-function minutesUntil(isoDate) {
+function minutesFromNow(isoDate) {
   const serverNow = Date.now() + clockGap;
-  return Math.max(0, Math.floor((new Date(isoDate).getTime() - serverNow) / 60000));
+  return Math.floor((new Date(isoDate).getTime() - serverNow) / 60000);
+}
+
+function startedText(minutes) {
+  return minutes < 1 ? 'started just now' : `started ${minutes} min ago`;
 }
 
 function showCountdowns() {
-  document.querySelectorAll('[data-starts]').forEach((chip) => {
-    chip.textContent = `Starts in ${durationText(minutesUntil(chip.dataset.starts))}`;
+  document.querySelectorAll('[data-since]').forEach((text) => {
+    text.textContent = startedText(-minutesFromNow(text.dataset.since));
   });
-  document.querySelectorAll('[data-due]').forEach((chip) => {
-    chip.textContent = timeLeftText(minutesUntil(chip.dataset.due));
+  document.querySelectorAll('[data-starts]').forEach((text) => {
+    text.textContent = `starts in ${durationText(Math.max(0, minutesFromNow(text.dataset.starts)))}`;
+  });
+  document.querySelectorAll('[data-due]').forEach((text) => {
+    text.textContent = timeLeftText(Math.max(0, minutesFromNow(text.dataset.due))).toLowerCase();
   });
 }
 
 // ---------- Building the page ----------
 
-function startsChipHtml(lecture) {
-  return `<span class="chip chip-green" data-starts="${escapeHtml(lecture.starts_at)}"></span>`;
+// "Today · 6:00 PM – 7:00 PM IST · Google Meet"
+function whenText(lecture, today) {
+  const end = new Date(new Date(lecture.starts_at).getTime() + lecture.duration_minutes * 60000);
+  const day = istDay(lecture.starts_at) === today ? 'Today' : formatDateTime(lecture.starts_at).split(',')[0];
+  return `${day} · ${formatTime(lecture.starts_at)} – ${formatTime(end)} IST · Google Meet`;
 }
 
 // aria-label names the lecture, so a screen reader can tell several Join buttons apart
-function liveItemHtml(lecture) {
+function liveItemHtml(lecture, today) {
   const title = escapeHtml(lecture.title);
   return `
-    <div class="live-item" id="lecture-${lecture.id}">
-      <div class="next-body">
-        ${liveChipHtml('Live now')}
-        <strong class="next-title">${title}</strong>
-        <span class="next-when">Started ${formatDateTime(lecture.starts_at)}</span>
+    <div class="hero-item" id="lecture-${lecture.id}">
+      <div class="hero-text">
+        <span class="hero-status">
+          <span class="live-dot" aria-hidden="true"><i></i></span>
+          <span><b>Live now</b> · <span data-since="${escapeHtml(lecture.starts_at)}"></span></span>
+        </span>
+        <strong class="hero-title">${title}</strong>
+        <span class="hero-when">${whenText(lecture, today)}</span>
       </div>
-      <a class="btn btn-primary" href="${escapeHtml(lecture.meet_link)}" target="_blank" rel="noopener noreferrer"
-         aria-label="Join live: ${title}">Join live</a>
+      <a class="btn btn-join" href="${escapeHtml(lecture.meet_link)}" target="_blank" rel="noopener noreferrer"
+         aria-label="Join live class: ${title}">${CAMERA_ICON}Join live class</a>
     </div>`;
 }
 
-function nextLectureHtml(lecture) {
+function nextLectureHtml(lecture, today) {
   return `
-    <h2>Next lecture</h2>
-    <div class="next-body">
-      <strong class="next-title">${escapeHtml(lecture.title)}</strong>
-      <span class="next-when">${formatDateTime(lecture.starts_at)}</span>
-      ${startsChipHtml(lecture)}
+    <div class="hero-item" id="lecture-${lecture.id}">
+      <div class="hero-text">
+        <span class="hero-status"><span><b>Next lecture</b> · <span data-starts="${escapeHtml(lecture.starts_at)}"></span></span></span>
+        <strong class="hero-title">${escapeHtml(lecture.title)}</strong>
+        <span class="hero-when">${whenText(lecture, today)}</span>
+      </div>
+      <span class="hero-note">Join opens at start</span>
     </div>`;
 }
 
-function liveCardHtml({ live, upcoming }) {
-  if (live.length) return `<div class="live-list">${live.map(liveItemHtml).join('')}</div>`;
-  if (upcoming.length) return nextLectureHtml(upcoming[0]);
+function liveCardHtml({ live, upcoming }, today) {
+  if (live.length) return `<div class="hero-list">${live.map((lecture) => liveItemHtml(lecture, today)).join('')}</div>`;
+  if (upcoming.length) return nextLectureHtml(upcoming[0], today);
   return emptyHtml('div', CAMERA_ICON, 'Nothing live right now', 'When your next lecture is scheduled, it will show up here.');
 }
 
-function upcomingRowHtml(lecture) {
-  const title = escapeHtml(lecture.title);
+function upcomingRowHtml(lecture, today) {
   return `
-    <li class="list-row schedule-row" id="lecture-${lecture.id}">
-      <div class="list-main">
-        <strong title="${title}">${title}</strong>
-        <span>${formatDateTime(lecture.starts_at)}</span>
+    <li class="row-card${istDay(lecture.starts_at) === today ? ' is-today' : ''}" id="lecture-${lecture.id}">
+      ${dateBlockHtml(lecture.starts_at, today)}
+      <div class="row-main">
+        <strong>${escapeHtml(lecture.title)}</strong>
+        <span>${formatTime(lecture.starts_at)} IST · Google Meet</span>
       </div>
-      <div class="list-meta">${startsChipHtml(lecture)}</div>
+      <span class="row-note">Join opens at start</span>
     </li>`;
 }
 
-// Amber for the last 24 hours, "Closed" once the deadline has passed
-function deadlineChipHtml(assignment) {
-  if (assignment.deadline_status === 'closed') return '<span class="chip chip-quiet">Closed</span>';
-  const style = assignment.deadline_status === 'soon' ? 'chip-amber' : 'chip-green';
-  return `<span class="chip ${style}" data-due="${escapeHtml(assignment.due_at)}"></span>`;
+// While a lecture is live, the next one is still in this list. Otherwise it is in the big card, so it isn't repeated.
+function upcomingHtml({ live, upcoming }, today) {
+  const rest = live.length ? upcoming : upcoming.slice(1);
+  if (rest.length) return rest.map((lecture) => upcomingRowHtml(lecture, today)).join('');
+  return emptyHtml('li', CALENDAR_ICON, upcoming.length ? 'Nothing else scheduled' : 'No upcoming lectures', 'New lectures will appear here.');
 }
 
 function assignmentRowHtml(assignment) {
-  const title = escapeHtml(assignment.title);
-  const description = escapeHtml(assignment.description);
+  const left = assignment.deadline_status === 'closed' ? '' : ` · <span data-due="${escapeHtml(assignment.due_at)}"></span>`;
   return `
-    <li class="list-row schedule-row assignment-row" id="assignment-${assignment.id}">
-      <div class="list-main">
-        <strong title="${title}">${title}</strong>
-        <p class="row-desc" title="${description}">${description}</p>
-        <span>Due ${formatDateTime(assignment.due_at)}</span>
-      </div>
-      <div class="list-meta">
-        ${submissionChipHtml(assignment.submission_status)}
-        ${deadlineChipHtml(assignment)}
-        <a class="btn btn-ghost btn-small" href="/student/submit?assignment=${assignment.id}" aria-label="Submit: ${title}">Submit</a>
-      </div>
+    <li>
+      <a class="row-card row-link" href="/student/assignments?assignment=${assignment.id}">
+        <span class="row-main">
+          <strong>${escapeHtml(assignment.title)}</strong>
+          <span>Due ${formatDateTime(assignment.due_at)}${left}</span>
+        </span>
+        <span class="row-side">${assignmentTagHtml(assignment)}</span>
+      </a>
     </li>`;
 }
 
@@ -141,15 +154,13 @@ async function refresh() {
   if (thisLoad !== latestLoad) return; // a newer refresh has started, so this answer is out of date
 
   clockGap = new Date(data.now).getTime() - Date.now();
-  showUserName(data.name);
+  const today = istDay(data.now);
+  const firstName = data.name.split(' ')[0];
+  hello.textContent = [`Hi ${firstName}`, data.batch_name].filter(Boolean).join(' · ');
 
-  update(liveBody, liveCardHtml(data));
-  update(
-    upcomingList,
-    data.upcoming.length
-      ? data.upcoming.map(upcomingRowHtml).join('')
-      : emptyHtml('li', CALENDAR_ICON, 'No upcoming lectures', "You're all set. New lectures will appear here.")
-  );
+  liveCard.classList.toggle('is-live', data.live.length > 0);
+  update(liveBody, liveCardHtml(data, today));
+  update(upcomingList, upcomingHtml(data, today));
   update(
     assignmentList,
     data.assignments.length
@@ -171,22 +182,23 @@ function showLoadError(error) {
   update(assignmentList, `<li class="alert alert-error">${message}</li>`);
 }
 
-// ui.js shows an item opened from a search result. If it isn't on the page, it may be newer than the last
+// ui.js shows a lecture opened from a search result. If it isn't on the page, it may be newer than the last
 // refresh, so ask the server once before giving up.
 async function findMissingItem() {
   const id = window.location.hash.slice(1);
-  if (!/^(lecture|assignment)-\d+$/.test(id) || document.getElementById(id)) return;
+  if (!/^lecture-\d+$/.test(id) || document.getElementById(id)) return;
 
   await refresh().catch(() => {});
   if (document.getElementById(id)) showLinkedItem();
-  else showToast("That item isn't on your dashboard any more.", 'error');
+  else showToast("That lecture isn't on your dashboard any more.", 'error');
 }
 window.addEventListener('hashchange', findMissingItem);
 
 // ---------- Start ----------
 
 setupLogout();
-enterAnimation('.welcome, .bento > *');
+showCurrentUser();
+enterAnimation('.page-head, .hero-card, .panels > *');
 
 refresh()
   .then(() => {

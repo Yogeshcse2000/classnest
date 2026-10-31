@@ -12,6 +12,7 @@ const formError = document.getElementById('student-error');
 const saveButton = document.getElementById('student-save');
 const list = document.getElementById('student-list');
 const countLabel = document.getElementById('student-count');
+const searchInput = document.getElementById('student-search');
 
 const credCard = document.getElementById('cred-card');
 const credIntro = document.getElementById('cred-intro');
@@ -26,34 +27,59 @@ let students = [];
 
 function studentRowHtml(student) {
   return `
-    <li class="list-row" id="student-${student.id}">
-      <span class="avatar" aria-hidden="true">${escapeHtml(student.name.charAt(0).toUpperCase())}</span>
-      <div class="list-main">
-        <strong>${escapeHtml(student.name)}</strong>
-        <span>${escapeHtml(student.email || '')}</span>
-      </div>
-      <div class="list-meta">
-        <span class="chip mono">${escapeHtml(student.username)}</span>
-        <span class="chip chip-green chip-batch" title="${escapeHtml(student.batch_name)}">${escapeHtml(student.batch_name)}</span>
-      </div>
-    </li>`;
+    <tr id="student-${student.id}">
+      <td class="table-name">${escapeHtml(student.name)}</td>
+      <td class="table-muted" data-label="Email">${escapeHtml(student.email || '')}</td>
+      <td data-label="Batch">${escapeHtml(student.batch_name)}</td>
+      <td data-label="Username"><span class="mono">${escapeHtml(student.username)}</span></td>
+    </tr>`;
 }
 
 const BATCH_ICON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 3 8l9 5 9-5z"/><path d="m3 13 9 5 9-5"/></svg>`;
 const STUDENT_ICON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m2 9 10-5 10 5-10 5z"/><path d="M6 11v5c2 2 10 2 12 0v-5"/></svg>`;
 
-const EMPTY_HTML = `
-  <li class="empty-state">
-    <div class="empty-icon" aria-hidden="true">${STUDENT_ICON}</div>
-    <h2>No students yet</h2>
-    <p>Enroll your first student with the form. Their login details will appear right here.</p>
-  </li>`;
+function messageRowHtml(title, text) {
+  return `
+    <tr class="table-message">
+      <td colspan="4">
+        <div class="empty-state">
+          <div class="empty-icon" aria-hidden="true">${STUDENT_ICON}</div>
+          <h2>${title}</h2>
+          <p>${text}</p>
+        </div>
+      </td>
+    </tr>`;
+}
+
+// Everything the table shows can be searched
+function matchesSearch(student) {
+  const words = searchInput.value.trim().toLowerCase();
+  return [student.name, student.email, student.batch_name, student.username].some((value) => value?.toLowerCase().includes(words));
+}
 
 function render() {
-  countLabel.textContent = students.length ? plural(students.length, 'student') : '';
-  list.innerHTML = students.length ? students.map(studentRowHtml).join('') : EMPTY_HTML;
+  const visible = students.filter(matchesSearch);
+  countLabel.textContent = visible.length === students.length ? `(${students.length})` : `(${visible.length} of ${students.length})`;
+
+  if (!students.length) {
+    list.innerHTML = messageRowHtml('No students yet', 'Enroll your first student with the form. Their login details will appear right here.');
+  } else if (!visible.length) {
+    list.innerHTML = messageRowHtml('No matching students', 'Try a different name, email, batch or username.');
+  } else {
+    list.innerHTML = visible.map(studentRowHtml).join('');
+  }
   list.removeAttribute('aria-busy');
 }
+
+searchInput.addEventListener('input', render);
+
+// A search result can point at a row the search box is hiding, so show everyone again
+window.addEventListener('hashchange', () => {
+  if (document.getElementById(window.location.hash.slice(1))) return;
+  searchInput.value = '';
+  render();
+  showLinkedItem();
+});
 
 // ---------- Batch dropdown ----------
 
@@ -173,6 +199,7 @@ form.addEventListener('submit', async (event) => {
     });
 
     students.unshift(student);
+    searchInput.value = ''; // so the new student is on show
     render();
     if (motionOK) gsap.from(list.firstElementChild, { opacity: 0, y: -8, duration: 0.3, ease: 'power2.out' });
 
@@ -185,23 +212,23 @@ form.addEventListener('submit', async (event) => {
     showFormError(error.message);
   } finally {
     saveButton.disabled = false;
-    saveButton.textContent = 'Enroll student';
+    saveButton.textContent = 'Enroll & generate login';
   }
 });
 
 // ---------- Start ----------
 
-enterAnimation('.welcome, .split > *');
+enterAnimation('.split > *');
 
 Promise.all([loadPageData('/api/admin/batches'), loadPageData('/api/admin/students')])
   .then(([batchData, studentData]) => {
     fillBatchSelect(batchData.batches);
     students = studentData.students;
     render();
-    enterAnimation('#student-list > *');
+    enterAnimation('#student-list'); // the list as one piece: row by row takes seconds on a long list
     showLinkedItem();
   })
   .catch((error) => {
     list.removeAttribute('aria-busy');
-    list.innerHTML = `<li class="alert alert-error">${escapeHtml(error.message)}</li>`;
+    list.innerHTML = `<tr class="table-message"><td colspan="4"><p class="alert alert-error">${escapeHtml(error.message)}</p></td></tr>`;
   });

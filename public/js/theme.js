@@ -4,6 +4,9 @@
 (function () {
   const KEY = 'classnest-theme';
 
+  // Light mode uses a different accent colour for each role
+  document.documentElement.dataset.role = window.location.pathname.startsWith('/student') ? 'student' : 'admin';
+
   try {
     const saved = localStorage.getItem(KEY);
     if (saved === 'light' || saved === 'dark') {

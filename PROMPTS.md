@@ -372,3 +372,41 @@ Then give me a short report of what you built and tested. Add this prompt to PRO
 
 Then give me a short report of what you built and tested. Add this prompt to PROMPTS.md.
 ```
+
+## Prompt 21 - Match the trainer's mockups (2026-10-31)
+
+```
+/classnest-ui Read CLAUDE.md, PLAN.md and IDEAS.md first. Then study every image in the mockups folder. These are my trainer's official mockups, and "UI matches the mockups" is part of my score.
+
+Goal: all inner pages must match the mockups' LAYOUT and ELEMENTS closely, and every page must look like part of one app. Keep the ClassNest name, logo and dark theme as the default. Add the mockup's style (cream background, thick black borders, hard offset shadows, blue accent for admin, orange for student) as the light mode.
+
+1. Login: keep my current login EXACTLY as it is: the cinematic intro, then two separate cards for Admin and Student, and clicking a card opens its login form. Don't replace it with the mockup's split screen or toggle. Only add, inside my design: the note "Students can't sign up. Your admin creates your login." and a working "Preview error state" link.
+
+2. Sidebar layout (all inner pages): replace the top navigation with a fixed left sidebar like the mockups. Logo and role badge at the top, nav links in the middle, then the user card (student: name and batch) and Log out at the bottom. Keep the search and theme toggle in the sidebar. On mobile the sidebar becomes a slide-out menu. This also fixes the bug where the top bar shows in the middle of pages over the content.
+
+3. Admin dashboard: greeting ("Good morning, Admin" by IST time), "+ Release lecture" and "+ Post assignment" buttons, 4 stat cards (Active batches, Students, Lectures released with "X scheduled today", Submissions with "X submitted late"), Upcoming lectures with date blocks (TODAY highlighted), and a Latest submissions table (student, assignment, when as "10 min ago", status On time or Late) with a "View all" link.
+
+4. Admin students: enroll form on the left, students table on the right (name, email, batch, username), with a working search box and a count. The credentials popup keeps working.
+
+5. Admin assignments: assignment list on the left (title, batch, deadline, "submitted/total in"), selected one highlighted. On the right, the selected assignment's table: student, file name, status (On time, Late with how late like "Late · 2h", Missing), and "Download .zip" or "Not submitted". Add working filter pills: All, On time, Late, Missing. The "+ New assignment" button opens the post form.
+
+6. Batches and Lectures pages: no mockup for these, so build them in the same layout: form card plus list or table, same borders, tags and buttons.
+
+7. Student dashboard: a big "Live now" card with "started X min ago" and a "Join live class" button. If nothing is live, show the next lecture there instead, and don't repeat it in the upcoming list. Upcoming lectures with date blocks and "Join opens at start". Assignments with Pending, Submitted, Late or Closed tags, and an "Open all" link.
+
+8. Student assignments page: add an "Assignments" sidebar link. List on the left (open first, closed at the bottom), the selected assignment on the right with its full description, a big "Time left" box counting down like "3d 05:05:02", and the zip drop zone. Merge the current Stage 7 submit page into this, keeping all its upload rules and behaviour.
+
+9. Polish fixes:
+- Replace the browser's default date-time picker with a custom picker that matches the design (IST).
+- No inner scrollbars inside form cards.
+- Fix any heading or content hidden under other elements.
+
+Rules:
+- All pages share the same sidebar, spacing, borders, buttons, tags and colours. Update the classnest-ui skill with these new rules, so every page now and later looks the same.
+- Every button in the mockups must exist and work. No fake buttons.
+- Use real data from the database, never the mockup's sample names.
+- Add API data needed for the new counts and tables, but don't change the database tables, the login logic, sessions, or the upload rules.
+- Test it yourself quickly (no tester agent): both roles, every page, button and filter, light and dark mode, desktop and mobile, no console errors. Then give me a short report, including anything you couldn't match.
+
+Add this prompt to PROMPTS.md.
+```

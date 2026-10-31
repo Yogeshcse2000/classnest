@@ -18,40 +18,39 @@ let batches = [];
 
 // ---------- Showing the list ----------
 
-function startLabel(batch) {
-  return `${batch.started ? 'Started' : 'Starts'} ${formatDate(batch.start_date)}`;
-}
-
-function batchCardHtml(batch) {
-  const description = batch.description
-    ? `<p class="batch-desc">${escapeHtml(batch.description)}</p>`
-    : `<p class="batch-desc">No description yet.</p>`;
-
+function batchRowHtml(batch) {
+  const description = batch.description ? `<span class="table-sub">${escapeHtml(batch.description)}</span>` : '';
   return `
-    <article class="card lift batch-card" id="batch-${batch.id}" data-id="${batch.id}">
-      <div class="batch-card-top">
-        <h3>${escapeHtml(batch.name)}</h3>
-        <button class="icon-btn icon-btn-danger" type="button" data-delete="${batch.id}"
-                aria-label="Delete ${escapeHtml(batch.name)}" title="Delete batch">${TRASH_ICON}</button>
-      </div>
-      <span class="chip chip-green">${startLabel(batch)}</span>
-      ${description}
-      <div class="batch-card-foot">${plural(batch.student_count, 'student')}</div>
-    </article>`;
+    <tr id="batch-${batch.id}">
+      <td class="table-name">${escapeHtml(batch.name)}${description}</td>
+      <td data-label="Start"><span class="cell-stack">${batch.started ? tagHtml('Started', 'green') : tagHtml('Not started', 'quiet')}<span class="table-sub">${formatDate(batch.start_date)}</span></span></td>
+      <td data-label="Students">${batch.student_count}</td>
+      <td data-label="Lectures">${batch.lecture_count}</td>
+      <td data-label="Assignments">${batch.assignment_count}</td>
+      <td class="table-action">
+        <div class="row-buttons">
+          <button class="icon-btn icon-btn-danger" type="button" data-delete="${batch.id}"
+                  aria-label="Delete ${escapeHtml(batch.name)}" title="Delete batch">${TRASH_ICON}</button>
+        </div>
+      </td>
+    </tr>`;
 }
 
 const EMPTY_HTML = `
-  <div class="card empty-state">
-    <div class="empty-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 3 8l9 5 9-5z"/><path d="m3 13 9 5 9-5"/></svg></div>
-    <h2>No batches yet</h2>
-    <p>Create your first batch with the form. Then you can start enrolling students into it.</p>
-  </div>`;
+  <tr class="table-message">
+    <td colspan="6">
+      <div class="empty-state">
+        <div class="empty-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 3 8l9 5 9-5z"/><path d="m3 13 9 5 9-5"/></svg></div>
+        <h2>No batches yet</h2>
+        <p>Create your first batch with the form. Then you can start enrolling students into it.</p>
+      </div>
+    </td>
+  </tr>`;
 
 function render() {
-  countLabel.textContent = batches.length ? plural(batches.length, 'batch', 'batches') : '';
-  list.innerHTML = batches.length ? batches.map(batchCardHtml).join('') : EMPTY_HTML;
+  countLabel.textContent = `(${batches.length})`;
+  list.innerHTML = batches.length ? batches.map(batchRowHtml).join('') : EMPTY_HTML;
   list.removeAttribute('aria-busy');
-  addHoverLift(list);
 }
 
 // ---------- Creating a batch ----------
@@ -78,7 +77,7 @@ form.addEventListener('submit', async (event) => {
     });
     batches.unshift(batch);
     render();
-    if (motionOK) gsap.from(list.firstElementChild, { opacity: 0, scale: 0.94, y: 10, duration: 0.3, ease: 'back.out(1.6)' });
+    if (motionOK) gsap.from(list.firstElementChild, { opacity: 0, y: -8, duration: 0.3, ease: 'power2.out', clearProps: 'opacity,transform' });
     form.reset();
     showToast(`Batch "${batch.name}" created.`);
   } catch (error) {
@@ -120,9 +119,9 @@ list.addEventListener('click', async (event) => {
       batches = batches.filter((b) => b.id !== batch.id);
       render();
     };
-    const card = button.closest('.batch-card');
+    const row = button.closest('tr');
     if (motionOK) {
-      gsap.to(card, { opacity: 0, scale: 0.94, duration: 0.25, ease: 'power2.in', onComplete: removeFromList });
+      gsap.to(row, { opacity: 0, x: 12, duration: 0.25, ease: 'power2.in', onComplete: removeFromList });
     } else {
       removeFromList();
     }
@@ -134,16 +133,16 @@ list.addEventListener('click', async (event) => {
 
 // ---------- Start ----------
 
-enterAnimation('.welcome, .split > *');
+enterAnimation('.split > *');
 
 loadPageData('/api/admin/batches')
   .then((data) => {
     batches = data.batches;
     render();
-    enterAnimation('#batch-list > *');
+    enterAnimation('#batch-list'); // the list as one piece: row by row takes seconds on a long list
     showLinkedItem();
   })
   .catch((error) => {
     list.removeAttribute('aria-busy');
-    list.innerHTML = `<p class="alert alert-error">${escapeHtml(error.message)}</p>`;
+    list.innerHTML = `<tr class="table-message"><td colspan="6"><p class="alert alert-error">${escapeHtml(error.message)}</p></td></tr>`;
   });

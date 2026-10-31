@@ -64,16 +64,14 @@ function uploadFile(path, file, onProgress) {
   });
 }
 
-// Fills every [data-user-name] and [data-user-initial] on the page
-function showUserName(name) {
-  document.querySelectorAll('[data-user-name]').forEach((el) => (el.textContent = name));
-  document.querySelectorAll('[data-user-initial]').forEach((el) => (el.textContent = name.charAt(0).toUpperCase()));
-}
-
-// Shows the logged-in person's name in the top bar
+// Shows the logged-in person in the sidebar's user card. Students also see their batch.
 function showCurrentUser() {
-  loadPageData('/api/auth/me')
-    .then((data) => showUserName(data.user.name))
+  const isStudent = window.location.pathname.startsWith('/student');
+  loadPageData(isStudent ? '/api/student/me' : '/api/auth/me')
+    .then(({ user }) => {
+      document.querySelector('[data-user-name]').textContent = user.name;
+      if (isStudent) document.querySelector('[data-user-batch]').textContent = user.batch_name;
+    })
     .catch(() => {});
 }
 

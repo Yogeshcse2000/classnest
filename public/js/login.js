@@ -143,6 +143,11 @@ function hideError() {
   errorBox.textContent = '';
 }
 
+// Shows what a failed sign-in looks like. Nothing is sent to the server.
+document.getElementById('preview-error').addEventListener('click', () => {
+  showError(`Wrong ${roleSettings[role].label.toLowerCase()} or password. Please try again.`);
+});
+
 // ---------- Pasting login details ----------
 
 // If someone pastes "Username: ... Password: ..." into either box, fill in both boxes for them
