@@ -71,6 +71,7 @@ db.exec(`
     file_path     TEXT    NOT NULL,
     original_name TEXT    NOT NULL,
     submitted_at  TEXT    NOT NULL,
+    is_late       INTEGER NOT NULL DEFAULT 0,
     UNIQUE (assignment_id, student_id)
   );
 
@@ -81,5 +82,12 @@ db.exec(`
     expires_at INTEGER NOT NULL
   );
 `);
+
+// "CREATE TABLE IF NOT EXISTS" skips a table that is already there, so a database from before Stage 7 gets this
+// column here, once. Adding a column leaves every existing row as it was.
+const submissionColumns = db.prepare('PRAGMA table_info(submissions)').all();
+if (!submissionColumns.some((column) => column.name === 'is_late')) {
+  db.exec('ALTER TABLE submissions ADD COLUMN is_late INTEGER NOT NULL DEFAULT 0');
+}
 
 module.exports = db;

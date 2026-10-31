@@ -44,4 +44,15 @@ function minutesLeft(dueAt, now) {
   return Math.max(0, Math.floor((new Date(dueAt).getTime() - now) / MINUTE));
 }
 
-module.exports = { utcToIst, istToUtc, istToday, lectureStatus, deadlineStatus, minutesLeft };
+// Late means uploaded after the deadline, by the server's clock
+function isLate(dueAt, now) {
+  return now > new Date(dueAt).getTime();
+}
+
+// The words shown for a student's work on an assignment. submittedAt is empty if they haven't handed anything in.
+function submissionStatus(submittedAt, late) {
+  if (!submittedAt) return 'Not submitted';
+  return late ? 'Late' : 'Submitted';
+}
+
+module.exports = { utcToIst, istToUtc, istToday, lectureStatus, deadlineStatus, minutesLeft, isLate, submissionStatus };

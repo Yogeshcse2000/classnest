@@ -60,6 +60,12 @@ function liveChipHtml(text) {
   return `<span class="chip chip-amber"><span class="live-dot" aria-hidden="true"><i></i></span>${text}</span>`;
 }
 
+// A student's work on an assignment. "Late" is about a deadline, so it may use amber.
+function submissionChipHtml(status) {
+  const styles = { Submitted: 'chip-green', Late: 'chip-amber', 'Not submitted': 'chip-quiet' };
+  return `<span class="chip ${styles[status]}">${status}</span>`;
+}
+
 // Search results link to an item in a list, like /admin/batches#batch-3. The list is built after the page
 // loads, so the browser can't jump there by itself. Bring the item into view and light it up for a moment.
 function showLinkedItem() {

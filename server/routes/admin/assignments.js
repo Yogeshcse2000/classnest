@@ -9,7 +9,8 @@ const {
   deleteAssignment,
 } = require('../../models/assignments');
 const { findBatchById } = require('../../models/batches');
-const { utcToIst, istToUtc, deadlineStatus, minutesLeft } = require('../../utils/dates');
+const { countAssignmentSubmissions, listAssignmentRoster } = require('../../models/submissions');
+const { utcToIst, istToUtc, deadlineStatus, minutesLeft, submissionStatus } = require('../../utils/dates');
 const { toId } = require('../../utils/ids');
 
 const router = express.Router();
@@ -70,6 +71,24 @@ router.get('/', async (req, res) => {
   res.json({ assignments: assignments.map((assignment) => assignmentView(assignment, now)) });
 });
 
+// GET /api/admin/assignments/:id/submissions - every student in the batch, whether they have submitted or not
+router.get('/:id/submissions', async (req, res) => {
+  const assignment = await findAssignmentById(toId(req.params.id));
+  if (!assignment) {
+    return res.status(404).json({ error: 'That assignment no longer exists.' });
+  }
+
+  const roster = await listAssignmentRoster(assignment.id, assignment.batch_id);
+  const students = roster.map((student) => ({ ...student, status: submissionStatus(student.submitted_at, student.is_late) }));
+  const count = (status) => students.filter((student) => student.status === status).length;
+
+  res.json({
+    assignment: assignmentView(assignment, Date.now()),
+    counts: { submitted: count('Submitted'), late: count('Late'), notSubmitted: count('Not submitted') },
+    students,
+  });
+});
+
 // POST /api/admin/assignments  body: { title, description, dueAt, batchId }
 router.post('/', async (req, res) => {
   const { assignment, fields } = await readAssignment(req.body);
@@ -93,6 +112,10 @@ router.put('/:id', async (req, res) => {
   }
 
   const { assignment, fields } = await readAssignment(req.body);
+  // The submissions view lists the assignment's batch, so moving it would hide the work already handed in
+  if (!fields.batchId && assignment.batchId !== existing.batch_id && (await countAssignmentSubmissions(existing.id))) {
+    fields.batchId = 'Students have already submitted work, so this assignment must stay in its batch.';
+  }
   if (Object.keys(fields).length) {
     return sendFieldErrors(res, fields);
   }

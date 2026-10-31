@@ -96,6 +96,7 @@ function setupSchedulePage({
     list.removeAttribute('aria-busy');
     shownRows = rows.map(rowHtml).join('');
     showStatuses();
+    addHoverLift(list);
   }
 
   // Asks the server for the list. Rows only rebuild if something other than a status changed,

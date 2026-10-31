@@ -1,5 +1,6 @@
 // Student dashboard: lectures that are live now, upcoming lectures and assignments, kept fresh without reloading.
-// The server decides what is live, upcoming or closed, because its clock is the one that counts. This file only shows it.
+// The server decides what is live, upcoming or closed, and the order of the assignments, because its clock is the one
+// that counts. This file only shows it.
 
 const REFRESH_MS = 30000; // statuses change as time passes, so ask the server again every 30 seconds
 const COUNTDOWN_MS = 60000; // the "Starts in" and "left" texts are in minutes, so they change every minute
@@ -94,13 +95,17 @@ function assignmentRowHtml(assignment) {
   const title = escapeHtml(assignment.title);
   const description = escapeHtml(assignment.description);
   return `
-    <li class="list-row schedule-row" id="assignment-${assignment.id}">
+    <li class="list-row schedule-row assignment-row" id="assignment-${assignment.id}">
       <div class="list-main">
         <strong title="${title}">${title}</strong>
         <p class="row-desc" title="${description}">${description}</p>
         <span>Due ${formatDateTime(assignment.due_at)}</span>
       </div>
-      <div class="list-meta">${deadlineChipHtml(assignment)}</div>
+      <div class="list-meta">
+        ${submissionChipHtml(assignment.submission_status)}
+        ${deadlineChipHtml(assignment)}
+        <a class="btn btn-ghost btn-small" href="/student/submit?assignment=${assignment.id}" aria-label="Submit: ${title}">Submit</a>
+      </div>
     </li>`;
 }
 

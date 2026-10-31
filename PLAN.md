@@ -15,7 +15,7 @@ Project rules are in [CLAUDE.md](CLAUDE.md). Design and animation rules are in t
 | Wrong role / not logged in | Pages redirect (to login, or to your own dashboard). API routes answer 401 / 403 with an error. |
 | Batches per student | **One.** Stored as `students.batch_id` (required). No enrollments table. |
 | Emails and usernames | Stored trimmed and lowercase, so capital letters don't matter at login. |
-| Deleting | Nothing is deleted automatically. Only **empty** batches (no students, lectures or assignments) can be deleted, so no lecture or assignment can lose its batch. The Batches page warns the admin what is still inside before anything happens, and the server refuses as well. An assignment with student submissions can't be deleted. |
+| Deleting | Nothing is deleted automatically. Only **empty** batches (no students, lectures or assignments) can be deleted, so no lecture or assignment can lose its batch. The Batches page warns the admin what is still inside before anything happens, and the server refuses as well. An assignment with student submissions can't be deleted, and students can't be deleted at all yet, so today no uploaded file can be left behind. **Any delete added later must also delete that student's or assignment's files** with `deleteFile()` from `storage.js`. |
 | Dates and times | Saved as ISO text in UTC. Admins type India time (IST), and `server/utils/dates.js` converts it (IST is always UTC + 5:30). Pages always show IST with the label "IST", whatever the computer is set to. |
 | Time checks | The server's clock only. It sends each lecture's status, each assignment's time left and whether a batch has started. The past-date warning comes from `/api/admin/lectures/check-time`, and the lecture and assignment pages ask again every 30 seconds so statuses stay correct. The student dashboard also receives the server's time, so its countdowns stay right even if the student's computer clock is wrong. |
 | Student dashboard | The login session says who the student is, and the database says which batch they are in. A batch in the URL or body is ignored. Meet links are only sent while a lecture is live, and finished lectures aren't sent at all. The page refreshes every 30 seconds, updates countdowns every minute, pauses both while the tab is hidden, and refreshes as soon as the tab is shown again. |
@@ -31,8 +31,12 @@ Project rules are in [CLAUDE.md](CLAUDE.md). Design and animation rules are in t
 | Design exceptions | The login page may use an amber glow and animations longer than 300ms. Everywhere else, the `classnest-ui` skill applies. |
 | Theme | Dark by default. The toggle on inner pages switches to light, and the choice is remembered. |
 | Duplicate emails | Rejected with a clear error (capital letters don't matter). |
-| Re-uploading | Allowed. The newest file **replaces** the old one (old file is deleted). |
+| Re-uploading | Allowed. The newest file **replaces** the old one (old file is deleted). `submitted_at` and `is_late` change with it. The new file is saved first and the old one deleted last, so a failure leaves the old submission whole. |
 | After the deadline | Uploads still allowed, but shown as **"Late"**. Never blocked. |
+| Late | Saved in `submissions.is_late` when the upload arrives, using the server's clock. Moving a deadline later doesn't change work already handed in. Only a new upload does. |
+| Upload rules | One file, `.zip` only, 10 MB at most, checked on the server by name and by its first 4 bytes (`PK` plus what kind of zip it is). The file is held in memory until every check passes, so a refused or half-finished upload never reaches the disk. Files are saved under a random name, and the student's file name is only kept in the database for display. Nothing is ever unzipped or run. |
+| Downloads | Only a logged-in admin, through `/api/admin/submissions/:id/download`. The `uploads/` folder is outside `public/`, and students have no download route, not even for their own work. Files download as `username_assignment-title.zip`. |
+| Moving an assignment | Once students have submitted work, an assignment can't move to another batch, because the submissions view lists the assignment's batch and their work would disappear from it. |
 | Grading | **None** for now. |
 | Running | Fully on a laptop with `npm start`. May be deployed for free later. |
 | Google Meet | Admin pastes a Meet link. No Google API. |
@@ -62,7 +66,8 @@ classnest/
 │   │   ├── dates.js         ← India time ↔ UTC, lecture status, time left
 │   │   └── ids.js           ← reads IDs strictly (lectures, assignments)
 │   ├── middleware/
-│   │   └── auth.js          ← requireRoleApi, requireRolePage
+│   │   ├── auth.js          ← requireRoleApi, requireRolePage
+│   │   └── upload.js        ← receives one .zip and checks it
 │   ├── models/              ← ALL SQL lives here
 │   │   ├── admins.js
 │   │   ├── students.js
@@ -79,11 +84,12 @@ classnest/
 │       │   ├── students.js  ← /api/admin/students
 │       │   ├── lectures.js  ← /api/admin/lectures
 │       │   ├── assignments.js ← /api/admin/assignments
+│       │   ├── submissions.js ← /api/admin/submissions  (downloads)
 │       │   └── search.js    ← /api/admin/search
 │       └── student.js       ← /api/student  (students only)
 ├── pages/                   ← protected pages, only reachable through the login checks
-│   ├── admin/               ← dashboard, batches, students, lectures, assignments
-│   └── student/             ← dashboard
+│   ├── admin/               ← dashboard, batches, students, lectures, assignments, submissions
+│   └── student/             ← dashboard, submit
 ├── public/                  ← open to everyone
 │   ├── index.html           ← login page
 │   ├── favicon.svg
@@ -91,7 +97,7 @@ classnest/
 │   └── js/                  ← api.js, ui.js, theme.js, animations.js, palette.js, login.js,
 │                               login-roles.js, login-intro.js, login-particles.js,
 │                               admin.js, batches.js, students.js, schedule.js, lectures.js,
-│                               assignments.js, student.js
+│                               assignments.js, submissions.js, student.js, submit.js
 ├── data/                    ← classnest.db (git-ignored)
 ├── uploads/                 ← student .zip files (git-ignored)
 ├── .env                     ← secrets (git-ignored)
@@ -125,7 +131,7 @@ assignments
 
 submissions
   id, assignment_id → assignments.id, student_id → students.id,
-  file_path, original_name, submitted_at
+  file_path, original_name, submitted_at, is_late (0 or 1)
   UNIQUE (assignment_id, student_id)   ← one row per student per assignment
 
 sessions
@@ -134,7 +140,6 @@ sessions
 
 Worked out by the server, not stored:
 - **Live now:** current time is between `starts_at` and `starts_at + duration_minutes`.
-- **Late:** `submitted_at` is after the assignment's `due_at`.
 
 ## Packages (all free)
 
@@ -171,6 +176,6 @@ When a stage is finished, run the [tester subagent](.claude/agents/tester.md), a
 - [x] **9. Admin: lectures:** schedule lectures with a Meet link. "Live now" badge.
 - [x] **10. Admin: assignments:** post assignments with due dates.
 - [x] **11. Student side:** dashboard, batch lectures with a "Join" button, assignments.
-- [ ] **12. Uploads:** `.zip` submit and re-upload (replaces old file), "Late" badge, admin can see and download.
+- [x] **12. Uploads:** `.zip` submit and re-upload (replaces old file), "Late" badge, admin can see and download.
 - [ ] **13. Dashboards + polish:** bento grid, GSAP count-up, hover lift, pulsing live dot, friendly empty states.
 - [ ] **14. Final check:** test as admin and student, security review, README.

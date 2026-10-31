@@ -233,6 +233,7 @@ textarea {
 .btn-ghost {
   background: transparent;
   border-color: var(--border);
+  color: var(--text);
 }
 .btn-danger {
   background: var(--danger);
@@ -240,6 +241,15 @@ textarea {
 }
 .btn-block {
   width: 100%;
+}
+.btn-small {
+  min-height: 34px;
+  padding: 0 0.9rem;
+  font-size: 0.85rem;
+}
+.btn-small svg {
+  width: 15px;
+  height: 15px;
 }
 
 /* Round icon button (light/dark toggle, delete, command palette) */
@@ -1442,6 +1452,191 @@ kbd {
   -webkit-box-orient: vertical;
 }
 
+.list-meta .btn {
+  z-index: 1; /* stays clickable above the spotlight layer */
+}
+/* Status, time left and Submit are too much to sit beside the text in half a page, so they get their own line */
+.assignment-row {
+  flex-wrap: wrap;
+  row-gap: 0.5rem;
+}
+.assignment-row .list-main {
+  flex-basis: 100%;
+}
+.assignment-row .list-meta {
+  justify-content: flex-start;
+  width: 100%;
+  padding-left: 0;
+}
+.assignment-row .list-meta .btn {
+  margin-left: auto;
+}
+.list-note {
+  padding: 1.25rem 1rem;
+}
+.list-note:hover {
+  background: none;
+}
+
+/* ---------- Submit page and submissions view ---------- */
+.page-back {
+  justify-self: start;
+  text-decoration: none;
+}
+.page-title {
+  overflow-wrap: anywhere;
+}
+.submit-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.1rem;
+  align-content: start;
+}
+.full-text {
+  white-space: pre-wrap; /* keeps the line breaks the admin typed */
+  overflow-wrap: anywhere;
+}
+.deadline-box {
+  display: grid;
+  gap: 0.3rem;
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--border);
+}
+.deadline-box .muted {
+  font-size: 0.85rem;
+}
+.countdown {
+  color: var(--primary-text);
+  font-family: var(--font-head);
+  font-size: clamp(1.6rem, 1.3rem + 1.2vw, 2.1rem);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums; /* the digits keep their width, so the text doesn't shake every second */
+  letter-spacing: -0.02em;
+}
+.countdown-soon {
+  color: var(--accent-text);
+}
+.countdown-closed {
+  color: var(--text-muted);
+}
+.current-work,
+.chosen-file {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.8rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--field);
+}
+.current-work {
+  scroll-margin-top: 132px; /* stops below the sticky top bar */
+  border-color: var(--glow);
+}
+.current-work .success-check {
+  width: 36px;
+  height: 36px;
+}
+/* The file name and time wrap instead of being cut off: phones have no hover to read the rest */
+.current-work .list-main strong,
+.current-work .list-main span,
+.chosen-file .list-main strong {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+.chosen-file .btn {
+  z-index: 1; /* stays clickable above the spotlight layer */
+  flex: none;
+}
+.dropzone {
+  display: grid;
+  justify-items: center;
+  gap: 0.5rem;
+  padding: 1.75rem 1rem;
+  border: 1.5px dashed var(--border);
+  border-radius: var(--radius-sm);
+  text-align: center;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+.dropzone.is-over {
+  border-color: var(--primary-text);
+  background: var(--primary-soft);
+}
+.dropzone .link-icon {
+  margin-bottom: 0.2rem;
+}
+.dropzone .btn {
+  z-index: 1; /* stays clickable above the spotlight layer */
+}
+/* Phones have nothing to drag from, so they only get the button */
+@media (hover: none) {
+  .drop-title {
+    display: none;
+  }
+}
+.upload-progress {
+  display: grid;
+  gap: 0.4rem;
+}
+.progress-track {
+  height: 8px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--surface-2);
+}
+.progress-fill {
+  height: 100%;
+  background: var(--primary-text);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.15s ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  .progress-fill {
+    transition: none;
+  }
+}
+.count-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+.count-card {
+  display: grid;
+  gap: 0.3rem;
+  align-content: start;
+  padding: 1.4rem;
+}
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.table th {
+  padding: 0.7rem 1rem;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-align: left;
+}
+.table td {
+  padding: 0.75rem 1rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.92rem;
+  overflow-wrap: anywhere;
+}
+.table .mono {
+  font-size: 0.88rem;
+}
+.table-name {
+  font-weight: 600;
+}
+.table-action {
+  text-align: right;
+}
+.table-action .btn {
+  z-index: 1; /* stays clickable above the spotlight layer */
+}
+
 /* New student's login details, shown once */
 .cred-card {
   display: grid;
@@ -1778,6 +1973,72 @@ kbd {
     justify-content: flex-start;
     width: 100%;
     padding-left: 0;
+  }
+}
+/* Phones: the five table columns can't fit, so each student becomes a small block with a label on each line */
+@media (max-width: 720px) {
+  .count-grid {
+    gap: 10px;
+  }
+  .count-card {
+    padding: 1rem;
+  }
+  .count-card .stat-number {
+    min-height: 0;
+    font-size: 2.25rem;
+  }
+  .count-card .sk-number {
+    width: 100%;
+    height: 36px;
+  }
+  .count-card .muted {
+    font-size: 0.82rem;
+    line-height: 1.25;
+  }
+  .table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+  .table,
+  .table tbody,
+  .table tr,
+  .table td {
+    display: block;
+  }
+  .table tr {
+    padding: 0.75rem;
+  }
+  .table tr + tr {
+    border-top: 1px solid var(--border);
+  }
+  .table td {
+    padding: 0.15rem 0;
+    border-top: 0;
+  }
+  .table td[data-label] {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    text-align: right;
+  }
+  .table td[data-label]::before {
+    content: attr(data-label);
+    flex: none;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+  }
+  .table-action:empty {
+    display: none;
+  }
+  .table-action {
+    margin-top: 0.5rem;
+  }
+  .table-action .btn {
+    width: 100%;
   }
 }
 /* Short screens: a smaller heading, so the whole login fits without scrolling */

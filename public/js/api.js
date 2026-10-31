@@ -37,6 +37,33 @@ async function loadPageData(path) {
   }
 }
 
+// Uploads one file as the "file" field. onProgress receives how much has been sent, from 0 to 1.
+// This uses XMLHttpRequest because fetch can't report upload progress. Errors work the same way as in api().
+function uploadFile(path, file, onProgress) {
+  return new Promise((resolve, reject) => {
+    const form = new FormData();
+    form.append('file', file);
+
+    const request = new XMLHttpRequest();
+    request.open('POST', path);
+    request.responseType = 'json';
+    request.upload.addEventListener('progress', (event) => {
+      if (event.lengthComputable) onProgress(event.loaded / event.total);
+    });
+    request.addEventListener('load', () => {
+      const data = request.response || {};
+      if (request.status >= 200 && request.status < 300) return resolve(data);
+      const error = new Error(data.error || 'Something went wrong. Please try again.');
+      error.status = request.status;
+      reject(error);
+    });
+    request.addEventListener('error', () => {
+      reject(new Error('The upload stopped before it finished, so nothing was changed. Please check your connection and try again.'));
+    });
+    request.send(form);
+  });
+}
+
 // Fills every [data-user-name] and [data-user-initial] on the page
 function showUserName(name) {
   document.querySelectorAll('[data-user-name]').forEach((el) => (el.textContent = name));

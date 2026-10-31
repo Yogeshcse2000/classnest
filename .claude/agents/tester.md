@@ -26,7 +26,7 @@ Run this in Bash from the project folder. The server gets a fresh database and a
 
 ```sh
 TEST_DIR=$(cygpath -m "$(mktemp -d)")
-export DB_PATH="$TEST_DIR/test.db" PORT=3100
+export DB_PATH="$TEST_DIR/test.db" UPLOADS_PATH="$TEST_DIR/uploads" PORT=3100
 export ADMIN_NAME="Test Admin" ADMIN_EMAIL="admin@test.local" ADMIN_PASSWORD="Admin-Pass-1"
 npm run seed --silent
 node server/server.js > "$TEST_DIR/server.log" 2>&1 &

@@ -328,3 +328,47 @@ Update .claude/agents/tester.md: by default, test only the features from the cur
 
 Then give me a short report of what you built and tested. Add this prompt to PROMPTS.md.
 ```
+
+## Prompt 20 - Stage 7: zip uploads, deadlines and admin review (2026-10-31)
+
+```
+/classnest-ui Read CLAUDE.md and PLAN.md first. Build Stage 7: zip uploads, deadlines and admin review. Don't change the login, existing features, database data, or the design of existing pages.
+
+1. Student: submit assignment page
+- Each assignment on the student dashboard gets a "Submit" button that opens its own submit page.
+- Show title, full description (the dashboard cuts it to 2 lines, and phones can't hover), deadline (IST) and a live countdown using the server time.
+- A drag-and-drop zone plus a "Choose file" button. Before uploading, show the file name and size. While uploading, show a progress bar and disable the button so it can't be clicked twice.
+- After upload: a success animation, and "Submitted on <time>", with a Late tag if it was late.
+- If already submitted, show the current submission (file name, time, Late tag) and allow re-upload. The new file replaces the old one, and is_late and submitted_at are updated.
+- On the dashboard: sort open assignments first by deadline, closed ones at the bottom, and show each assignment's status (Not submitted, Submitted, Late).
+
+2. Upload rules (checked on the server, not only in the browser):
+- Accept only .zip files. Check the extension AND the real content (a zip file starts with the bytes "PK"). Reject anything else with a clear message.
+- Size limit 10 MB, with a clear error if it's too big.
+- Never unzip or run uploaded files. Only store and download them.
+- Save files in an uploads folder with a safe generated name, never the user's file name in the path. Keep the original name in the database only for display.
+- If an upload fails halfway, delete the partial file and don't change the old submission.
+- Mark is_late with the server clock: late if uploaded after the deadline. Late uploads are allowed but flagged.
+- A student can only submit to assignments of their own batch (batch looked up from the session's student ID, like Stage 6).
+- If an assignment or student is deleted, delete their uploaded files too, so nothing is left behind.
+- The uploads folder must stay in .gitignore.
+
+3. Admin: submissions review
+- On the Assignments page, each assignment opens a submissions view.
+- A table of every student in that batch: name, username, status (Submitted, Late, Not submitted), submitted time, and a Download button.
+- Counts at the top: submitted, late, not submitted.
+- Download sends the .zip with a clean name like username_assignment-title.zip.
+- Only a logged-in admin can download. Students can never download anyone's files through the API, including their own.
+- Admin dashboard: show the 5 latest submissions.
+
+4. Test it yourself (no tester agent), on a copy of the database and a test uploads folder so my real data stays clean:
+- A real .zip uploads fine. A .pdf, and a .txt renamed to .zip, are both rejected.
+- A file over 10 MB is rejected.
+- An upload after the deadline is marked Late.
+- Re-upload replaces the old file, and the old file is deleted from disk.
+- Admin sees the correct status for every student, and the download works.
+- A student can't download files, or submit to another batch's assignment.
+- No errors in the browser console or the server terminal, on desktop and mobile size.
+
+Then give me a short report of what you built and tested. Add this prompt to PROMPTS.md.
+```

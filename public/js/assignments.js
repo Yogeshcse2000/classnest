@@ -21,6 +21,7 @@ function assignmentRowHtml(assignment) {
       <div class="list-meta">
         <span class="status-spot" data-status></span>
         <span class="chip chip-batch" title="${batch}">${batch}</span>
+        <a class="btn btn-ghost btn-small" href="/admin/submissions?assignment=${assignment.id}" aria-label="Submissions for ${title}">Submissions</a>
       </div>
       <div class="row-buttons">${rowButtonsHtml(assignment)}</div>
     </li>`;
