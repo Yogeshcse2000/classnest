@@ -19,6 +19,9 @@
 - The design follows the **classnest-ui** skill ([SKILL.md](.claude/skills/classnest-ui/SKILL.md)): a dark, rich, ambient theme, a cinematic login intro and calm inner pages.
 - The skill is the single source of design and animation rules. Use it whenever creating or changing any page, component or style.
 
+## Testing
+- When a stage is finished, use the **tester** subagent ([tester.md](.claude/agents/tester.md)). It tests the app as admin and as student, then reports bugs without fixing them.
+
 ## Git
 - Never commit `.env` or `node_modules`.
 

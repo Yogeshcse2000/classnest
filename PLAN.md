@@ -148,6 +148,8 @@ Worked out by the server, not stored:
 
 ## Build order
 
+When a stage is finished, run the [tester subagent](.claude/agents/tester.md), and fix what it reports before ticking the step.
+
 - [x] **1. Setup:** Node.js, `package.json`, packages installed.
 - [x] **2. Hello server:** `server.js` serves `public/`. Test page at `localhost:3000`.
 - [x] **3. Database + seed:** `db.js` creates all tables. `npm run seed` creates the first admin (hashed password, from `.env`).

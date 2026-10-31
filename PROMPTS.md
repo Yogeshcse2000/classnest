@@ -211,3 +211,20 @@ First explain in simple words what was wrong, then fix it. Don't change the data
 
 Test it: as admin, search "kevin" and find the student. As student, search and see only your own batch data. Fix any errors, then confirm it works. Add this prompt to PROMPTS.md.
 ```
+
+## Prompt 15 - Tester subagent (2026-10-31)
+
+```
+Create a Claude Code subagent at .claude/agents/tester.md.
+
+Name: tester
+Description: Tests ClassNest after every stage. Use it when a stage is finished.
+
+Its job:
+- Start the app and test every finished feature as admin AND as student.
+- Check the must-have items built so far, and the security rules: protected pages and API routes, hashed passwords, no .env in Git.
+- Check the browser console and the server terminal for errors.
+- Don't fix anything itself. Give a short pass/fail report with clear steps to reproduce each bug.
+
+Mention this agent in CLAUDE.md and PLAN.md. Add this prompt to PROMPTS.md.
+```
