@@ -246,3 +246,43 @@ Also test the "Not tested" items you can: logins surviving a server restart, and
 
 Then use the tester agent to check only these 4 fixes and the restart test. Give me a short report. Add this prompt to PROMPTS.md.
 ```
+
+## Prompt 17 - Stage 5: lectures and assignments (2026-10-31)
+
+```
+/classnest-ui Act as a world-class senior full-stack developer and product designer. Read CLAUDE.md and PLAN.md first.
+
+Build Stage 5: lectures and assignments (admin side only). Student pages come in Stage 6, don't build them yet.
+
+1. Release lecture page (admin):
+- Form: title, date and time, Google Meet link, and a batch dropdown.
+- Validate: all fields required, the Meet link must start with https://meet.google.com/, the batch must exist. Show a clear error next to the wrong field.
+- If the date and time is in the past, show a warning but still allow saving.
+- List all lectures sorted by date, showing title, batch, date and time, and a status tag: Upcoming, Live now (from start time to 1 hour after), or Done.
+- Edit and delete each lecture, with a confirm popup before deleting.
+- Filter the list by batch.
+
+2. Assignments page (admin):
+- Form: title, description, deadline (date and time), and a batch dropdown.
+- Validate: all fields required, the deadline must be in the future when creating.
+- List all assignments sorted by deadline, showing title, batch, deadline and time left. Deadlines within 24 hours use the amber accent colour, past deadlines show "Closed".
+- Edit and delete each assignment, with a confirm popup.
+- Filter the list by batch.
+
+3. Dates and times: save them in the database in one standard format (ISO, UTC), and always show them in the user's local time (India, IST). Use the server's clock for all time checks, never the browser's.
+
+4. Connect to existing features:
+- Add Lectures and Assignments to the admin navigation.
+- Admin dashboard: show counts of lectures and assignments, and the next upcoming lecture.
+- Ctrl+K search: lectures and assignments results should now open their correct page.
+- If a batch is deleted, handle its lectures and assignments safely (don't leave broken data, and warn the admin before deleting).
+
+5. Safety rules:
+- Only logged-in admins can use these pages and API routes.
+- Don't change the login, batches, students or existing data.
+- Every lecture and assignment belongs to exactly one batch.
+- Don't redesign or restyle existing pages. Only add the new pages, nav links and dashboard cards in the same style.
+6. When done, use the tester agent to check Stage 5 and everything before it. Fix any bugs it finds.
+
+Then give me a short report: what you built, what you tested, and how dates are saved, explained simply. Add this prompt to PROMPTS.md.
+```

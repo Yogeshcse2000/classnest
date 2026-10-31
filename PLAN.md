@@ -15,13 +15,18 @@ Project rules are in [CLAUDE.md](CLAUDE.md). Design and animation rules are in t
 | Wrong role / not logged in | Pages redirect (to login, or to your own dashboard). API routes answer 401 / 403 with an error. |
 | Batches per student | **One.** Stored as `students.batch_id` (required). No enrollments table. |
 | Emails and usernames | Stored trimmed and lowercase, so capital letters don't matter at login. |
-| Deleting | Nothing is deleted automatically. Only **empty** batches (no students, lectures or assignments) can be deleted. |
+| Deleting | Nothing is deleted automatically. Only **empty** batches (no students, lectures or assignments) can be deleted, so no lecture or assignment can lose its batch. The Batches page warns the admin what is still inside before anything happens, and the server refuses as well. An assignment with student submissions can't be deleted. |
+| Dates and times | Saved as ISO text in UTC. Admins type India time (IST), and `server/utils/dates.js` converts it (IST is always UTC + 5:30). Pages always show IST with the label "IST", whatever the computer is set to. |
+| Time checks | The server's clock only. It sends each lecture's status, each assignment's time left and whether a batch has started. The past-date warning comes from `/api/admin/lectures/check-time`, and the lecture and assignment pages ask again every 30 seconds so statuses stay correct. |
+| Lecture length | Always 60 minutes, saved in `duration_minutes`. **Live now** runs from the start time up to, but not including, 1 hour after. |
+| Past dates | Lectures: a plain warning (amber is only for "Live now" and deadlines), and saving is still allowed. Assignments: a new deadline must be in the future. Editing may keep or set a past deadline, so a closed assignment can still be corrected. |
+| Form errors | The server checks everything and sends one message per wrong field in `fields`. Lecture and assignment forms show each one under its field. |
 | Batch names | Must be unique (capital letters don't matter). Start date required, description optional. |
 | New students | Admin enters name + email + batch. Username comes from the name (`priya.sharma`, then `priya.sharma2`...). Temporary password is random (`k7mq-x4tz-p9wd`). |
 | Showing credentials | Only once, right after enrolling, with **Copy username**, **Copy password** and **Copy both** buttons. Only the hash is saved. |
 | Pasting at login | Spaces around the username or password are ignored. Pasting `Username: ... Password: ...` into either box fills in both. |
 | Login page | Always dark, with no light/dark toggle (dashboards keep theirs). The first visit in a browser session plays the full 4-second intro, which can't be skipped. Later visits, in any tab, play a 0.5-second version (remembered with a cookie that ends when the browser closes). A stalled computer still reaches the login after 6 seconds of visible time. |
-| Search (Ctrl+K) | Read-only. Admins find students, batches, lectures, assignments and pages through `/api/admin/search`. Students find only their own batch's lectures and assignments through `/api/student/search`. Their batch comes from the database, never from the browser. Lecture and assignment results link to the batch (admin) or dashboard (student) until their own pages exist: update the links in the search routes in steps 9-11. |
+| Search (Ctrl+K) | Read-only. Admins find students, batches, lectures, assignments and pages through `/api/admin/search`. Students find only their own batch's lectures and assignments through `/api/student/search`. Their batch comes from the database, never from the browser. Admin lecture and assignment results open `/admin/lectures` and `/admin/assignments`. Student results link to the dashboard until their own pages exist: update the links in the student search route in step 11. |
 | Design exceptions | The login page may use an amber glow and animations longer than 300ms. Everywhere else, the `classnest-ui` skill applies. |
 | Theme | Dark by default. The toggle on inner pages switches to light, and the choice is remembered. |
 | Duplicate emails | Rejected with a clear error (capital letters don't matter). |
@@ -52,7 +57,9 @@ classnest/
 │   ├── session.js           ← login sessions, saved in the sessions table
 │   ├── storage.js           ← save / delete / get uploaded files
 │   ├── utils/
-│   │   └── credentials.js   ← makes usernames and temporary passwords
+│   │   ├── credentials.js   ← makes usernames and temporary passwords
+│   │   ├── dates.js         ← India time ↔ UTC, lecture status, time left
+│   │   └── ids.js           ← reads IDs strictly (lectures, assignments)
 │   ├── middleware/
 │   │   └── auth.js          ← requireRoleApi, requireRolePage
 │   ├── models/              ← ALL SQL lives here
@@ -69,8 +76,9 @@ classnest/
 │       ├── admin/
 │       │   ├── batches.js   ← /api/admin/batches
 │       │   ├── students.js  ← /api/admin/students
-│       │   ├── search.js    ← /api/admin/search
-│       │   └── ...          ← lectures, assignments added in later steps
+│       │   ├── lectures.js  ← /api/admin/lectures
+│       │   ├── assignments.js ← /api/admin/assignments
+│       │   └── search.js    ← /api/admin/search
 │       └── student.js       ← /api/student  (students only)
 ├── pages/                   ← protected pages, only reachable through the login checks
 │   ├── admin/               ← dashboard, batches, students, lectures, assignments
@@ -81,7 +89,8 @@ classnest/
 │   ├── css/style.css        ← colours, fonts, cards, light/dark
 │   └── js/                  ← api.js, ui.js, theme.js, animations.js, palette.js, login.js,
 │                               login-roles.js, login-intro.js, login-particles.js,
-│                               admin.js, batches.js, students.js, student.js
+│                               admin.js, batches.js, students.js, schedule.js, lectures.js,
+│                               assignments.js, student.js
 ├── data/                    ← classnest.db (git-ignored)
 ├── uploads/                 ← student .zip files (git-ignored)
 ├── .env                     ← secrets (git-ignored)
@@ -158,8 +167,8 @@ When a stage is finished, run the [tester subagent](.claude/agents/tester.md), a
 - [x] **6. Design foundation:** `style.css` colours, fonts, cards, light/dark toggle, GSAP helpers, styled login page.
 - [x] **7. Admin: batches:** create, list and delete (empty) batches.
 - [x] **8. Admin: students:** enroll with name + email + batch, auto username + temporary password shown once with copy button.
-- [ ] **9. Admin: lectures:** schedule lectures with a Meet link. "Live now" badge.
-- [ ] **10. Admin: assignments:** post assignments with due dates.
+- [x] **9. Admin: lectures:** schedule lectures with a Meet link. "Live now" badge.
+- [x] **10. Admin: assignments:** post assignments with due dates.
 - [ ] **11. Student side:** dashboard, batch lectures with a "Join" button, assignments.
 - [ ] **12. Uploads:** `.zip` submit and re-upload (replaces old file), "Late" badge, admin can see and download.
 - [ ] **13. Dashboards + polish:** bento grid, GSAP count-up, hover lift, pulsing live dot, friendly empty states.

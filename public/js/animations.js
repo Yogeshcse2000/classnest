@@ -52,6 +52,19 @@ function countUp(element, value) {
   });
 }
 
+// The ring around each "Live now" dot grows and fades, over and over
+function pulseLiveDots(root = document) {
+  if (!motionOK) return;
+  root.querySelectorAll('.live-dot i').forEach((ring) => {
+    gsap.fromTo(ring, { scale: 1, opacity: 0.7 }, { scale: 2.8, opacity: 0, duration: 1.3, ease: 'power2.out', repeat: -1 });
+  });
+}
+
+// Stops the pulses inside a list that is about to be replaced
+function stopLiveDots(root = document) {
+  if (motionOK) gsap.killTweensOf(root.querySelectorAll('.live-dot i'));
+}
+
 // The two background glows slowly grow and fade, like breathing. GSAP stops by itself while the tab is hidden.
 function breathe(glows) {
   gsap.to(glows, { opacity: 0.6, scale: 1.08, duration: 5, stagger: 1.5, ease: 'sine.inOut', yoyo: true, repeat: -1 });

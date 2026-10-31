@@ -21,6 +21,7 @@
 
   --accent: #f0ae4b; /* warm amber: ONLY for "Live now" and deadlines */
   --accent-soft: rgba(240, 174, 75, 0.15);
+  --accent-text: #f0ae4b;
 
   --danger: #f2948a;
   --danger-soft: rgba(242, 148, 138, 0.14);
@@ -63,6 +64,7 @@
 
   --accent: #b86f0e;
   --accent-soft: #fcefd9;
+  --accent-text: #8a5208; /* darker, so small text stays readable on the pale amber */
 
   --danger: #b42318;
   --danger-soft: #fdecea;
@@ -1126,6 +1128,7 @@ kbd {
 }
 .stack {
   display: grid;
+  grid-template-columns: minmax(0, 1fr); /* one long name can't push the page wider than the screen */
   gap: 20px;
   align-content: start;
   min-width: 0;
@@ -1213,6 +1216,7 @@ kbd {
 }
 .list {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   margin: 0;
   padding: 0;
   list-style: none;
@@ -1265,6 +1269,138 @@ kbd {
   border-radius: inherit;
   box-shadow: 0 0 0 2px var(--primary-text), 0 0 24px var(--glow);
   pointer-events: none;
+}
+
+/* ---------- Lectures and assignments ---------- */
+.field-error {
+  color: var(--danger);
+  font-size: 0.85rem;
+}
+.field input[aria-invalid='true'],
+.field select[aria-invalid='true'],
+.field textarea[aria-invalid='true'] {
+  border-color: var(--danger);
+}
+/* A warning that doesn't stop anything. Amber is kept for "Live now" and deadlines, so this one is plain. */
+.field-note {
+  padding: 0.55rem 0.8rem;
+  border-left: 3px solid var(--text-muted);
+  border-radius: 6px;
+  background: var(--surface-2);
+  font-size: 0.85rem;
+}
+.schedule-form {
+  scroll-margin-top: 132px; /* stops below the sticky top bar when the form scrolls into view */
+}
+.section-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem 0.75rem;
+  min-width: 0;
+}
+.section-title:has(.filter-field) {
+  align-items: center;
+}
+/* A fixed size: left alone, a dropdown grows to fit its longest batch name */
+.filter-field {
+  flex: 0 1 220px;
+  min-width: 130px;
+}
+.filter-field select {
+  height: 40px;
+  padding: 0 0.9rem;
+  border-radius: 999px;
+  font-size: 0.9rem;
+}
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.schedule-row .list-meta {
+  align-items: center;
+}
+.schedule-row .list-main {
+  min-width: 190px; /* when space runs out, the chips wrap instead of squeezing the date */
+}
+.schedule-row .list-main span {
+  white-space: normal; /* the date and time must always show in full */
+}
+.status-spot {
+  display: inline-flex;
+}
+.chip-quiet {
+  background: none;
+  box-shadow: inset 0 0 0 1px var(--border);
+}
+.chip-amber {
+  background: var(--accent-soft);
+  color: var(--accent-text);
+}
+.chip-batch {
+  display: inline-block;
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* "Live now" dot. The ring behind it pulses (animations.js) and stays hidden behind the dot if motion is off. */
+.live-dot {
+  position: relative;
+  flex: none;
+  width: 8px;
+  height: 8px;
+  margin-right: 0.15rem;
+  border-radius: 50%;
+  background: var(--accent-text);
+}
+.live-dot i {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: var(--accent-text);
+}
+.row-buttons {
+  position: relative; /* stays clickable above the spotlight layer */
+  z-index: 1;
+  display: flex;
+  flex: none;
+  gap: 0.1rem;
+}
+.row-buttons .icon-btn {
+  width: 34px;
+  height: 34px;
+  border-color: transparent;
+  background: transparent;
+}
+.row-buttons .icon-btn:hover {
+  background: var(--surface-2);
+}
+.row-buttons .icon-btn-danger:hover {
+  background: var(--danger-soft);
+}
+
+/* The next lecture on the dashboard */
+.next-body {
+  display: grid;
+  gap: 0.45rem;
+  margin-top: 0.35rem;
+}
+.next-title {
+  font-family: var(--font-head);
+  font-size: 1.6rem;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  overflow-wrap: anywhere;
+}
+.next-when {
+  color: var(--text-muted);
 }
 
 /* New student's login details, shown once */
@@ -1483,6 +1619,32 @@ kbd {
 }
 
 /* ---------- Small screens ---------- */
+/* Wide screens: a form taller than the window scrolls by itself, so its button can always be reached */
+@media (min-width: 961px) {
+  .schedule-form {
+    max-height: calc(100vh - 112px);
+    overflow-y: auto;
+  }
+}
+/* Five page links don't fit beside everything else here, so they move to their own row */
+@media (max-width: 1200px) {
+  .topbar {
+    flex-wrap: wrap;
+    row-gap: 8px;
+  }
+  .nav {
+    order: 3;
+    width: 100%;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .form-card {
+    top: 132px;
+  }
+  .schedule-form {
+    max-height: calc(100vh - 148px);
+  }
+}
 @media (max-width: 960px) {
   .split {
     grid-template-columns: 1fr;
@@ -1490,15 +1652,11 @@ kbd {
   .form-card {
     position: static;
   }
-  .topbar {
-    flex-wrap: wrap;
-    row-gap: 8px;
-    padding: 10px 24px;
+  .schedule-form {
+    max-height: none;
   }
-  .nav {
-    order: 3;
-    width: 100%;
-    overflow-x: auto;
+  .topbar {
+    padding: 10px 24px;
   }
   .palette-btn kbd {
     display: none;
@@ -1554,6 +1712,26 @@ kbd {
     justify-content: flex-start;
     width: 100%;
     padding-left: calc(32px + 0.9rem);
+  }
+  /* Lecture and assignment rows have no avatar. The title shares a line with its buttons, the chips go below. */
+  .chip-batch {
+    max-width: 100%;
+  }
+}
+/* When the list is narrow, a lecture or assignment row has the title beside its buttons and the chips below.
+   That means small screens, and just above 960px, where the list shares the width with the form. */
+@media (max-width: 640px), (min-width: 961px) and (max-width: 1100px) {
+  .schedule-row {
+    flex-wrap: wrap;
+  }
+  .schedule-row .list-main {
+    min-width: 0;
+  }
+  .schedule-row .list-meta {
+    order: 3;
+    justify-content: flex-start;
+    width: 100%;
+    padding-left: 0;
   }
 }
 /* Short screens: a smaller heading, so the whole login fits without scrolling */

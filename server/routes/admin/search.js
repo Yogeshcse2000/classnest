@@ -16,6 +16,8 @@ const PAGES = [
   { title: 'Dashboard', url: '/admin/dashboard' },
   { title: 'Batches', url: '/admin/batches' },
   { title: 'Students', url: '/admin/students' },
+  { title: 'Lectures', url: '/admin/lectures' },
+  { title: 'Assignments', url: '/admin/assignments' },
 ];
 
 router.get('/', async (req, res) => {
@@ -52,20 +54,19 @@ router.get('/', async (req, res) => {
         detail: `${batch.student_count} ${batch.student_count === 1 ? 'student' : 'students'}`,
         url: `/admin/batches#batch-${batch.id}`,
       })),
-      // Lectures and assignments have no pages yet (steps 9 and 10), so these open their batch for now
       ...lectures.map((lecture) => ({
         type: 'Lecture',
         title: lecture.title,
         detail: lecture.batch_name,
         date: lecture.starts_at,
-        url: `/admin/batches#batch-${lecture.batch_id}`,
+        url: `/admin/lectures#lecture-${lecture.id}`,
       })),
       ...assignments.map((assignment) => ({
         type: 'Assignment',
         title: assignment.title,
         detail: assignment.batch_name,
         date: assignment.due_at,
-        url: `/admin/batches#batch-${assignment.batch_id}`,
+        url: `/admin/assignments#assignment-${assignment.id}`,
       })),
       ...pages,
     ],

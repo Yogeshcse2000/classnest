@@ -34,7 +34,7 @@ function studentRowHtml(student) {
       </div>
       <div class="list-meta">
         <span class="chip mono">${escapeHtml(student.username)}</span>
-        <span class="chip chip-green">${escapeHtml(student.batch_name)}</span>
+        <span class="chip chip-green chip-batch" title="${escapeHtml(student.batch_name)}">${escapeHtml(student.batch_name)}</span>
       </div>
     </li>`;
 }

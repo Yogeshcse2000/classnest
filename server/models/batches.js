@@ -2,10 +2,12 @@
 
 const db = require('../db');
 
-// Every batch, newest first, with how many students are in it
+// Every batch, newest first, with how many students, lectures and assignments are in it
 const SELECT_BATCH = `
   SELECT b.id, b.name, b.description, b.start_date, b.created_at,
-         (SELECT COUNT(*) FROM students s WHERE s.batch_id = b.id) AS student_count
+         (SELECT COUNT(*) FROM students s WHERE s.batch_id = b.id) AS student_count,
+         (SELECT COUNT(*) FROM lectures l WHERE l.batch_id = b.id) AS lecture_count,
+         (SELECT COUNT(*) FROM assignments a WHERE a.batch_id = b.id) AS assignment_count
   FROM batches b`;
 
 async function listBatches() {

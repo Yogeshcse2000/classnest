@@ -9,6 +9,7 @@ const {
   countBatchLinks,
   deleteBatch,
 } = require('../../models/batches');
+const { istToday } = require('../../utils/dates');
 
 const router = express.Router();
 
@@ -25,9 +26,15 @@ function isValidDate(value) {
   return !Number.isNaN(date.getTime()) && date.toISOString().startsWith(value);
 }
 
+// What the browser receives. The server decides "started", so it always follows the server's clock.
+function batchView(batch) {
+  return { ...batch, started: batch.start_date <= istToday(Date.now()) };
+}
+
 // GET /api/admin/batches - all batches
 router.get('/', async (req, res) => {
-  res.json({ batches: await listBatches() });
+  const batches = await listBatches();
+  res.json({ batches: batches.map(batchView) });
 });
 
 // POST /api/admin/batches  body: { name, startDate, description }
@@ -54,7 +61,7 @@ router.post('/', async (req, res) => {
   }
 
   const id = await createBatch({ name, startDate, description: description || null });
-  res.status(201).json({ batch: await findBatchById(id) });
+  res.status(201).json({ batch: batchView(await findBatchById(id)) });
 });
 
 // DELETE /api/admin/batches/:id - only empty batches can be deleted, so nobody's data disappears by accident

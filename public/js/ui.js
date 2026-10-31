@@ -21,11 +21,26 @@ function formatDate(isoDate) {
   return new Date(year, month - 1, day).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
 }
 
+// "2026-10-30T14:00:00.000Z" -> "Fri, 30 Oct 2026, 7:30 pm IST". Always India time, whatever the computer is set to.
+function formatDateTime(isoDate) {
+  const text = new Date(isoDate).toLocaleString('en-GB', {
+    timeZone: 'Asia/Kolkata',
+    weekday: 'short',
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true,
+  });
+  return `${text} IST`;
+}
+
 // Search results link to an item in a list, like /admin/batches#batch-3. The list is built after the page
 // loads, so the browser can't jump there by itself. Bring the item into view and light it up for a moment.
 function showLinkedItem() {
   const id = window.location.hash.slice(1);
-  const item = /^(batch|student)-\d+$/.test(id) && document.getElementById(id);
+  const item = /^(batch|student|lecture|assignment)-\d+$/.test(id) && document.getElementById(id);
   if (!item) return;
 
   item.scrollIntoView({ block: 'center', behavior: motionOK ? 'smooth' : 'auto' });

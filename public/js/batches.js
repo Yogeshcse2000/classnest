@@ -18,9 +18,8 @@ let batches = [];
 
 // ---------- Showing the list ----------
 
-function startLabel(startDate) {
-  const today = new Date().toISOString().slice(0, 10);
-  return `${startDate > today ? 'Starts' : 'Started'} ${formatDate(startDate)}`;
+function startLabel(batch) {
+  return `${batch.started ? 'Started' : 'Starts'} ${formatDate(batch.start_date)}`;
 }
 
 function batchCardHtml(batch) {
@@ -35,7 +34,7 @@ function batchCardHtml(batch) {
         <button class="icon-btn icon-btn-danger" type="button" data-delete="${batch.id}"
                 aria-label="Delete ${escapeHtml(batch.name)}" title="Delete batch">${TRASH_ICON}</button>
       </div>
-      <span class="chip chip-green">${startLabel(batch.start_date)}</span>
+      <span class="chip chip-green">${startLabel(batch)}</span>
       ${description}
       <div class="batch-card-foot">${plural(batch.student_count, 'student')}</div>
     </article>`;
@@ -97,8 +96,14 @@ list.addEventListener('click', async (event) => {
   if (!button) return;
   const batch = batches.find((b) => b.id === Number(button.dataset.delete));
 
-  if (batch.student_count > 0) {
-    showToast(`"${batch.name}" still has ${plural(batch.student_count, 'student')}. Only empty batches can be deleted.`, 'error');
+  // A batch with anything in it stays, so no student, lecture or assignment is left without a batch
+  const stillInside = [];
+  if (batch.student_count) stillInside.push(plural(batch.student_count, 'student'));
+  if (batch.lecture_count) stillInside.push(plural(batch.lecture_count, 'lecture'));
+  if (batch.assignment_count) stillInside.push(plural(batch.assignment_count, 'assignment'));
+
+  if (stillInside.length) {
+    showToast(`"${batch.name}" still has ${stillInside.join(', ')}. Only empty batches can be deleted.`, 'error');
     return;
   }
 

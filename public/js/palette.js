@@ -36,7 +36,7 @@
 
   function detailText(result) {
     if (!result.date) return result.detail;
-    const day = new Date(result.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+    const day = new Date(result.date).toLocaleDateString('en-GB', { timeZone: 'Asia/Kolkata', day: 'numeric', month: 'short', year: 'numeric' });
     const when = result.type === 'Assignment' ? `Due ${day}` : day;
     return [result.detail, when].filter(Boolean).join(' · ');
   }
@@ -172,8 +172,12 @@
     if (item && Number(item.dataset.index) !== active) select(Number(item.dataset.index));
   });
 
+  // Use the clicked row itself: a tap on a phone never moves the pointer, so it wouldn't have been selected yet
   list.addEventListener('click', (event) => {
-    if (event.target.closest('.palette-item')) openActive();
+    const item = event.target.closest('.palette-item');
+    if (!item) return;
+    active = Number(item.dataset.index);
+    openActive();
   });
 
   // A click on the dimmed area outside the box lands on the dialog itself

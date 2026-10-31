@@ -19,6 +19,7 @@ async function api(path, { method = 'GET', body } = {}) {
   if (!response.ok) {
     const error = new Error(data.error || 'Something went wrong. Please try again.');
     error.status = response.status;
+    error.fields = data.fields; // one message per wrong form field, when the server sends them
     throw error;
   }
   return data;
