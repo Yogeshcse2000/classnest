@@ -21,6 +21,29 @@ function formatDate(isoDate) {
   return new Date(year, month - 1, day).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
 }
 
+// Search results link to an item in a list, like /admin/batches#batch-3. The list is built after the page
+// loads, so the browser can't jump there by itself. Bring the item into view and light it up for a moment.
+function showLinkedItem() {
+  const id = window.location.hash.slice(1);
+  const item = /^(batch|student)-\d+$/.test(id) && document.getElementById(id);
+  if (!item) return;
+
+  item.scrollIntoView({ block: 'center', behavior: motionOK ? 'smooth' : 'auto' });
+
+  const ring = document.createElement('span');
+  ring.className = 'linked-ring';
+  item.appendChild(ring);
+  if (motionOK) {
+    gsap
+      .timeline({ onComplete: () => ring.remove() })
+      .from(ring, { opacity: 0, duration: 0.3 })
+      .to(ring, { opacity: 0, duration: 0.3 }, '+=1.2');
+  } else {
+    setTimeout(() => ring.remove(), 1800);
+  }
+}
+window.addEventListener('hashchange', showLinkedItem);
+
 // A short message that pops up at the bottom of the screen and disappears by itself
 function showToast(message, type = 'success') {
   let holder = document.querySelector('.toasts');

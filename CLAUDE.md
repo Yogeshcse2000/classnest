@@ -16,24 +16,8 @@
 - Everything must be **100% free**: no paid services, APIs, libraries or hosting.
 
 ## Design
-- Use the **classnest-ui** skill ([SKILL.md](.claude/skills/classnest-ui/SKILL.md)) whenever creating or changing any page, component or style. Where it differs from this file, the skill wins.
-- Style: clean, modern and friendly. Not flashy.
-- Background: off-white.
-- Primary colour: deep green.
-- Accent colour: warm amber, used **only** for "Live now" and deadlines.
-- Fonts (from Google Fonts):
-  - Headings: **Outfit**
-  - Body text: **Inter**
-- Dashboard: bento-grid layout with rounded cards and soft shadows.
-- Empty states should be friendly (a short helpful message, not a blank area).
-- Include a light/dark mode toggle.
-
-## Animations
-- Use **GSAP** for animations.
-- Keep them fast: around **300ms**.
-- Smooth hover lift on cards and buttons.
-- Pulsing dot next to "Live now".
-- Numbers on the dashboard count up when they appear.
+- The design follows the **classnest-ui** skill ([SKILL.md](.claude/skills/classnest-ui/SKILL.md)): a dark, rich, ambient theme, a cinematic login intro and calm inner pages.
+- The skill is the single source of design and animation rules. Use it whenever creating or changing any page, component or style.
 
 ## Git
 - Never commit `.env` or `node_modules`.

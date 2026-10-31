@@ -66,7 +66,18 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'Something went wrong on the server. Please try again.' });
 });
 
-// Start listening for requests
-app.listen(PORT, () => {
+// Start listening for requests.
+// Express also calls this when starting fails, so check for an error before saying the server is running.
+app.listen(PORT, (error) => {
+  if (error?.code === 'EADDRINUSE') {
+    console.error(`ClassNest did NOT start: port ${PORT} is already in use.`);
+    console.error('Another copy of the server is probably still running, and it is using your old code.');
+    console.error('Press Ctrl+C in that terminal to stop it, then start the server again.');
+    process.exit(1);
+  }
+  if (error) {
+    console.error('ClassNest did NOT start:', error.message);
+    process.exit(1);
+  }
   console.log(`ClassNest is running at http://localhost:${PORT}`);
 });

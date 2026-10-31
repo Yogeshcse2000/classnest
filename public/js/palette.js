@@ -1,14 +1,22 @@
-// Command palette: press Ctrl+K on any inner page, type a few letters, and press Enter to jump to a page or run an action.
+// Search: press Ctrl+K on any inner page to find real data, then press Enter or click a result to open it.
+// The server does the searching, so each role only ever receives what it is allowed to see.
 
 (function () {
+  const isAdmin = window.location.pathname.startsWith('/admin');
+  const SEARCH_URL = isAdmin ? '/api/admin/search' : '/api/student/search';
+  const WAIT_MS = 150; // wait for a short pause in typing, so every letter doesn't ask the server
+  const PLACEHOLDER = isAdmin ? 'Search students, batches, lectures and assignments' : 'Search your lectures and assignments';
+  const START_HINT = 'Type to search your lectures and assignments.';
+  const TRY_HINT = isAdmin ? 'Try a name, a username or a batch.' : 'Try a lecture or assignment title.';
+
   const dialog = document.createElement('dialog');
   dialog.className = 'dialog palette';
-  dialog.setAttribute('aria-label', 'Command palette');
+  dialog.setAttribute('aria-label', 'Search');
   dialog.innerHTML = `
     <div class="palette-search">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
       <input type="text" role="combobox" aria-expanded="true" aria-controls="palette-list" aria-autocomplete="list"
-             aria-label="Search pages and actions" placeholder="Search pages and actions" autocomplete="off" spellcheck="false">
+             aria-label="Search" autocomplete="off" spellcheck="false">
       <kbd>Esc</kbd>
     </div>
     <ul class="palette-list" id="palette-list" role="listbox" aria-label="Results"></ul>`;
@@ -16,27 +24,31 @@
 
   const input = dialog.querySelector('input');
   const list = dialog.querySelector('ul');
-  const themeButton = document.querySelector('[data-theme-toggle]');
-  const logoutButton = document.querySelector('[data-logout]');
+  input.placeholder = PLACEHOLDER;
 
-  let matches = [];
+  let results = [];
   let active = 0;
+  let waitTimer = null;
+  let latestSearch = 0;
+  let searching = Promise.resolve();
 
-  // Everything the palette can do, read from the page so it always matches the top bar
-  function allCommands() {
-    const pages = [...document.querySelectorAll('.nav a')].map((link) => ({
-      label: `Go to ${link.textContent}`,
-      kind: 'Page',
-      run: () => (window.location.href = link.href),
-    }));
-    return [
-      ...pages,
-      { label: themeButton.getAttribute('aria-label'), kind: 'Action', run: () => themeButton.click() },
-      { label: 'Log out', kind: 'Action', run: () => logoutButton.click() },
-    ];
+  // ---------- Showing results ----------
+
+  function detailText(result) {
+    if (!result.date) return result.detail;
+    const day = new Date(result.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+    const when = result.type === 'Assignment' ? `Due ${day}` : day;
+    return [result.detail, when].filter(Boolean).join(' · ');
   }
 
-  function itemFor(command, index) {
+  function textSpan(className, text) {
+    const span = document.createElement('span');
+    span.className = className;
+    span.textContent = text; // textContent keeps any name safe: it can never become HTML
+    return span;
+  }
+
+  function itemFor(result, index) {
     const item = document.createElement('li');
     item.className = 'palette-item';
     item.id = `palette-item-${index}`;
@@ -44,30 +56,42 @@
     item.setAttribute('aria-selected', String(index === active));
     item.dataset.index = index;
 
-    const label = document.createElement('span');
-    label.textContent = command.label;
-    const kind = document.createElement('span');
-    kind.className = 'palette-kind';
-    kind.textContent = command.kind;
-    item.append(label, kind);
+    item.append(textSpan('palette-title', result.title));
+    const detail = detailText(result);
+    if (detail) item.append(textSpan('palette-detail', detail));
     return item;
   }
 
-  function render() {
-    const query = input.value.trim().toLowerCase();
-    matches = allCommands().filter((command) => command.label.toLowerCase().includes(query));
-    active = Math.min(active, Math.max(matches.length - 1, 0));
+  function groupLabel(type) {
+    const row = document.createElement('li');
+    row.className = 'palette-group';
+    row.setAttribute('role', 'presentation');
+    row.textContent = type;
+    return row;
+  }
 
-    if (matches.length) {
-      list.replaceChildren(...matches.map(itemFor));
-      input.setAttribute('aria-activedescendant', `palette-item-${active}`);
-    } else {
-      const empty = document.createElement('li');
-      empty.className = 'palette-empty';
-      empty.textContent = 'Nothing found. Try "batches" or "log out".';
-      list.replaceChildren(empty);
-      input.removeAttribute('aria-activedescendant');
+  function showMessage(message) {
+    const row = document.createElement('li');
+    row.className = 'palette-empty';
+    row.textContent = message;
+    list.replaceChildren(row);
+    input.removeAttribute('aria-activedescendant');
+  }
+
+  function render() {
+    const query = input.value.trim();
+    if (!results.length) {
+      showMessage(query ? `No results for "${query}". ${TRY_HINT}` : START_HINT);
+      return;
     }
+
+    const rows = [];
+    results.forEach((result, index) => {
+      if (index === 0 || results[index - 1].type !== result.type) rows.push(groupLabel(result.type));
+      rows.push(itemFor(result, index));
+    });
+    list.replaceChildren(...rows);
+    input.setAttribute('aria-activedescendant', `palette-item-${active}`);
   }
 
   function select(index) {
@@ -79,35 +103,67 @@
     list.querySelector(`#palette-item-${active}`).scrollIntoView({ block: 'nearest' });
   }
 
-  function runActive() {
-    const command = matches[active];
-    if (!command) return;
+  // ---------- Searching ----------
+
+  async function search() {
+    waitTimer = null;
+    const thisSearch = ++latestSearch;
+    try {
+      const data = await loadPageData(`${SEARCH_URL}?q=${encodeURIComponent(input.value.trim())}`);
+      if (thisSearch !== latestSearch) return; // a newer search has started, so this answer is out of date
+      results = data.results;
+      active = 0;
+      render();
+    } catch (error) {
+      if (thisSearch !== latestSearch) return;
+      results = [];
+      showMessage("Search isn't available right now. Please try again.");
+    }
+  }
+
+  function searchNow() {
+    clearTimeout(waitTimer);
+    searching = search();
+  }
+
+  // Open the chosen result. If it is on this page already, the browser won't reload, so show the item here.
+  function openActive() {
+    const result = results[active];
+    if (!result) return;
     dialog.close();
-    command.run();
+    const alreadyHere = result.url === window.location.pathname + window.location.hash;
+    window.location.href = result.url;
+    if (alreadyHere) window.dispatchEvent(new HashChangeEvent('hashchange'));
   }
 
   function open() {
     if (document.querySelector('dialog[open]')) return; // a confirm dialog is already showing
     input.value = '';
+    results = [];
     active = 0;
-    render();
+    list.replaceChildren();
     dialog.showModal();
     popIn(dialog);
+    searchNow();
   }
 
+  // ---------- Keyboard and mouse ----------
+
   input.addEventListener('input', () => {
-    active = 0;
-    render();
+    clearTimeout(waitTimer);
+    waitTimer = setTimeout(searchNow, WAIT_MS);
   });
 
-  input.addEventListener('keydown', (event) => {
+  input.addEventListener('keydown', async (event) => {
     if (event.key === 'Enter') {
       event.preventDefault();
-      runActive();
-    } else if ((event.key === 'ArrowDown' || event.key === 'ArrowUp') && matches.length) {
+      if (waitTimer) searchNow(); // pressed Enter straight after typing: finish this search first
+      await searching;
+      openActive();
+    } else if ((event.key === 'ArrowDown' || event.key === 'ArrowUp') && results.length) {
       event.preventDefault();
       const step = event.key === 'ArrowDown' ? 1 : -1;
-      select((active + step + matches.length) % matches.length);
+      select((active + step + results.length) % results.length);
     }
   });
 
@@ -117,7 +173,7 @@
   });
 
   list.addEventListener('click', (event) => {
-    if (event.target.closest('.palette-item')) runActive();
+    if (event.target.closest('.palette-item')) openActive();
   });
 
   // A click on the dimmed area outside the box lands on the dialog itself

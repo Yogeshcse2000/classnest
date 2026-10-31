@@ -26,7 +26,7 @@ let students = [];
 
 function studentRowHtml(student) {
   return `
-    <li class="list-row">
+    <li class="list-row" id="student-${student.id}">
       <span class="avatar" aria-hidden="true">${escapeHtml(student.name.charAt(0).toUpperCase())}</span>
       <div class="list-main">
         <strong>${escapeHtml(student.name)}</strong>
@@ -199,6 +199,7 @@ Promise.all([loadPageData('/api/admin/batches'), loadPageData('/api/admin/studen
     students = studentData.students;
     render();
     enterAnimation('#student-list > *');
+    showLinkedItem();
   })
   .catch((error) => {
     list.removeAttribute('aria-busy');

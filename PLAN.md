@@ -2,7 +2,7 @@
 
 ClassNest is an LMS. An **admin** creates batches, adds students, shares Google Meet lectures and posts assignments. **Students** log in, join classes and upload their work as a `.zip` file.
 
-Project rules (stack, design, animations) are in [CLAUDE.md](CLAUDE.md).
+Project rules are in [CLAUDE.md](CLAUDE.md). Design and animation rules are in the [classnest-ui skill](.claude/skills/classnest-ui/SKILL.md).
 
 ## Decisions
 
@@ -20,7 +20,8 @@ Project rules (stack, design, animations) are in [CLAUDE.md](CLAUDE.md).
 | New students | Admin enters name + email + batch. Username comes from the name (`priya.sharma`, then `priya.sharma2`...). Temporary password is random (`k7mq-x4tz-p9wd`). |
 | Showing credentials | Only once, right after enrolling, with **Copy username**, **Copy password** and **Copy both** buttons. Only the hash is saved. |
 | Pasting at login | Spaces around the username or password are ignored. Pasting `Username: ... Password: ...` into either box fills in both. |
-| Login page | Always dark, with no light/dark toggle (dashboards keep theirs). First visit in a browser tab plays a 4-second intro, later visits a 0.5-second version. Skip button, any click or any key skips it. The form always appears within 6 seconds. |
+| Login page | Always dark, with no light/dark toggle (dashboards keep theirs). The first visit in a browser session plays the full 4-second intro, which can't be skipped. Later visits, in any tab, play a 0.5-second version (remembered with a cookie that ends when the browser closes). A stalled computer still reaches the login after 6 seconds of visible time. |
+| Search (Ctrl+K) | Read-only. Admins find students, batches, lectures, assignments and pages through `/api/admin/search`. Students find only their own batch's lectures and assignments through `/api/student/search`. Their batch comes from the database, never from the browser. Lecture and assignment results link to the batch (admin) or dashboard (student) until their own pages exist: update the links in the search routes in steps 9-11. |
 | Design exceptions | The login page may use an amber glow and animations longer than 300ms. Everywhere else, the `classnest-ui` skill applies. |
 | Theme | Dark by default. The toggle on inner pages switches to light, and the choice is remembered. |
 | Duplicate emails | Rejected with a clear error (capital letters don't matter). |
@@ -60,13 +61,15 @@ classnest/
 │   │   ├── batches.js
 │   │   ├── lectures.js
 │   │   ├── assignments.js
-│   │   └── submissions.js
+│   │   ├── submissions.js
+│   │   └── search.js        ← Ctrl+K search (read-only)
 │   └── routes/              ← API routes (no SQL here)
 │       ├── auth.js          ← /api/auth  (login, logout, me)
 │       ├── admin.js         ← /api/admin    (admins only)
 │       ├── admin/
 │       │   ├── batches.js   ← /api/admin/batches
 │       │   ├── students.js  ← /api/admin/students
+│       │   ├── search.js    ← /api/admin/search
 │       │   └── ...          ← lectures, assignments added in later steps
 │       └── student.js       ← /api/student  (students only)
 ├── pages/                   ← protected pages, only reachable through the login checks

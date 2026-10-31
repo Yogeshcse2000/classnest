@@ -707,23 +707,6 @@ textarea {
   font-weight: 500;
 }
 
-/* Skip button */
-.intro-skip {
-  position: fixed;
-  top: 16px;
-  right: 16px;
-  z-index: 3;
-  min-height: 40px;
-  padding: 0 1.1rem;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.07);
-  color: var(--text);
-  font-size: 0.9rem;
-  font-weight: 600;
-  cursor: pointer;
-}
-
 /* ---------- Login background ---------- */
 .stage {
   position: fixed;
@@ -1235,6 +1218,7 @@ kbd {
   list-style: none;
 }
 .list-row {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 0.9rem;
@@ -1272,6 +1256,15 @@ kbd {
   flex-wrap: wrap;
   justify-content: flex-end;
   gap: 0.4rem;
+}
+
+/* The ring around an item opened from a search result */
+.linked-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: 0 0 0 2px var(--primary-text), 0 0 24px var(--glow);
+  pointer-events: none;
 }
 
 /* New student's login details, shown once */
@@ -1406,7 +1399,7 @@ kbd {
   margin-top: 0.5rem;
 }
 
-/* ---------- Command palette (Ctrl+K) ---------- */
+/* ---------- Search (Ctrl+K) ---------- */
 .palette {
   width: min(560px, calc(100% - 32px));
   margin-top: 14vh;
@@ -1441,35 +1434,52 @@ kbd {
 .palette-list {
   display: grid;
   gap: 2px;
-  max-height: 320px;
+  max-height: min(380px, 56vh);
   margin: 0;
   padding: 0.5rem;
   overflow-y: auto;
   list-style: none;
 }
+.palette-group {
+  padding: 0.6rem 0.8rem 0.2rem;
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
 .palette-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 0.65rem 0.8rem;
+  display: grid;
+  min-width: 0;
+  padding: 0.55rem 0.8rem;
   border-radius: var(--radius-sm);
-  font-size: 0.95rem;
   cursor: pointer;
 }
 .palette-item[aria-selected='true'] {
   background: var(--primary-soft);
+}
+.palette-item > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.palette-title {
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+.palette-item[aria-selected='true'] .palette-title {
   color: var(--primary-text);
 }
-.palette-kind {
+.palette-detail {
   color: var(--text-muted);
-  font-size: 0.8rem;
+  font-size: 0.82rem;
 }
 .palette-empty {
   padding: 1.5rem 0.8rem;
   color: var(--text-muted);
   font-size: 0.92rem;
   text-align: center;
+  overflow-wrap: anywhere;
 }
 
 /* ---------- Small screens ---------- */

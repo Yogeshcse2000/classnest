@@ -178,3 +178,36 @@ Small fix on the login page: the browser autofills the saved admin email AND adm
 
 Don't change the login logic. Test that switching roles never shows the admin email or password in the student form. Add this prompt to PROMPTS.md.
 ```
+
+## Prompt 13 - Real search, no Skip, docs cleanup (2026-10-31)
+
+```
+Make these changes:
+
+1. Ctrl+K search: keep the search bar, but remove "Log out", "Switch to light mode" and other action items from it. The search should only find real data and pages:
+- Admin: students (by name, username or email), batches, lectures, assignments, and pages (Dashboard, Batches, Students).
+- Student: their own lectures and assignments only.
+Clicking a result opens that item's page. Show grouped results with small labels (Student, Batch, Lecture, Assignment), and a friendly "No results" message.
+
+2. Login intro: remove the "Skip" button and all skip behaviour (no click or Esc skip). Keep the intro length as it is and let it play fully, then show the login. In the same browser session, if the user comes back to the login page (for example after logging out), don't play the full intro again: show only a quick version. Keep prefers-reduced-motion support for users who turn off animations.
+
+3. Update the classnest-ui skill with these rules. Also update CLAUDE.md: replace the old design and animation lines (off-white, "not flashy") with a short note that the design now follows the classnest-ui skill: dark, rich, ambient theme, cinematic login intro, calm inner pages. Keep the skill as the single source of design rules.
+
+4. Fix PROMPTS.md: if Prompt 12 is missing its closing code block, add it.
+
+Safety rules: don't change any database tables or existing data, search must only read data. Protect the search API routes: admin search only for logged-in admins, student search only returns that student's own batch data. Don't change login, batches or students logic. After the changes, test admin login, student login, creating a batch, enrolling a student, the intro and the search for both roles, and fix any errors.
+
+Add this prompt to PROMPTS.md.
+```
+
+## Prompt 14 - Fix admin search error (2026-10-31)
+
+```
+Bug: the Ctrl+K search always shows "Search isn't available right now. Please try again." for admin.
+
+Find the cause yourself: start the server, log in as admin, call the search API the same way the frontend does, and read the server logs and the response status. Check that the search API route exists and is registered in the server, that the frontend calls the correct URL, and that the login session cookie is sent with the request.
+
+First explain in simple words what was wrong, then fix it. Don't change the database, login, batches or students logic. Search must only read data, admin search only for logged-in admins, student search only for that student's own batch.
+
+Test it: as admin, search "kevin" and find the student. As student, search and see only your own batch data. Fix any errors, then confirm it works. Add this prompt to PROMPTS.md.
+```

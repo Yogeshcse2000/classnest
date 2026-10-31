@@ -29,7 +29,7 @@ function batchCardHtml(batch) {
     : `<p class="batch-desc">No description yet.</p>`;
 
   return `
-    <article class="card lift batch-card" data-id="${batch.id}">
+    <article class="card lift batch-card" id="batch-${batch.id}" data-id="${batch.id}">
       <div class="batch-card-top">
         <h3>${escapeHtml(batch.name)}</h3>
         <button class="icon-btn icon-btn-danger" type="button" data-delete="${batch.id}"
@@ -136,6 +136,7 @@ loadPageData('/api/admin/batches')
     batches = data.batches;
     render();
     enterAnimation('#batch-list > *');
+    showLinkedItem();
   })
   .catch((error) => {
     list.removeAttribute('aria-busy');

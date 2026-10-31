@@ -5,10 +5,9 @@
 (function () {
   if (!motionOK) return; // no GSAP or "reduce motion" is on: the page simply shows up, already finished
 
-  const INTRO_KEY = 'classnest-intro-seen';
-  const SKIP_SECONDS = 0.4; // Skip fast-forwards to the end in this time, so it doesn't jump
+  const INTRO_COOKIE = 'classnest-intro-seen';
   const FONT_WAIT_MS = 600;
-  const MAX_INTRO_MS = 6000; // even on a very slow computer, the login form appears by then
+  const MAX_INTRO_MS = 6000; // even on a very slow computer, the login appears after this much visible time
   const LOGO_ZOOM = 1.9; // how much bigger the logo and word are in the middle of the screen
   const MAX_TILT = 4; // degrees
   const ALMOST_INVISIBLE = 0.001;
@@ -27,7 +26,6 @@
   const tilt = document.getElementById('card-tilt');
   const rolePicker = document.getElementById('role-picker');
   const pickerParts = rolePicker.querySelectorAll('#role-title, .role-card');
-  const skipButton = document.getElementById('intro-skip');
 
   const particles = createParticles(canvas);
   const motion = []; // every animation that must stop while the tab is hidden
@@ -59,8 +57,6 @@
   }
 
   function goLive() {
-    stopListeningForSkip();
-    skipButton.hidden = true;
     gsap.set(hero, { clearProps: 'transform' });
     gsap.set(rolePicker, { clearProps: 'all' }); // from here on, the stylesheet decides when it shows
     tilt.inert = false;
@@ -74,27 +70,7 @@
     startTilt();
   }
 
-  // ---------- Skipping ----------
-
   let intro;
-
-  function skip() {
-    stopListeningForSkip();
-    gsap.to(skipButton, { autoAlpha: 0, duration: 0.2 });
-    intro.timeScale(Math.max(1, (intro.duration() - intro.time()) / SKIP_SECONDS));
-  }
-
-  function listenForSkip() {
-    window.addEventListener('pointerdown', skip);
-    window.addEventListener('keydown', skip);
-    window.addEventListener('resize', skip); // the positions were measured for the old screen size
-  }
-
-  function stopListeningForSkip() {
-    window.removeEventListener('pointerdown', skip);
-    window.removeEventListener('keydown', skip);
-    window.removeEventListener('resize', skip);
-  }
 
   // ---------- The full intro (about 4 seconds) ----------
 
@@ -180,14 +156,25 @@
     intro = buildFullIntro();
     motion.push(intro);
     root.classList.remove('intro-pending');
-    skipButton.hidden = false;
-    listenForSkip();
     gsap.ticker.add(particles.draw);
     followTab();
-    setTimeout(() => intro.progress(1), MAX_INTRO_MS);
+    startTimeLimit();
   }
 
-  // ---------- The quick version (0.5 seconds, for every later visit) ----------
+  // The intro always plays to the end. This only rescues a computer so slow that the login would never appear.
+  // Time spent on another tab doesn't count, because the intro is paused then.
+  function startTimeLimit() {
+    let timer;
+    function restart() {
+      clearTimeout(timer);
+      if (document.hidden || intro.progress() === 1) return;
+      timer = setTimeout(() => intro.progress(1), MAX_INTRO_MS - intro.time() * 1000);
+    }
+    document.addEventListener('visibilitychange', restart);
+    restart();
+  }
+
+  // ---------- The quick version (0.5 seconds, for every later visit in this browser session) ----------
 
   function playQuick() {
     const scenery = [light, arc, ...columns];
@@ -211,15 +198,11 @@
 
   // ---------- Start ----------
 
-  // sessionStorage is like localStorage, but it is forgotten when the browser tab closes
+  // A cookie with no expiry date is forgotten when the browser closes, and all its tabs share it
   function isFirstVisit() {
-    try {
-      if (sessionStorage.getItem(INTRO_KEY)) return false;
-      sessionStorage.setItem(INTRO_KEY, 'yes');
-      return true;
-    } catch (e) {
-      return false; // storage can be blocked. Then nobody gets stuck watching the long version every time.
-    }
+    if (document.cookie.includes(INTRO_COOKIE)) return false;
+    document.cookie = `${INTRO_COOKIE}=yes; path=/; SameSite=Lax`;
+    return document.cookie.includes(INTRO_COOKIE); // if cookies are blocked, nobody has to sit through the long version every time
   }
 
   window.addEventListener('resize', particles.resize);
