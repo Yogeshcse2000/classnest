@@ -501,3 +501,42 @@ Change the login intro into a full-screen cinematic text reveal. Don't change th
 
 Test it yourself quickly: the full opening in a fresh InPrivate window, the quick version on a second visit, both logins still work, desktop and mobile. Add this prompt to PROMPTS.md.
 ```
+
+## Prompt 25 - Final design pass: new logo, new font and the inner pages (2026-11-01)
+
+```
+/classnest-ui Read CLAUDE.md and PLAN.md first. Final ClassNest design pass: new logo, new font, and the inner pages (Part B). Don't change any app logic, database, API routes, sessions, upload rules, or the working features of any page. Keep the login opening animation flow exactly as it is now; only swap in the new font and the new logo.
+
+1. Font:
+- Use Clash Display (free from Fontshare, load it from the Fontshare CSS link, with a system sans-serif fallback) for the "CLASSNEST" wordmark and all headings and big numbers. Inter stays for body text.
+- Remove Jost and Outfit everywhere.
+- Wordmark: "CLASSNEST" in uppercase, Clash Display semibold, slightly wide letter spacing. Tagline "LEARN · GROW · FLY" stays small and wide-spaced.
+
+2. New premium 3D nest logo (replace the sketch-style nest everywhere):
+- Drawn in code as SVG, no images. It must look like a luxury brand emblem, not a hand sketch.
+- A round nest made of 6 to 8 smooth, thick woven bands that overlap over and under each other, like a woven ring seen at a slight 3/4 angle from above.
+- Real depth: each band has a metallic gradient (bright silver at the top edge, dark graphite at the bottom), soft shadows where bands pass under each other, a darker hollow inside, and a soft shadow under the whole nest.
+- In the centre, a small glossy egg with a soft highlight: pearl white on the login page, electric blue on admin pages, electric orange on student pages.
+- Make a simplified version for small sizes (sidebar and browser tab) with fewer bands, so it stays clean at 24px.
+- Use it on the login page (in the opening, appearing after the word moves to the left, as now), in the sidebar, and as the browser tab icon. Remove the old nest everywhere.
+
+3. Inner pages (premium dark dashboard style, like Taskk):
+- A breadcrumb at the top of every inner page (for example Home > Dashboard, Home > Assignments > build a page).
+- Stat cards: icon inside a small rounded square box, big number in Clash Display, label below, and a soft accent glow with a faint dot pattern rising from the bottom on hover.
+- Sidebar: muted grey icons, and the active page gets a soft filled background with an accent-coloured icon. Keep the search and theme icons at the top.
+- Same thin borders, radius, spacing, buttons, inputs and tags on every card, table and form, for both roles.
+- Admin pages use electric blue, student pages use electric orange, with no green anywhere.
+- Subtle page transitions: content fades in smoothly when you open a page.
+
+4. One consistent experience: the login and inner pages use the same black background, fonts, cards, inputs and buttons, so moving from login to the dashboard feels like one app.
+
+5. Fixes:
+- The "+ Post assignment" button is cut off at the right edge of the admin dashboard. Make sure nothing overflows at any screen width.
+- In light mode, use slightly deeper shades of the accents for text so it stays readable.
+
+6. Safety: keep all existing form field names, element ids and JavaScript hooks that features use (login forms, autofill fix, upload zone, filters, search). Change styling and add new elements, but don't break or rename what works. If you must change one, update every place that uses it.
+
+7. Update the classnest-ui skill and CLAUDE.md with the new font, logo and inner page rules, and remove all old font, old nest and green rules, so they never come back.
+
+Test it yourself quickly (no tester agent): the login opening in a fresh InPrivate window, admin and student login, every inner page for both roles, the logo at large and small sizes, light and dark mode, desktop and mobile, no console errors. Then give me a short report. Add this prompt to PROMPTS.md.
+```

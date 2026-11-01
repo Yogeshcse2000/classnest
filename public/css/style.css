@@ -25,12 +25,12 @@ h3 {
   font-family: var(--font-head);
   font-weight: 600;
   line-height: 1.15;
-  letter-spacing: -0.02em;
+  word-spacing: 0.08em; /* Clash Display's spaces are narrow */
 }
 h1 {
   font-size: clamp(2.25rem, 1.7rem + 2.4vw, 3.5rem);
   line-height: 1.08;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.01em;
 }
 h2 {
   font-size: 1.35rem;
@@ -103,11 +103,12 @@ textarea {
   align-items: center;
   justify-content: center;
   gap: var(--space-2);
-  min-height: 46px;
-  padding: 0 var(--space-5-5);
+  max-width: 100%;
+  min-height: var(--control);
+  padding: 0 var(--space-5);
   border: var(--border-width) solid transparent;
   border-radius: var(--radius-btn);
-  font-size: 0.95rem;
+  font-size: 0.92rem;
   font-weight: 600;
   text-decoration: none;
   white-space: nowrap;
@@ -173,7 +174,7 @@ textarea {
   width: 100%;
 }
 .btn-small {
-  min-height: 34px;
+  min-height: var(--control-sm);
   padding: 0 var(--space-3-5);
   font-size: 0.85rem;
 }
@@ -182,15 +183,15 @@ textarea {
   height: 15px;
 }
 
-/* Round icon button (light/dark toggle, delete, command palette) */
+/* Icon button (light/dark toggle, delete, command palette) */
 .icon-btn {
   display: inline-grid;
   flex: none;
   place-items: center;
-  width: 40px;
-  height: 40px;
+  width: var(--control-sm);
+  height: var(--control-sm);
   border: var(--border-width) solid var(--border);
-  border-radius: var(--radius-round);
+  border-radius: var(--radius-sm);
   background: var(--surface);
   color: var(--text-muted);
   cursor: pointer;
@@ -226,7 +227,7 @@ textarea {
 /* ---------- Cards ---------- */
 .card {
   position: relative;
-  padding: var(--space-7);
+  padding: var(--card-pad);
   background: var(--surface);
   border: var(--border-width) solid var(--border);
   border-radius: var(--radius);
@@ -309,8 +310,8 @@ textarea {
   height: 18px;
 }
 .sk-number {
-  width: 88px;
-  height: 56px;
+  width: 72px;
+  height: 40px;
   border-radius: var(--radius-sm);
 }
 
@@ -331,7 +332,7 @@ textarea {
 .field select,
 .field textarea {
   width: 100%;
-  height: 48px;
+  height: var(--control);
   padding: 0 var(--space-4);
   border: var(--border-width) solid var(--field-border);
   border-radius: var(--radius-sm);
@@ -412,23 +413,22 @@ html:has(.auth-page) {
   width: fit-content;
 }
 .logo-nest {
-  width: clamp(150px, 15vw, 200px);
+  width: clamp(170px, 16vw, 230px);
   height: auto;
-  margin-bottom: var(--space-5);
-  color: var(--white);
+  margin-bottom: var(--space-4);
 }
 .logo-word {
   position: relative;
   isolation: isolate; /* keeps the hover colours inside the word */
-  padding-left: 0.32em; /* the wide spacing also adds room after the last letter, so this keeps the word centred */
+  padding-left: 0.14em; /* the wide spacing also adds room after the last letter, so this keeps the word centred */
   background: var(--bg);
   color: var(--text);
-  font-family: var(--font-brand);
+  font-family: var(--font-head);
   font-size: clamp(1.9rem, 3.2vw, 3rem);
   font-weight: 600;
   font-kerning: none; /* keeps the single letters and the sweep's copy of the word lined up */
   line-height: 1.2;
-  letter-spacing: 0.32em;
+  letter-spacing: 0.14em;
   white-space: nowrap;
   cursor: default;
 }
@@ -451,7 +451,7 @@ html:has(.auth-page) {
 .word-sweep-text {
   position: absolute;
   top: 0.7em;
-  left: 0.32em;
+  left: 0.14em;
   color: var(--white);
   text-shadow: 0 0 14px var(--white), 0 0 26px var(--white);
 }
@@ -500,7 +500,7 @@ html:has(.auth-page) {
 .logo-tagline {
   padding-left: 0.42em;
   color: var(--text-muted);
-  font-family: var(--font-brand);
+  font-family: var(--font-head);
   font-size: 0.74rem;
   font-weight: 500;
   letter-spacing: 0.42em;
@@ -513,7 +513,8 @@ html:has(.auth-page) {
   place-items: center;
   padding: var(--space-8) var(--space-6);
   border-left: 1px solid var(--border);
-  background: var(--auth-side);
+  background-image: radial-gradient(var(--dot) 1px, transparent 1.5px); /* the same faint dots as the inner pages */
+  background-size: 26px 26px;
 }
 
 /* The role tiles and the form share one spot, so the page stays still when one turns into the other */
@@ -591,7 +592,7 @@ html:has(.auth-page) {
   width: 44px;
   height: 44px;
   margin-bottom: var(--space-2);
-  border-radius: var(--radius-round);
+  border-radius: var(--radius-sm);
   background: var(--surface-2);
 }
 .role-icon::before {
@@ -616,7 +617,7 @@ html:has(.auth-page) {
   font-family: var(--font-head);
   font-size: 1.25rem;
   font-weight: 600;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
 }
 .role-note {
   color: var(--text-muted);
@@ -676,7 +677,7 @@ html:has(.auth-page) {
 }
 /* Holds the form's space while it isn't in the page, so the heading stays still when it appears */
 .login-form-slot {
-  min-height: 233px;
+  min-height: 225px;
 }
 /* Whatever the browser fills in stays invisible until login.js has checked it belongs to this role.
    The animation shows nothing. It only tells login.js that the browser just filled in this box. */
@@ -741,6 +742,18 @@ html:has(.auth-page) {
   }
 }
 
+/* Every inner page's content fades in when it opens. The sidebar stays still, so it feels like one app. */
+@media (prefers-reduced-motion: no-preference) {
+  .page {
+    animation: content-in 0.3s ease-out backwards;
+  }
+}
+@keyframes content-in {
+  from {
+    opacity: 0;
+  }
+}
+
 /* ---------- App layout: a fixed sidebar on the left, the page beside it ---------- */
 .app {
   padding-left: var(--sidebar-width);
@@ -750,6 +763,7 @@ html:has(.auth-page) {
   flex-direction: column;
   gap: var(--space-5);
   width: 100%;
+  min-width: 0;
   max-width: 1280px;
   min-height: 100vh;
   min-height: 100dvh;
@@ -758,7 +772,6 @@ html:has(.auth-page) {
 }
 .page h1 {
   font-size: clamp(1.75rem, 1.5rem + 1vw, 2.25rem);
-  letter-spacing: -0.02em;
 }
 .fill {
   flex: 1;
@@ -770,10 +783,57 @@ html:has(.auth-page) {
   justify-content: space-between;
   gap: var(--space-3) var(--space-6);
 }
+.page-head > * {
+  min-width: 0;
+}
 .page-actions {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-2-5);
+  max-width: 100%;
+}
+
+/* The breadcrumb at the top of every inner page, built in sidebar.js. A long last step ends in "...". */
+.crumbs {
+  min-height: 1.25rem;
+  color: var(--text-muted);
+  font-size: 0.8125rem;
+}
+.crumbs ol {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1-5);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.crumbs li {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: var(--space-1-5);
+  white-space: nowrap;
+}
+.crumbs li:last-child {
+  flex: 0 1 auto;
+  min-width: 0;
+}
+.crumbs li + li::before {
+  content: '\203A';
+  opacity: 0.7;
+}
+.crumbs a {
+  color: inherit;
+  text-decoration: none;
+}
+.crumbs a:hover {
+  color: var(--text);
+}
+.crumbs [aria-current] {
+  overflow: hidden;
+  color: var(--text);
+  font-weight: 500;
+  text-overflow: ellipsis;
 }
 .eyebrow {
   margin-bottom: var(--space-1);
@@ -836,17 +896,17 @@ html:has(.auth-page) {
   gap: var(--space-2);
   min-width: 0;
   color: var(--text);
-  font-family: var(--font-brand);
-  font-size: 0.8125rem;
+  font-family: var(--font-head);
+  font-size: 0.78rem;
   font-weight: 600;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.12em;
   text-decoration: none;
   text-transform: uppercase;
 }
 .brand-mark {
   flex: none;
   width: 28px;
-  height: 21px;
+  height: auto;
 }
 .sidebar-tools {
   display: flex;
@@ -1017,7 +1077,6 @@ kbd {
   flex-direction: column;
   gap: var(--space-3-5);
   min-width: 0;
-  padding: var(--space-5);
 }
 .panel-head {
   display: flex;
@@ -1043,7 +1102,7 @@ kbd {
 }
 .search-field input {
   width: 100%;
-  height: 40px;
+  height: var(--control-sm);
   padding: 0 var(--space-3-5);
   border: var(--border-width) solid var(--field-border);
   border-radius: var(--radius-sm);
@@ -1076,7 +1135,7 @@ kbd {
   width: 56px;
   height: 56px;
   margin-bottom: var(--space-1-5);
-  border-radius: var(--radius-round);
+  border-radius: var(--radius-sm);
   background: var(--primary-soft);
   color: var(--primary-text);
 }
@@ -1094,13 +1153,12 @@ kbd {
 .stat-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: var(--space-4);
+  gap: var(--space-5);
 }
 .stat-card {
   display: grid;
   gap: var(--space-0-5);
   align-content: start;
-  padding: var(--space-4) var(--space-4-5);
   color: inherit;
   text-decoration: none;
 }
@@ -1116,23 +1174,78 @@ kbd {
 .stat-d {
   background: var(--stat-d);
 }
-.stat-label {
-  font-size: 0.86rem;
-  font-weight: 600;
+.stat-icon,
+.stat-number,
+.stat-label,
+.stat-note {
+  position: relative; /* above the glow */
+}
+.stat-icon {
+  display: grid;
+  place-items: center;
+  width: var(--control-sm);
+  height: var(--control-sm);
+  margin-bottom: var(--space-3);
+  border: var(--border-width) solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--primary-soft);
+  color: var(--primary-text);
+}
+.stat-icon svg {
+  width: 18px;
+  height: 18px;
 }
 .stat-number {
   display: block;
   min-height: 2.6rem;
   font-family: var(--font-head);
-  font-size: 2.4rem;
+  font-size: 2.25rem;
   font-weight: 600;
-  line-height: 1.1;
-  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+.stat-label {
+  font-size: 0.86rem;
+  font-weight: 600;
 }
 .stat-note {
   min-height: 1.2rem;
   color: var(--text-muted);
   font-size: 0.8rem;
+}
+/* On hover, a soft glow and a faint dot pattern rise from the bottom of the card. Only transform and opacity change. */
+.stat-glow {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  pointer-events: none;
+}
+.stat-glow span {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(var(--stat-dots) 1px, transparent 1.5px) 0 0 / var(--space-3-5) var(--space-3-5),
+    radial-gradient(120% 100% at 50% 100%, var(--stat-glow), transparent 70%);
+  -webkit-mask-image: linear-gradient(to top, black, transparent 80%);
+  mask-image: linear-gradient(to top, black, transparent 80%);
+  transform: translateY(30%);
+  transition: transform 0.3s ease;
+}
+.stat-card:hover .stat-glow,
+.stat-card:focus-visible .stat-glow {
+  opacity: 1;
+}
+.stat-card:hover .stat-glow span,
+.stat-card:focus-visible .stat-glow span {
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .stat-glow span {
+    transform: none;
+    transition: none;
+  }
 }
 
 /* ---------- Rows: lectures and assignments, each in its own bordered box ---------- */
@@ -1371,7 +1484,7 @@ kbd {
   display: inline-flex;
   align-items: center;
   gap: var(--space-1-5);
-  min-height: 34px;
+  min-height: var(--control-sm);
   padding: 0 var(--space-3);
   border: var(--border-width) solid var(--border);
   border-radius: var(--radius-pill);
@@ -1404,7 +1517,6 @@ kbd {
 
 /* ---------- The big card on the student dashboard ---------- */
 .hero-card {
-  padding: var(--space-5-5) var(--space-6);
   background: var(--surface);
 }
 .hero-card.is-live {
@@ -1456,7 +1568,7 @@ kbd {
   font-size: clamp(1.5rem, 1.2rem + 1.4vw, 2.1rem);
   font-weight: 600;
   line-height: 1.15;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
   overflow-wrap: anywhere;
 }
 .hero-when {
@@ -1476,7 +1588,7 @@ kbd {
 .btn-join {
   z-index: 1; /* stays clickable above the spotlight layer */
   flex: none;
-  min-height: 52px;
+  min-height: var(--control);
   padding: 0 var(--space-6);
   background: var(--join-bg);
   color: var(--join-fg);
@@ -1709,10 +1821,9 @@ kbd {
   z-index: 2; /* an open date picker sits above whatever is beside the form */
   display: grid;
   gap: var(--space-4);
-  padding: var(--space-5-5);
 }
 .form-card h2 {
-  font-size: 1.3rem;
+  font-size: 1.15rem;
 }
 .form-card form {
   display: grid;
@@ -1741,7 +1852,7 @@ kbd {
   font-size: 0.85rem;
 }
 .filter-field select {
-  height: 40px;
+  height: var(--control-sm);
   padding: 0 var(--space-3);
   font-size: 0.9rem;
 }
@@ -1781,7 +1892,7 @@ kbd {
   justify-content: space-between;
   gap: var(--space-2);
   width: 100%;
-  height: 48px;
+  height: var(--control);
   padding: 0 var(--space-3-5) 0 var(--space-4);
   border: var(--border-width) solid var(--field-border);
   border-radius: var(--radius-sm);
@@ -1937,7 +2048,6 @@ kbd {
 .cred-card {
   display: grid;
   gap: var(--space-4);
-  padding: var(--space-5-5);
   border-color: var(--glow);
 }
 .cred-head {
@@ -2264,17 +2374,8 @@ kbd {
   .page {
     padding: var(--space-5) var(--space-4) var(--space-10);
   }
-  .panel {
-    padding: var(--space-4);
-  }
-  .form-card {
-    padding: var(--space-4-5);
-  }
   .stat-grid {
     gap: var(--space-3);
-  }
-  .stat-card {
-    padding: var(--space-3-5);
   }
   .stat-number {
     min-height: 2.2rem;
@@ -2373,7 +2474,7 @@ kbd {
 /* Short laptop screens: a smaller logo and form, so the whole login fits without scrolling */
 @media (max-height: 720px) {
   .logo-nest {
-    width: 120px;
+    width: 132px;
     margin-bottom: var(--space-3);
   }
   .auth-card {
@@ -2397,7 +2498,7 @@ kbd {
     display: none;
   }
   .logo-nest {
-    width: 78px;
+    width: 92px;
     margin-bottom: var(--space-2);
   }
   .logo-word {
@@ -2413,7 +2514,6 @@ kbd {
     place-items: start center;
     padding: var(--space-6) var(--space-4) var(--space-8);
     border-left: 0;
-    background: none;
   }
   .role-picker,
   .auth-card {

@@ -4,8 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin dashboard · ClassNest</title>
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/favicon-admin.svg" type="image/svg+xml">
 
+  <link rel="preconnect" href="https://api.fontshare.com">
+  <link rel="preconnect" href="https://cdn.fontshare.com" crossorigin>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="/css/tokens.css">
@@ -23,6 +25,7 @@
   <script src="/js/sidebar.js"></script>
 
   <main class="page">
+    <nav class="crumbs" id="crumbs" aria-label="Breadcrumb"></nav>
 <section class="page-head">
       <div>
         <p class="eyebrow" id="greeting">&nbsp;</p>
@@ -36,23 +39,31 @@
 
     <section class="stat-grid" aria-label="Summary">
       <a class="card lift stat-card stat-a" href="/admin/batches">
-        <span class="stat-label">Active batches</span>
+        <span class="stat-glow" aria-hidden="true"><span></span></span>
+        <span class="stat-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/><path d="M2 12a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 12"/><path d="M2 17a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 17"/></svg></span>
         <span class="stat-number" id="stat-batches"><span class="skeleton sk-number"></span></span>
+        <span class="stat-label">Active batches</span>
         <span class="stat-note" id="note-batches"></span>
       </a>
       <a class="card lift stat-card stat-b" href="/admin/students">
-        <span class="stat-label">Students</span>
+        <span class="stat-glow" aria-hidden="true"><span></span></span>
+        <span class="stat-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
         <span class="stat-number" id="stat-students"><span class="skeleton sk-number"></span></span>
+        <span class="stat-label">Students</span>
         <span class="stat-note" id="note-students"></span>
       </a>
       <a class="card lift stat-card stat-c" href="/admin/lectures">
-        <span class="stat-label">Lectures released</span>
+        <span class="stat-glow" aria-hidden="true"><span></span></span>
+        <span class="stat-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5"/><rect x="2" y="6" width="14" height="12" rx="2"/></svg></span>
         <span class="stat-number" id="stat-lectures"><span class="skeleton sk-number"></span></span>
+        <span class="stat-label">Lectures released</span>
         <span class="stat-note" id="note-lectures"></span>
       </a>
       <a class="card lift stat-card stat-d" href="/admin/assignments">
-        <span class="stat-label">Submissions</span>
+        <span class="stat-glow" aria-hidden="true"><span></span></span>
+        <span class="stat-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg></span>
         <span class="stat-number" id="stat-submissions"><span class="skeleton sk-number"></span></span>
+        <span class="stat-label">Submissions</span>
         <span class="stat-note" id="note-submissions"></span>
       </a>
     </section>

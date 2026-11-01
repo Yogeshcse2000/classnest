@@ -2,7 +2,8 @@
    Change a value here and every page follows. style.css only ever uses these names.
    Design rules are in .claude/skills/classnest-ui/SKILL.md */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Jost:wght@500;600&family=Outfit:wght@500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
+@import url('https://api.fontshare.com/v2/css?f[]=clash-display@500,600,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 /* ---------- Dark (the default) ---------- */
 :root {
@@ -104,8 +105,20 @@
   --drop-border: var(--border);
   --drop-bg: transparent;
 
+  /* The 3D nest logo: bright silver at the top of each band, dark graphite at the bottom, and a dark hollow */
+  --nest-shine: var(--white);
+  --nest-silver: #e6e9ee;
+  --nest-steel: #969ba6;
+  --nest-graphite: #34363d;
+  --nest-edge: #101114;
+  --nest-hollow: #030304;
+
+  /* The egg in the nest: pearl on the login page. Each role has its own below. */
+  --egg-light: var(--white);
+  --egg: #ece9e2;
+  --egg-deep: #a8a49a;
+
   /* The login page */
-  --auth-side: #070708; /* the login half, one step lighter than the black beside it */
   --bird: #f2f2f4; /* the birds. login-flock.js reads these three, so keep them as #rrggbb */
   --bird-admin: #4d86ff;
   --bird-student: #ff7a26;
@@ -113,8 +126,7 @@
   --word-flow: linear-gradient(90deg, var(--bird-admin) 12%, var(--white) 26%, var(--bird-student) 40%, var(--bird-student) 60%, var(--white) 74%, var(--bird-admin) 88%);
 
   /* Fonts (loaded at the top of this file) */
-  --font-brand: 'Jost', system-ui, sans-serif; /* only the logo */
-  --font-head: 'Outfit', system-ui, sans-serif;
+  --font-head: 'Clash Display', system-ui, sans-serif; /* the wordmark, headings and big numbers */
   --font-body: 'Inter', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, Consolas, monospace;
 
@@ -122,10 +134,15 @@
   --radius: 18px;
   --radius-sm: 12px;
   --radius-xs: 8px;
-  --radius-btn: 999px;
+  --radius-btn: 12px;
   --radius-pill: 999px;
   --radius-round: 50%;
   --border-width: 1px;
+
+  /* One height for every button and input, one padding for every card */
+  --control: 2.75rem;
+  --control-sm: 2.25rem;
+  --card-pad: var(--space-5);
 
   /* Spacing: each step is 4px, so --space-3 is 12px, and --space-3-5 is 14px. Used for padding, margins and gaps. */
   --space-px: 0.0625rem;
@@ -165,15 +182,34 @@
   --selected-bg: var(--primary-soft);
   --hero-bg: linear-gradient(120deg, var(--primary-soft), var(--surface) 62%);
   --join-shadow: 0 0 22px var(--glow);
+  --stat-glow: color-mix(in srgb, var(--primary) 30%, transparent); /* rises from the bottom of a stat card */
+  --stat-dots: color-mix(in srgb, var(--primary-text) 45%, transparent);
   --shadow-lift: 0 2px 4px rgba(0, 0, 0, 0.3), 0 20px 44px rgba(0, 0, 0, 0.45), 0 0 32px var(--primary-faint);
 }
 
-/* ---------- Students: orange. theme.js sets data-role on <html>. ---------- */
+/* ---------- Admins: a blue egg. theme.js sets data-role on <html>. ---------- */
+:root[data-role='admin'] {
+  --egg-light: #a9c4ff;
+  --egg: var(--blue);
+  --egg-deep: #0b2a8f;
+}
+
+/* ---------- Students: orange ---------- */
 :root[data-role='student'] {
   --primary: var(--orange);
   --primary-text: var(--orange-bright);
   --on-primary: var(--black); /* white on this orange is too hard to read */
   --sidebar-accent: var(--orange-bright);
+  --egg-light: #ffc79c;
+  --egg: var(--orange);
+  --egg-deep: #9a3a00;
+}
+
+/* ---------- Phones: a little less padding inside cards ---------- */
+@media (max-width: 720px) {
+  :root {
+    --card-pad: var(--space-4);
+  }
 }
 
 /* ---------- Light mode (picked with the toggle): the mockups' style ----------
@@ -190,8 +226,6 @@
   --border: var(--ink);
   --edge: transparent;
   --border-width: 2px;
-  --radius-btn: 12px;
-  --font-head: 'Space Grotesk', system-ui, sans-serif;
 
   --primary-text: var(--blue-deep);
   --glow: var(--primary);

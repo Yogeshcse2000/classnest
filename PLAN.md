@@ -29,10 +29,13 @@ Project rules are in [CLAUDE.md](CLAUDE.md). Design and animation rules are in t
 | Login page | A split screen, always dark, with no light/dark toggle (dashboards keep theirs). The left panel has the full logo and a flock of birds. The right panel has the two tiles, the "Students can't sign up" note and a "Preview error state" link, which shows the login error without sending anything. It stays black and white until a role is hovered or chosen. The first visit in a browser session plays a full-screen opening of about 3.6 seconds (about 2 on phones), which can't be skipped: "CLASSNEST" is revealed in the centre of the whole screen, moves into the left panel, and the nest, birds and login then appear. Later visits, in any tab, fade straight into the finished layout in 0.5 seconds (remembered with a cookie that ends when the browser closes). A stalled computer still reaches the login after 6 seconds of visible time. |
 | Search (Ctrl+K) | Read-only. Admins find students, batches, lectures, assignments and pages through `/api/admin/search`. Students find only their own batch's lectures and assignments through `/api/student/search`. Their batch comes from the database, never from the browser. Assignment results open that assignment selected on its Assignments page (`/admin/assignments?assignment=3`, `/student/assignments?assignment=3`). Other results scroll to the item and highlight it (`/admin/lectures#lecture-3`, `/student/dashboard#lecture-3`). Finished lectures are hidden from students, so their search leaves them out too. |
 | Design exceptions | The login page's opening and birds may run longer than 300ms. Everywhere else, the `classnest-ui` skill applies. |
-| Design tokens | Every colour, font, radius and spacing value is a CSS variable in `public/css/tokens.css`, and `style.css` only uses those names. Only `favicon.svg` and the `theme-color` tag keep their own colour, because they can't read CSS. |
+| Design tokens | Every colour, font, radius and spacing value is a CSS variable in `public/css/tokens.css`, and `style.css` only uses those names. Only the three favicon files and the `theme-color` tag keep their own colour, because they can't read CSS. |
 | Colours | Pure black base, electric blue for admins, electric orange for students. **No green anywhere.** Status colours keep their meaning: On time is a calm blue-white, Late is coral, Missing is red, Pending and Live now are amber. |
 | Theme | Dark by default. The toggle in the sidebar switches to light, and the choice is remembered. Light mode is the mockups' style: cream page, thick black borders, hard shadows, and the same blue and orange, in a deeper shade for text. Both themes use the same layout. |
-| Rebrand | Part A (colours, logo and the login page) is done. Part B is the layout of the inner pages. |
+| Rebrand | Done: the colours, the font, the 3D logo, the login page and the inner pages. |
+| Fonts | Clash Display (free, from Fontshare) for the wordmark, headings and big numbers. Inter for body text, JetBrains Mono for small labels. They are loaded in `tokens.css`. |
+| Logo | A 3D woven nest drawn as SVG in code, with no images. The egg is pearl on the login page, blue for admins and orange for students. The sidebar and browser tab use a simpler version with fewer bands. |
+| Breadcrumb | On every inner page, built in `sidebar.js`, so a change there reaches all pages. The Assignments pages add the chosen assignment's name. |
 | Mockups | The trainer's mockups in `mockups/` set the layout and elements of every inner page. The name stays ClassNest, with its logo. Batches and Lectures have no mockup, so they follow the Students page: a form card and a list. |
 | Layout | Every inner page has one fixed sidebar, built in `sidebar.js`, so a change there reaches all pages. At 960px and below it becomes a slide-out menu. |
 | Admin dashboard | The fourth stat card is **Submissions**, not the mockup's "Pending reviews", because there is no grading. "Active batches" means batches that have reached their start date. |
@@ -102,7 +105,7 @@ classnest/
 │   └── student/             ← dashboard, assignments
 ├── public/                  ← open to everyone
 │   ├── index.html           ← login page
-│   ├── favicon.svg
+│   ├── favicon.svg          ← also favicon-admin.svg and favicon-student.svg
 │   ├── css/tokens.css       ← every colour, font, radius and spacing value
 │   ├── css/style.css        ← layout and components
 │   └── js/                  ← api.js, ui.js, theme.js, animations.js, palette.js, sidebar.js, picker.js,
@@ -162,7 +165,7 @@ Worked out by the server, not stored:
 | `express-session` | login sessions (cookies) |
 | `multer` | receives uploaded files (.zip only, size limit) |
 | `dotenv` | reads the `.env` file |
-| GSAP, Google Fonts (Jost, Outfit, Space Grotesk, Inter, JetBrains Mono) | loaded from a free CDN (GSAP in the HTML, the fonts in `tokens.css`) |
+| GSAP, Clash Display (Fontshare), Google Fonts (Inter, JetBrains Mono) | loaded from a free CDN (GSAP in the HTML, the fonts in `tokens.css`) |
 
 ## Commands
 

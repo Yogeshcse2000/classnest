@@ -34,8 +34,10 @@
         { title: 'Assignments', url: '/student/assignments', icon: NOTEBOOK_ICON },
       ];
 
-  // The small nest: the same twigs as favicon.svg. The full one is in index.html.
-  const LOGO = `<svg class="brand-mark" viewBox="0 0 32 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path stroke-width="1.25" d="M4.2 8.6C9 3.2 23 3 27.8 8.4"/><path stroke-width="1.25" d="M3.4 9.4C5.6 14 11 15.6 17 15.1C22.4 14.7 26.8 13 28.8 8.6"/><path stroke-width="1.25" d="M2.4 11.2C5 18.8 12 21.6 18 21C23.6 20.4 28 17 29.6 11"/><path stroke-width="1" d="M6 16C11 19 20.4 19.4 27 14.6"/><path stroke-width="1" d="M8.4 19.6C13 17.4 21 16 26.4 17.6"/><path stroke-width="1" d="M10.2 5.2C7 7 6 11 9.2 13.4"/><path stroke-width="1" d="M22 4.8C26 6.4 27 10.2 23.4 13"/><path stroke-width="1" d="M28 7.6L30.8 5.6"/><path stroke-width="1" d="M3.8 8.4L1.4 6.8"/></svg>`;
+  // The small nest, with fewer bands than the big one in index.html, so it stays clean at 24px. The favicons match it.
+  // Each copy needs its own id, because its colours are looked up by id.
+  const nestLogo = (id) =>
+    `<svg viewBox="0 0 320 262" class="brand-mark" aria-hidden="true"><defs><linearGradient id="${id}-m" gradientUnits="userSpaceOnUse" x1="0" y1="40" x2="0" y2="230"><stop offset="0" stop-color="var(--nest-silver)"/><stop offset=".55" stop-color="var(--nest-steel)"/><stop offset="1" stop-color="var(--nest-graphite)"/></linearGradient><radialGradient id="${id}-g" cx=".36" cy=".26" r=".85"><stop offset="0" stop-color="var(--egg-light)"/><stop offset=".45" stop-color="var(--egg)"/><stop offset="1" stop-color="var(--egg-deep)"/></radialGradient></defs><ellipse cx="160" cy="130" rx="112" ry="85" fill="var(--nest-hollow)"/><ellipse cx="160" cy="126" rx="33" ry="41" fill="url(#${id}-g)"/><g fill="none" stroke="url(#${id}-m)" stroke-width="48"><path d="M255 191C248 196 227 216 211 220C195 224 174 222 160 217C146 212 135 201 125 193C114 184 101 172 96 168"/><path d="M100 210C93 207 67 202 60 194C52 185 52 171 53 159C55 147 63 135 68 123C72 112 77 95 79 89"/><path d="M27 105C30 100 36 84 47 77C58 71 78 68 93 65C109 62 124 63 138 61C151 59 168 55 174 53"/><path d="M138 20C146 22 175 25 190 32C204 39 217 54 225 64C233 75 234 85 238 92C242 100 247 106 248 109"/><path d="M279 74C281 81 293 106 291 120C289 134 276 150 266 158C256 167 241 170 230 173C219 177 205 179 200 180"/></g><g fill="none"><path d="M247 108C249 110 254 115 257 120C260 126 265 132 266 140C268 148 269 158 266 167C264 176 254 190 252 195" stroke="var(--nest-edge)" stroke-width="64" stroke-linecap="round"/><path d="M247 108C249 110 254 115 257 120C260 126 265 132 266 140C268 148 269 158 266 167C264 176 254 190 252 195" stroke="url(#${id}-m)" stroke-width="48" stroke-linecap="round"/><path d="M248 103C250 106 256 113 258 119C261 126 264 134 264 143C264 151 258 166 257 171" stroke="var(--nest-shine)" stroke-width="10" stroke-linecap="round" opacity=".9"/><path d="M203 179C200 181 192 184 185 187C177 190 169 195 160 199C151 202 139 206 128 208C117 210 100 209 94 210" stroke="var(--nest-edge)" stroke-width="64" stroke-linecap="round"/><path d="M203 179C200 181 192 184 185 187C177 190 169 195 160 199C151 202 139 206 128 208C117 210 100 209 94 210" stroke="url(#${id}-m)" stroke-width="48" stroke-linecap="round"/><path d="M190 173C187 174 177 179 169 183C161 186 151 191 141 194C131 197 113 199 107 200" stroke="var(--nest-shine)" stroke-width="10" stroke-linecap="round" opacity=".9"/><path d="M99 170C96 168 85 161 77 156C70 151 60 146 53 141C46 135 38 129 34 122C29 116 28 105 27 102" stroke="var(--nest-edge)" stroke-width="64" stroke-linecap="round"/><path d="M99 170C96 168 85 161 77 156C70 151 60 146 53 141C46 135 38 129 34 122C29 116 28 105 27 102" stroke="url(#${id}-m)" stroke-width="48" stroke-linecap="round"/><path d="M85 153C81 151 69 144 61 139C53 133 44 128 38 122C32 116 27 105 24 102" stroke="var(--nest-shine)" stroke-width="10" stroke-linecap="round" opacity=".9"/><path d="M79 93C79 89 81 77 84 70C86 62 88 53 93 46C98 39 105 32 113 28C121 24 138 21 143 20" stroke="var(--nest-edge)" stroke-width="64" stroke-linecap="round"/><path d="M79 93C79 89 81 77 84 70C86 62 88 53 93 46C98 39 105 32 113 28C121 24 138 21 143 20" stroke="url(#${id}-m)" stroke-width="48" stroke-linecap="round"/><path d="M77 71C78 67 80 55 84 48C87 40 91 32 98 26C104 20 119 15 123 12" stroke="var(--nest-shine)" stroke-width="10" stroke-linecap="round" opacity=".9"/><path d="M170 54C174 53 186 49 195 48C204 46 215 45 225 46C235 47 247 50 257 56C266 61 278 74 282 78" stroke="var(--nest-edge)" stroke-width="64" stroke-linecap="round"/><path d="M170 54C174 53 186 49 195 48C204 46 215 45 225 46C235 47 247 50 257 56C266 61 278 74 282 78" stroke="url(#${id}-m)" stroke-width="48" stroke-linecap="round"/><path d="M178 41C182 40 196 36 205 36C215 35 227 36 237 39C247 42 262 52 267 55" stroke="var(--nest-shine)" stroke-width="10" stroke-linecap="round" opacity=".9"/></g></svg>`;
   const MOON_ICON = `<svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>`;
   const SUN_ICON = `<svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>`;
 
@@ -55,12 +57,12 @@
     `
     <header class="mobile-bar">
       <button class="icon-btn" type="button" id="menu-open" aria-label="Open menu" aria-expanded="false" aria-controls="sidebar">${MENU_ICON}</button>
-      <a class="brand" href="${home}">${LOGO}<span>ClassNest</span></a>
+      <a class="brand" href="${home}">${nestLogo('nest-bar')}<span>ClassNest</span></a>
     </header>
     <div class="sidebar-scrim" id="menu-scrim" hidden></div>
     <aside class="sidebar" id="sidebar">
       <div class="sidebar-top">
-        <a class="brand" href="${home}">${LOGO}<span>ClassNest</span></a>
+        <a class="brand" href="${home}">${nestLogo('nest-side')}<span>ClassNest</span></a>
         <div class="sidebar-tools">
           <button class="icon-btn" type="button" data-palette-open data-menu-close aria-label="Search" title="Search (Ctrl+K)">${SEARCH_ICON}</button>
           <button class="icon-btn" type="button" data-theme-toggle aria-label="Switch colour theme">${MOON_ICON}${SUN_ICON}</button>
@@ -108,4 +110,34 @@
     if (event.key === 'Escape') closeMenu();
   });
   window.matchMedia('(min-width: 961px)').addEventListener('change', closeMenu);
+
+  // ---------- The breadcrumb ----------
+
+  // Home > Dashboard, or Home > Assignments > Build a page while one item is open.
+  // Each page has an empty <nav id="crumbs">. Names go in with textContent, so a title can't become HTML.
+  const pageTitle = links.find((link) => link.url === current).title;
+  let openItem = null;
+
+  function showBreadcrumb() {
+    const steps = [{ title: 'Home', url: home }, { title: pageTitle, url: openItem ? current : null }];
+    if (openItem) steps.push({ title: openItem });
+
+    const list = document.createElement('ol');
+    steps.forEach((step) => {
+      const part = document.createElement(step.url ? 'a' : 'span');
+      part.textContent = step.title;
+      if (step.url) part.href = step.url;
+      else part.setAttribute('aria-current', 'page');
+      const item = document.createElement('li');
+      item.append(part);
+      list.append(item);
+    });
+    document.getElementById('crumbs').replaceChildren(list);
+  }
+
+  window.setBreadcrumbItem = (title) => {
+    openItem = title || null;
+    showBreadcrumb();
+  };
+  document.addEventListener('DOMContentLoaded', showBreadcrumb);
 })();

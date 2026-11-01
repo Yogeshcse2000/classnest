@@ -126,7 +126,7 @@
     tilt.inert = true; // a click near the end of the opening shouldn't open a tile that is still moving
 
     // Wait for the logo's font, so the word doesn't change shape halfway through
-    const fontLoaded = document.fonts.load('600 1em Jost', 'CLASSNEST');
+    const fontLoaded = document.fonts.load('600 1em "Clash Display"', 'CLASSNEST');
     await Promise.race([fontLoaded, new Promise((done) => setTimeout(done, FONT_WAIT_MS))]);
 
     intro = buildFullIntro();

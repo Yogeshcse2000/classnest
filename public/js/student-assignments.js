@@ -98,6 +98,7 @@ function showCountdown() {
 function showAssignment(assignment) {
   dueAt = assignment.due_at;
   document.title = `${assignment.title} · ClassNest`;
+  setBreadcrumbItem(assignment.title);
   content.hidden = false;
   unavailable.hidden = true;
   element('assignment-batch').textContent = `Assignment · ${assignment.batch_name}`;
@@ -117,6 +118,7 @@ function showSubmission(submission) {
 
 function showUnavailable(title, message) {
   document.title = 'Assignment not available · ClassNest';
+  setBreadcrumbItem(null);
   element('unavailable-title').textContent = title;
   element('unavailable-text').textContent = message;
   unavailable.hidden = false;

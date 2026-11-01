@@ -123,6 +123,7 @@ async function loadRoster() {
 function showDetail(assignment) {
   detailContent.hidden = !assignment;
   detailEmpty.hidden = Boolean(assignment);
+  setBreadcrumbItem(assignment?.title);
   if (!assignment) return;
 
   document.getElementById('detail-batch').textContent = assignment.batch_name;
