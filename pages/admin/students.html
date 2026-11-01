@@ -54,7 +54,7 @@
       </section>
 
       <section class="stack">
-        <!-- Login details for the student just enrolled. Shown once, then wiped. -->
+        <!-- Login details for the student just enrolled or reset. Shown once, then wiped. -->
         <article class="card cred-card" id="cred-card" aria-live="polite" hidden>
           <div class="cred-head">
             <svg class="success-check" viewBox="0 0 52 52" aria-hidden="true">
@@ -62,7 +62,7 @@
               <path d="M16 27l7 7 14-15" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
             <div>
-              <h2>Student enrolled!</h2>
+              <h2 id="cred-title">Student enrolled!</h2>
               <p id="cred-intro"></p>
             </div>
           </div>
@@ -95,12 +95,13 @@
                 <th scope="col">Email</th>
                 <th scope="col">Batch</th>
                 <th scope="col">Username</th>
+                <th scope="col"><span class="visually-hidden">Reset password</span></th>
               </tr>
             </thead>
             <tbody id="student-list" aria-busy="true">
-              <tr><td colspan="4"><span class="skeleton sk-line"></span></td></tr>
-              <tr><td colspan="4"><span class="skeleton sk-line"></span></td></tr>
-              <tr><td colspan="4"><span class="skeleton sk-line"></span></td></tr>
+              <tr><td colspan="5"><span class="skeleton sk-line"></span></td></tr>
+              <tr><td colspan="5"><span class="skeleton sk-line"></span></td></tr>
+              <tr><td colspan="5"><span class="skeleton sk-line"></span></td></tr>
             </tbody>
           </table>
         </article>

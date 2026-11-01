@@ -8,9 +8,12 @@ const {
   findStudentByEmail,
   usernameTaken,
   createStudent,
+  updateStudentPassword,
 } = require('../../models/students');
 const { findBatchById } = require('../../models/batches');
 const { usernameBase, generateTempPassword } = require('../../utils/credentials');
+const { toId } = require('../../utils/ids');
+const { endStudentSessions } = require('../../session');
 
 const router = express.Router();
 
@@ -78,6 +81,23 @@ router.post('/', async (req, res) => {
     username = `${base}${number}`;
     number++;
   }
+});
+
+// POST /api/admin/students/:id/reset-password
+// Gives the student a new temporary password. The old one stops working at once, and anyone already logged in with it
+// is logged out. As with enrolling, only the hash is saved, and the plain password is sent back this one time.
+router.post('/:id/reset-password', async (req, res) => {
+  const id = toId(req.params.id);
+  const student = id && (await findStudentById(id));
+  if (!student) {
+    return res.status(404).json({ error: 'That student no longer exists.' });
+  }
+
+  const password = generateTempPassword();
+  await updateStudentPassword(id, await bcrypt.hash(password, 10));
+  endStudentSessions(id);
+
+  res.json({ student, credentials: { username: student.username, password } });
 });
 
 module.exports = router;

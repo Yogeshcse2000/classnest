@@ -1,4 +1,4 @@
-// Students page (admin): enroll a student, show their login details once, and list everyone.
+// Students page (admin): enroll a student, reset a password, show login details once, and list everyone.
 
 setupLogout();
 showCurrentUser();
@@ -15,6 +15,7 @@ const countLabel = document.getElementById('student-count');
 const searchInput = document.getElementById('student-search');
 
 const credCard = document.getElementById('cred-card');
+const credTitle = document.getElementById('cred-title');
 const credIntro = document.getElementById('cred-intro');
 const credUsername = document.getElementById('cred-username');
 const credPassword = document.getElementById('cred-password');
@@ -25,13 +26,22 @@ let students = [];
 
 // ---------- Student list ----------
 
+// <wbr> marks a spot where the browser may wrap, so a long email or username breaks at a dot or @, not inside a word
+function wrapAtDots(value) {
+  return escapeHtml(value).replace(/[.@]/g, '$&<wbr>');
+}
+
 function studentRowHtml(student) {
   return `
     <tr id="student-${student.id}">
       <td class="table-name">${escapeHtml(student.name)}</td>
-      <td class="table-muted" data-label="Email">${escapeHtml(student.email || '')}</td>
+      <td class="table-muted" data-label="Email">${wrapAtDots(student.email || '')}</td>
       <td data-label="Batch">${escapeHtml(student.batch_name)}</td>
-      <td data-label="Username"><span class="mono">${escapeHtml(student.username)}</span></td>
+      <td data-label="Username"><span class="mono">${wrapAtDots(student.username)}</span></td>
+      <td class="table-action">
+        <button class="btn btn-ghost" type="button" data-reset="${student.id}"
+                aria-label="Reset password for ${escapeHtml(student.name)}">Reset password</button>
+      </td>
     </tr>`;
 }
 
@@ -41,7 +51,7 @@ const STUDENT_ICON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
 function messageRowHtml(title, text) {
   return `
     <tr class="table-message">
-      <td colspan="4">
+      <td colspan="5">
         <div class="empty-state">
           <div class="empty-icon" aria-hidden="true">${STUDENT_ICON}</div>
           <h2>${title}</h2>
@@ -67,6 +77,7 @@ function render() {
     list.innerHTML = messageRowHtml('No matching students', 'Try a different name, email, batch or username.');
   } else {
     list.innerHTML = visible.map(studentRowHtml).join('');
+    addHoverLift(list);
   }
   list.removeAttribute('aria-busy');
 }
@@ -103,8 +114,9 @@ function fillBatchSelect(batches) {
 
 // ---------- Login details card (shown once) ----------
 
-function showCredentials(student, credentials) {
-  credIntro.textContent = `${student.name} is enrolled in ${student.batch_name}.`;
+function showCredentials(title, intro, credentials) {
+  credTitle.textContent = title;
+  credIntro.textContent = intro;
   credUsername.textContent = credentials.username;
   credPassword.textContent = credentials.password;
   credCard.hidden = false;
@@ -203,7 +215,7 @@ form.addEventListener('submit', async (event) => {
     render();
     if (motionOK) gsap.from(list.firstElementChild, { opacity: 0, y: -8, duration: 0.3, ease: 'power2.out' });
 
-    showCredentials(student, credentials);
+    showCredentials('Student enrolled!', `${student.name} is enrolled in ${student.batch_name}.`, credentials);
 
     // Keep the chosen batch, so enrolling several students into one batch is quick
     nameInput.value = '';
@@ -213,6 +225,34 @@ form.addEventListener('submit', async (event) => {
   } finally {
     saveButton.disabled = false;
     saveButton.textContent = 'Enroll & generate login';
+  }
+});
+
+// ---------- Resetting a password ----------
+
+list.addEventListener('click', async (event) => {
+  const button = event.target.closest('[data-reset]');
+  if (!button) return;
+  const student = students.find((s) => s.id === Number(button.dataset.reset));
+
+  const confirmed = await confirmDialog({
+    title: `Reset ${student.name}'s password?`,
+    message: "Their old password stops working straight away and they are logged out. You'll get a new temporary password to give them.",
+    confirmText: 'Reset password',
+  });
+  if (!confirmed) return;
+
+  button.disabled = true;
+  button.textContent = 'Resetting…';
+  try {
+    const { credentials } = await api(`/api/admin/students/${student.id}/reset-password`, { method: 'POST' });
+    showCredentials('Password reset!', `${student.name}'s old password no longer works.`, credentials);
+    credCard.scrollIntoView({ block: 'nearest', behavior: motionOK ? 'smooth' : 'auto' }); // the row may be far down the list
+  } catch (error) {
+    showToast(error.message, 'error');
+  } finally {
+    button.disabled = false;
+    button.textContent = 'Reset password';
   }
 });
 
@@ -230,5 +270,5 @@ Promise.all([loadPageData('/api/admin/batches'), loadPageData('/api/admin/studen
   })
   .catch((error) => {
     list.removeAttribute('aria-busy');
-    list.innerHTML = `<tr class="table-message"><td colspan="4"><p class="alert alert-error">${escapeHtml(error.message)}</p></td></tr>`;
+    list.innerHTML = `<tr class="table-message"><td colspan="5"><p class="alert alert-error">${escapeHtml(error.message)}</p></td></tr>`;
   });

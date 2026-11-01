@@ -60,6 +60,10 @@ async function createStudent({ name, username, email, passwordHash, batchId }) {
   }
 }
 
+async function updateStudentPassword(id, passwordHash) {
+  db.prepare('UPDATE students SET password_hash = ? WHERE id = ?').run(passwordHash, id);
+}
+
 module.exports = {
   findStudentByUsername,
   findStudentByEmail,
@@ -69,4 +73,5 @@ module.exports = {
   countStudentsSince,
   findStudentById,
   createStudent,
+  updateStudentPassword,
 };

@@ -67,6 +67,16 @@ function clearExpired() {
 clearExpired();
 setInterval(clearExpired, ONE_HOUR).unref();
 
+// Logs a student out on every device, by removing their saved sessions. Who a session belongs to is inside its JSON,
+// so it is read here in code. That keeps the SQL plain, for the move to Postgres.
+function endStudentSessions(studentId) {
+  const remove = db.prepare('DELETE FROM sessions WHERE sid = ?');
+  for (const { sid, data } of db.prepare('SELECT sid, data FROM sessions').all()) {
+    const { user } = JSON.parse(data);
+    if (user?.role === 'student' && user.id === studentId) remove.run(sid);
+  }
+}
+
 const sessionMiddleware = session({
   name: SESSION_COOKIE,
   secret: process.env.SESSION_SECRET, // used to sign the cookie so it can't be faked
@@ -81,4 +91,4 @@ const sessionMiddleware = session({
   },
 });
 
-module.exports = { sessionMiddleware, SESSION_COOKIE };
+module.exports = { sessionMiddleware, SESSION_COOKIE, endStudentSessions };

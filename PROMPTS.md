@@ -573,3 +573,21 @@ Safety: keep all existing button ids, classes used by JavaScript, and form names
 
 Test it yourself quickly (no tester agent): the logo at large and small sizes, every primary, secondary and delete button on both roles, light and dark mode, desktop and mobile. Add this prompt to PROMPTS.md.
 ```
+
+## Prompt 27 - Reset password and demo data (2026-11-01)
+
+```
+Read CLAUDE.md and PLAN.md first. Two small additions. Don't change the design, existing features, or existing data.
+
+1. Reset password (admin): on the Students page, each student gets a "Reset password" button. It asks for confirmation first, then generates a new temporary password, saves it hashed, and shows it only once with copy buttons, exactly like when a student is created. The old password stops working immediately. Only a logged-in admin can do this.
+
+2. Demo data script: add "npm run seed:demo". It ADDS demo data without deleting anything that already exists, and skips items that already exist, so it is safe to run again:
+- 2 batches: "Web Dev · Jan 2027" and "AI Builders · Nov 2026".
+- 6 students spread across both batches, all with the password Demo@1234 (hashed).
+- Lectures: one that is live right now (started 10 minutes before the script runs), 2 upcoming, and 1 finished.
+- Assignments: one open, one due within 24 hours, and one closed.
+- Submissions on the open and closed assignments, with small real .zip files: some on time, some late, and some students missing, so every status shows.
+- At the end, print the demo admin and student logins in the terminal.
+
+Test it yourself quickly (no tester agent): reset a password and log in with the new one, run the seed twice to check nothing duplicates, and check both dashboards show the demo data. Add this prompt to PROMPTS.md.
+```

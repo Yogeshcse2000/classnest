@@ -24,7 +24,8 @@ Project rules are in [CLAUDE.md](CLAUDE.md). Design and animation rules are in t
 | Form errors | The server checks everything and sends one message per wrong field in `fields`. Lecture and assignment forms show each one under its field. |
 | Batch names | Must be unique (capital letters don't matter). Start date required, description optional. |
 | New students | Admin enters name + email + batch. Username comes from the name (`priya.sharma`, then `priya.sharma2`...). Temporary password is random (`k7mq-x4tz-p9wd`). |
-| Showing credentials | Only once, right after enrolling, with **Copy username**, **Copy password** and **Copy both** buttons. Only the hash is saved. |
+| Showing credentials | Only once, right after enrolling or resetting a password, with **Copy username**, **Copy password** and **Copy both** buttons. Only the hash is saved. |
+| Resetting a password | Each row on the Students page has a **Reset password** button, which asks first. The server makes a new temporary password, saves only its hash, and sends it back once. The old password stops working at once, and the student is logged out on every device, so nobody who got in with the old password can stay in. Admins only: the route is behind `requireRoleApi('admin')`. |
 | Pasting at login | Spaces around the username or password are ignored. Pasting `Username: ... Password: ...` into either box fills in both. |
 | Login page | A split screen, always dark, with no light/dark toggle (dashboards keep theirs). The left panel has the full logo and a flock of birds. The right panel has the two tiles, the "Students can't sign up" note and a "Preview error state" link, which shows the login error without sending anything. It stays black and white until a role is hovered or chosen. The first visit in a browser session plays a full-screen opening of about 3.6 seconds (about 2 on phones), which can't be skipped: "CLASSNEST" is revealed in the centre of the whole screen, moves into the left panel, and the nest, birds and login then appear. Later visits, in any tab, fade straight into the finished layout in 0.5 seconds (remembered with a cookie that ends when the browser closes). A stalled computer still reaches the login after 6 seconds of visible time. |
 | Search (Ctrl+K) | Read-only. Admins find students, batches, lectures, assignments and pages through `/api/admin/search`. Students find only their own batch's lectures and assignments through `/api/student/search`. Their batch comes from the database, never from the browser. Assignment results open that assignment selected on its Assignments page (`/admin/assignments?assignment=3`, `/student/assignments?assignment=3`). Other results scroll to the item and highlight it (`/admin/lectures#lecture-3`, `/student/dashboard#lecture-3`). Finished lectures are hidden from students, so their search leaves them out too. |
@@ -54,6 +55,7 @@ Project rules are in [CLAUDE.md](CLAUDE.md). Design and animation rules are in t
 | Running | Fully on a laptop with `npm start`. May be deployed for free later. |
 | Google Meet | Admin pastes a Meet link. No Google API. |
 | First admin | Created by `npm run seed` using details from `.env`. |
+| Demo data | `npm run seed:demo` adds a demo admin, 2 batches, 6 students, lectures, assignments and submissions. It only adds, and skips whatever already exists, by batch name, username, title, or assignment and student. Everyone in it has the password `Demo@1234`, so it is for a laptop only, never a deployed site. Dates are set the first time only, so running it again does not make the demo lecture live again. |
 | Adding students | Admin creates the account with a temporary password. |
 
 ## Keeping it easy to move later (Postgres + online file storage)
@@ -72,6 +74,7 @@ classnest/
 │   ├── server.js            ← starts the server, connects everything
 │   ├── db.js                ← opens SQLite, creates tables
 │   ├── seed.js              ← creates the first admin
+│   ├── seed-demo.js         ← adds demo data (safe to run again)
 │   ├── session.js           ← login sessions, saved in the sessions table
 │   ├── storage.js           ← save / delete / get uploaded files
 │   ├── utils/
@@ -174,6 +177,7 @@ Worked out by the server, not stored:
 | `npm start` | runs the server |
 | `npm run dev` | runs the server and restarts it when you save a file |
 | `npm run seed` | creates the first admin account (from step 4) |
+| `npm run seed:demo` | adds demo data and prints the demo logins, and is safe to run again |
 
 ## Build order
 
