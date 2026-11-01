@@ -9,7 +9,7 @@ Project rules are in [CLAUDE.md](CLAUDE.md). Design and animation rules are in t
 | Question | Decision |
 |---|---|
 | Admins vs students | **Two separate tables:** `admins` and `students`. |
-| Logging in | One login page with Admin and Student role cards. The chosen card becomes the login form. **Admins use email, students use username.** |
+| Logging in | One login page with Admin and Student tiles. The chosen tile becomes the login form. **Admins use email, students use username.** |
 | Saved logins | Only the chosen role's form is in the page. Browsers save logins per website, so `login.js` also hides anything the browser fills until it has checked it fits the role (an email for admins, no `@` for students), and wipes it if not. |
 | Sessions | Stored in the `sessions` table, so logins survive restarts. Cookie lasts 7 days. |
 | Wrong role / not logged in | Pages redirect (to login, or to your own dashboard). API routes answer 401 / 403 with an error. |
@@ -26,10 +26,13 @@ Project rules are in [CLAUDE.md](CLAUDE.md). Design and animation rules are in t
 | New students | Admin enters name + email + batch. Username comes from the name (`priya.sharma`, then `priya.sharma2`...). Temporary password is random (`k7mq-x4tz-p9wd`). |
 | Showing credentials | Only once, right after enrolling, with **Copy username**, **Copy password** and **Copy both** buttons. Only the hash is saved. |
 | Pasting at login | Spaces around the username or password are ignored. Pasting `Username: ... Password: ...` into either box fills in both. |
-| Login page | Always dark, with no light/dark toggle (dashboards keep theirs). It keeps its role cards instead of the mockup's split screen, and adds the "Students can't sign up" note and a "Preview error state" link, which shows the sign-in error without sending anything. The first visit in a browser session plays the full 4-second intro, which can't be skipped. Later visits, in any tab, play a 0.5-second version (remembered with a cookie that ends when the browser closes). A stalled computer still reaches the login after 6 seconds of visible time. |
+| Login page | A split screen, always dark, with no light/dark toggle (dashboards keep theirs). The left panel has the full logo and a flock of birds. The right panel has the two tiles, the "Students can't sign up" note and a "Preview error state" link, which shows the login error without sending anything. It stays black and white until a role is hovered or chosen. The first visit in a browser session plays the full 2-second intro, which can't be skipped. Later visits, in any tab, play a 0.5-second version (remembered with a cookie that ends when the browser closes). A stalled computer still reaches the login after 3.5 seconds of visible time. |
 | Search (Ctrl+K) | Read-only. Admins find students, batches, lectures, assignments and pages through `/api/admin/search`. Students find only their own batch's lectures and assignments through `/api/student/search`. Their batch comes from the database, never from the browser. Assignment results open that assignment selected on its Assignments page (`/admin/assignments?assignment=3`, `/student/assignments?assignment=3`). Other results scroll to the item and highlight it (`/admin/lectures#lecture-3`, `/student/dashboard#lecture-3`). Finished lectures are hidden from students, so their search leaves them out too. |
-| Design exceptions | The login page may use an amber glow and animations longer than 300ms. Everywhere else, the `classnest-ui` skill applies. |
-| Theme | Dark by default. The toggle in the sidebar switches to light, and the choice is remembered. Light mode is the mockups' style: cream page, thick black borders, hard shadows, blue for admins and orange for students. Both themes use the same layout. |
+| Design exceptions | The login page's intro and birds may run longer than 300ms, and the nest's strokes may animate `stroke-dashoffset`. Everywhere else, the `classnest-ui` skill applies. |
+| Design tokens | Every colour, font, radius and spacing value is a CSS variable in `public/css/tokens.css`, and `style.css` only uses those names. Only `favicon.svg` and the `theme-color` tag keep their own colour, because they can't read CSS. |
+| Colours | Pure black base, electric blue for admins, electric orange for students. **No green anywhere.** Status colours keep their meaning: On time is a calm blue-white, Late is coral, Missing is red, Pending and Live now are amber. |
+| Theme | Dark by default. The toggle in the sidebar switches to light, and the choice is remembered. Light mode is the mockups' style: cream page, thick black borders, hard shadows, and the same blue and orange, in a deeper shade for text. Both themes use the same layout. |
+| Rebrand | Part A (colours, logo and the login page) is done. Part B is the layout of the inner pages. |
 | Mockups | The trainer's mockups in `mockups/` set the layout and elements of every inner page. The name stays ClassNest, with its logo. Batches and Lectures have no mockup, so they follow the Students page: a form card and a list. |
 | Layout | Every inner page has one fixed sidebar, built in `sidebar.js`, so a change there reaches all pages. At 960px and below it becomes a slide-out menu. |
 | Admin dashboard | The fourth stat card is **Submissions**, not the mockup's "Pending reviews", because there is no grading. "Active batches" means batches that have reached their start date. |
@@ -100,9 +103,10 @@ classnest/
 ├── public/                  ← open to everyone
 │   ├── index.html           ← login page
 │   ├── favicon.svg
-│   ├── css/style.css        ← colours, fonts, cards, light/dark
+│   ├── css/tokens.css       ← every colour, font, radius and spacing value
+│   ├── css/style.css        ← layout and components
 │   └── js/                  ← api.js, ui.js, theme.js, animations.js, palette.js, sidebar.js, picker.js,
-│                               login.js, login-roles.js, login-intro.js, login-particles.js,
+│                               login.js, login-roles.js, login-intro.js, login-flock.js,
 │                               admin.js, batches.js, students.js, schedule.js, lectures.js,
 │                               assignments.js, student.js, student-assignments.js
 ├── data/                    ← classnest.db (git-ignored)
@@ -158,7 +162,7 @@ Worked out by the server, not stored:
 | `express-session` | login sessions (cookies) |
 | `multer` | receives uploaded files (.zip only, size limit) |
 | `dotenv` | reads the `.env` file |
-| GSAP, Google Fonts (Outfit, Space Grotesk, Inter, JetBrains Mono) | loaded from a free CDN in the HTML |
+| GSAP, Google Fonts (Jost, Outfit, Space Grotesk, Inter, JetBrains Mono) | loaded from a free CDN (GSAP in the HTML, the fonts in `tokens.css`) |
 
 ## Commands
 

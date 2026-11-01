@@ -1,6 +1,7 @@
 // Login page: choosing Admin or Student, sending the form, and showing errors.
 
 const ROLE_KEY = 'classnest-login-role';
+const FADE_KEY = 'classnest-fade-in'; // tells the dashboard to fade in (theme.js reads it)
 
 // What the form looks like for each role
 const roleSettings = {
@@ -12,7 +13,7 @@ const roleSettings = {
     type: 'email',
     autocomplete: 'email',
     placeholder: 'you@example.com',
-    hint: 'Admins sign in with their email address.',
+    hint: 'Admins log in with their email address.',
   },
   student: {
     name: 'Student',
@@ -46,6 +47,20 @@ try {
   if (roleSettings[saved]) role = saved;
 } catch (e) {}
 
+// The role whose form is showing. `role` above also remembers the last one, even with no form showing.
+let chosenRole = null;
+
+// ---------- The page's colour ----------
+
+// Black and white until a role is hovered or chosen. tokens.css and the birds both follow this.
+function showAccent(accent) {
+  document.body.dataset.accent = accent;
+}
+
+function showChosenAccent() {
+  showAccent(chosenRole || 'neutral');
+}
+
 // ---------- Choosing a role ----------
 
 function updateRoleButtons() {
@@ -76,7 +91,7 @@ function showForm() {
 
       <p class="alert alert-error" id="login-error" role="alert" hidden></p>
 
-      <button class="btn btn-primary btn-block" type="submit" id="login-button">Sign in</button>
+      <button class="btn btn-primary btn-block" type="submit" id="login-button">Log in</button>
     </form>`;
 
   identifierInput = document.getElementById(settings.identifierId);
@@ -102,10 +117,12 @@ function removeForm() {
 
 function setRole(newRole) {
   role = newRole;
+  chosenRole = newRole;
   try {
     localStorage.setItem(ROLE_KEY, role);
   } catch (e) {}
 
+  showChosenAccent();
   updateRoleButtons();
   applyRoleSettings();
   showForm();
@@ -178,13 +195,17 @@ async function sendForm(event) {
   }
 
   loginButton.disabled = true;
-  loginButton.textContent = 'Signing in…';
+  loginButton.textContent = 'Logging in…';
 
   try {
     const data = await api('/api/auth/login', { method: 'POST', body: { role, identifier, password } });
-    // Success: fade the card away, then open the right dashboard
+    // Success: fade the page away, then open the right dashboard, which fades in (see theme.js)
     if (motionOK) {
-      gsap.to(card, { opacity: 0, y: -12, duration: 0.25, ease: 'power2.in', onComplete: () => (window.location.href = data.redirect) });
+      try {
+        sessionStorage.setItem(FADE_KEY, 'yes');
+      } catch (e) {}
+      gsap.to(document.getElementById('auth-brand'), { opacity: 0, duration: 0.3, ease: 'none' });
+      gsap.to(card, { opacity: 0, y: -12, duration: 0.3, ease: 'power2.in', onComplete: () => (window.location.href = data.redirect) });
     } else {
       window.location.href = data.redirect;
     }
@@ -193,7 +214,7 @@ async function sendForm(event) {
     passwordInput.value = '';
     passwordInput.focus();
     loginButton.disabled = false;
-    loginButton.textContent = 'Sign in';
+    loginButton.textContent = 'Log in';
   }
 }
 

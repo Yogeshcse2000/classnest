@@ -25,7 +25,7 @@ let shownRows = null;
 // Amber for the last 24 hours, "Closed" once the deadline has passed
 function statusHtml(assignment) {
   if (assignment.deadline_status === 'closed') return tagHtml('Closed', 'quiet');
-  return tagHtml(timeLeftText(assignment.minutes_left), assignment.deadline_status === 'soon' ? 'amber' : 'green');
+  return tagHtml(timeLeftText(assignment.minutes_left), assignment.deadline_status === 'soon' ? 'amber' : 'calm');
 }
 
 function assignmentRowHtml(assignment) {

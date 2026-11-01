@@ -79,7 +79,7 @@ function timeLeftText(minutes) {
   return minutes < 1 ? 'Less than a minute left' : `${durationText(minutes)} left`;
 }
 
-// Every status in the app is a tag. style is green, amber, peach, red or quiet.
+// Every status in the app is a tag. style is calm, amber, peach, red or quiet.
 function tagHtml(text, style) {
   return `<span class="tag tag-${style}">${text}</span>`;
 }
@@ -97,14 +97,14 @@ function shortDuration(minutes) {
 
 // A student's work as the admin sees it. minutesLate adds how late it was, like "Late · 2h".
 function submissionTagHtml(status, minutesLate = 0) {
-  if (status === 'Submitted') return tagHtml('On time', 'green');
+  if (status === 'Submitted') return tagHtml('On time', 'calm');
   if (status === 'Late') return tagHtml(minutesLate ? `Late · ${shortDuration(minutesLate)}` : 'Late', 'peach');
   return tagHtml('Missing', 'red');
 }
 
 // An assignment as a student sees it: their work first, then the deadline
 function assignmentTagHtml({ submission_status, deadline_status }) {
-  if (submission_status === 'Submitted') return tagHtml('Submitted', 'green');
+  if (submission_status === 'Submitted') return tagHtml('Submitted', 'calm');
   if (submission_status === 'Late') return tagHtml('Late', 'peach');
   return deadline_status === 'closed' ? tagHtml('Closed', 'quiet') : tagHtml('Pending', 'amber');
 }

@@ -8,7 +8,7 @@ const CAMERA_ICON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" 
 
 function statusHtml(lecture) {
   if (lecture.status === 'Live now') return liveTagHtml('Live now');
-  return lecture.status === 'Upcoming' ? tagHtml('Upcoming', 'green') : tagHtml('Done', 'quiet');
+  return lecture.status === 'Upcoming' ? tagHtml('Upcoming', 'calm') : tagHtml('Done', 'quiet');
 }
 
 function lectureRowHtml(lecture) {

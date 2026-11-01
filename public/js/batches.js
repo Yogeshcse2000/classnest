@@ -23,7 +23,7 @@ function batchRowHtml(batch) {
   return `
     <tr id="batch-${batch.id}">
       <td class="table-name">${escapeHtml(batch.name)}${description}</td>
-      <td data-label="Start"><span class="cell-stack">${batch.started ? tagHtml('Started', 'green') : tagHtml('Not started', 'quiet')}<span class="table-sub">${formatDate(batch.start_date)}</span></span></td>
+      <td data-label="Start"><span class="cell-stack">${batch.started ? tagHtml('Started', 'calm') : tagHtml('Not started', 'quiet')}<span class="table-sub">${formatDate(batch.start_date)}</span></span></td>
       <td data-label="Students">${batch.student_count}</td>
       <td data-label="Lectures">${batch.lecture_count}</td>
       <td data-label="Assignments">${batch.assignment_count}</td>

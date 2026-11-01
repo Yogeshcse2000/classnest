@@ -16,8 +16,10 @@
 - Everything must be **100% free**: no paid services, APIs, libraries or hosting.
 
 ## Design
-- The design follows the **classnest-ui** skill ([SKILL.md](.claude/skills/classnest-ui/SKILL.md)): a dark, rich, ambient theme, a cinematic login intro and calm inner pages.
+- The design follows the **classnest-ui** skill ([SKILL.md](.claude/skills/classnest-ui/SKILL.md)): a pure black theme, electric blue for admins and electric orange for students, a white hand-drawn nest logo, a split-screen login with a flock of birds, and calm inner pages.
+- There is no green anywhere. Light mode stays available, with the same accents in a deeper shade for text.
 - The skill is the single source of design and animation rules. Use it whenever creating or changing any page, component or style.
+- Every colour, font, radius and spacing value lives in one file, [tokens.css](public/css/tokens.css). Never write one directly in `style.css`.
 
 ## Testing
 - When a stage is finished, use the **tester** subagent ([tester.md](.claude/agents/tester.md)). It tests the app as admin and as student, then reports bugs without fixing them.

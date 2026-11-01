@@ -3,9 +3,21 @@
 
 (function () {
   const KEY = 'classnest-theme';
+  const FADE_KEY = 'classnest-fade-in';
 
-  // Light mode uses a different accent colour for each role
+  // Each role has its own accent colour: blue for admins, orange for students (see tokens.css)
   document.documentElement.dataset.role = window.location.pathname.startsWith('/student') ? 'student' : 'admin';
+
+  // Right after logging in, the dashboard fades in. login.js leaves this note, and style.css does the fading.
+  try {
+    if (sessionStorage.getItem(FADE_KEY)) {
+      sessionStorage.removeItem(FADE_KEY);
+      document.documentElement.classList.add('from-login');
+      document.addEventListener('animationend', function (event) {
+        if (event.animationName === 'page-fade-in') document.documentElement.classList.remove('from-login');
+      });
+    }
+  } catch (e) {}
 
   try {
     const saved = localStorage.getItem(KEY);

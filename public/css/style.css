@@ -1,210 +1,5 @@
-/* ClassNest styles: colours, fonts, layout and components.
+/* ClassNest styles: layout and components. Every colour, font, radius and spacing value comes from tokens.css.
    Design rules are in .claude/skills/classnest-ui/SKILL.md */
-
-/* ---------- Colours (dark is the default) ---------- */
-:root {
-  --bg: #060b08; /* near-black green */
-  --surface: rgba(19, 30, 24, 0.74); /* glass cards: the page shows faintly through */
-  --surface-solid: #101913; /* pop-ups, where nothing should show through */
-  --surface-2: rgba(255, 255, 255, 0.06); /* soft tracks and hovers */
-  --field: rgba(255, 255, 255, 0.05);
-  --text: #eaf2ed;
-  --text-muted: #a0b1a7;
-  --border: rgba(170, 225, 195, 0.13);
-  --edge: rgba(255, 255, 255, 0.06); /* the thin light along the top of a glass card */
-
-  --primary: #1e7a54; /* deep green */
-  --primary-soft: rgba(63, 174, 125, 0.15);
-  --primary-text: #84d7af; /* green used for text */
-  --on-primary: #ffffff;
-  --glow: rgba(127, 208, 168, 0.4);
-
-  --accent: #f0ae4b; /* warm amber: ONLY for "Live now" and deadlines */
-  --accent-soft: rgba(240, 174, 75, 0.15);
-  --accent-text: #f0ae4b;
-
-  --danger: #f2948a;
-  --danger-soft: rgba(242, 148, 138, 0.14);
-  --on-danger: #2a0f0c;
-
-  --dot: rgba(170, 225, 195, 0.1); /* the faint dot grid */
-  --ambient-a: rgba(46, 125, 91, 0.3); /* the breathing glows */
-  --ambient-b: rgba(30, 100, 80, 0.22);
-  --spot: rgba(127, 208, 168, 0.1); /* the spotlight that follows the mouse */
-  --shine: rgba(255, 255, 255, 0.07); /* skeleton shimmer */
-
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
-  --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 12px 32px rgba(0, 0, 0, 0.3);
-  --shadow-lift: 0 2px 4px rgba(0, 0, 0, 0.3), 0 20px 44px rgba(0, 0, 0, 0.45), 0 0 32px rgba(63, 174, 125, 0.1);
-
-  --radius: 18px;
-  --radius-sm: 12px;
-  --radius-btn: 999px;
-  --border-width: 1px;
-  --font-head: 'Outfit', system-ui, sans-serif;
-  --font-body: 'Inter', system-ui, sans-serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, Consolas, monospace;
-
-  --sidebar-width: 236px;
-  --sidebar-bg: #0a120d;
-  --sidebar-edge: rgba(170, 225, 195, 0.13);
-  --sidebar-hover: rgba(255, 255, 255, 0.06);
-  --sidebar-active: rgba(255, 255, 255, 0.1);
-  --sidebar-accent: #84d7af; /* the active page's icon; the sidebar is dark in both themes, so it must stay bright */
-
-  --line: var(--border); /* the thin lines between table rows */
-  --field-border: var(--border);
-  --row-bg: transparent;
-  --link: var(--primary-text);
-  --eyebrow: var(--primary-text);
-  --live-dot: var(--accent-text);
-
-  --tag-line: 1px;
-  --tag-mix: 30%; /* how much of the text colour shows in a tag's border */
-  --green-bg: var(--primary-soft);
-  --green-fg: var(--primary-text);
-  --amber-bg: var(--accent-soft);
-  --amber-fg: var(--accent-text);
-  --peach-bg: var(--accent-soft);
-  --peach-fg: var(--accent-text);
-  --red-bg: var(--danger-soft);
-  --red-fg: var(--danger);
-  --quiet-bg: var(--surface-2);
-  --quiet-fg: var(--text-muted);
-
-  --stat-a: var(--surface);
-  --stat-b: var(--surface);
-  --stat-c: var(--surface);
-  --stat-d: var(--surface);
-  --today-bg: var(--primary-soft);
-  --today-text: var(--primary-text);
-
-  --selected-bg: var(--primary-soft);
-  --selected-text: var(--text);
-  --selected-muted: var(--text-muted);
-  --selected-border: var(--primary-text);
-  --selected-shadow: none;
-
-  --hero-bg: linear-gradient(120deg, rgba(240, 174, 75, 0.17), rgba(19, 30, 24, 0.74) 62%);
-  --hero-fg: var(--text);
-  --hero-border: rgba(240, 174, 75, 0.45);
-  --hero-pill-bg: var(--accent-soft);
-  --hero-pill-fg: var(--accent-text);
-  --hero-pill-border: transparent;
-  --join-bg: var(--primary);
-  --join-fg: var(--on-primary);
-  --join-shadow: 0 0 22px var(--glow);
-
-  --time-bg: var(--primary-soft);
-  --time-fg: var(--primary-text);
-  --time-border: transparent;
-  --drop-line: 1.5px;
-  --drop-border: var(--border);
-  --drop-bg: transparent;
-
-  color-scheme: dark;
-}
-
-/* ---------- Colours (light mode, picked with the toggle): the mockups' style ----------
-   Cream page, thick black borders, hard offset shadows. Blue for admins, orange for students (theme.js sets data-role). */
-:root[data-theme='light'] {
-  --ink: #15161c;
-  --bg: #fff6e9;
-  --surface: #ffffff;
-  --surface-solid: #ffffff;
-  --surface-2: #f8f1e4;
-  --field: #ffffff;
-  --text: var(--ink);
-  --text-muted: #5a5c6a;
-  --border: var(--ink);
-  --edge: transparent;
-  --border-width: 2px;
-  --radius-btn: 12px;
-  --font-head: 'Space Grotesk', system-ui, sans-serif;
-
-  --primary: #2e4ff0;
-  --primary-soft: #e4e8fd;
-  --primary-text: #2e4ff0;
-  --on-primary: #ffffff;
-  --glow: var(--primary);
-
-  --accent: #b86f0e;
-  --accent-soft: #fff0c2;
-  --accent-text: #8a5208;
-
-  --danger: #c4271b;
-  --danger-soft: #ffe0dc;
-  --on-danger: #ffffff;
-
-  --dot: transparent;
-  --spot: transparent;
-  --shine: rgba(255, 255, 255, 0.7);
-
-  --shadow-sm: 2px 2px 0 var(--ink);
-  --shadow: 4px 4px 0 var(--ink);
-  --shadow-lift: 6px 6px 0 var(--ink);
-
-  --sidebar-bg: #15161c;
-  --sidebar-edge: #15161c;
-  --sidebar-accent: #8fa3ff;
-
-  --line: #e9e1d2;
-  --link: #2e4ff0;
-  --eyebrow: #4a4c59;
-  --live-dot: #e5484d;
-
-  --tag-line: 1.5px;
-  --tag-mix: 100%;
-  --green-bg: #d8f5df;
-  --green-fg: var(--ink);
-  --amber-bg: #fff0c2;
-  --amber-fg: var(--ink);
-  --peach-bg: #ffe3d6;
-  --peach-fg: var(--ink);
-  --red-bg: #ffdcd8;
-  --red-fg: var(--ink);
-  --quiet-bg: #efece4;
-  --quiet-fg: var(--ink);
-
-  --stat-a: #e4e8fd;
-  --stat-b: #ffffff;
-  --stat-c: #fff0c2;
-  --stat-d: #ffe3d6;
-  --today-bg: #fff0c2;
-  --today-text: var(--ink);
-
-  --selected-bg: var(--ink);
-  --selected-text: #ffffff;
-  --selected-muted: #c8cad3;
-  --selected-border: var(--ink);
-  --selected-shadow: 4px 4px 0 var(--primary);
-
-  --hero-bg: var(--primary);
-  --hero-fg: var(--on-primary);
-  --hero-border: var(--ink);
-  --hero-pill-bg: #ffffff;
-  --hero-pill-fg: var(--ink);
-  --hero-pill-border: var(--ink);
-  --join-bg: var(--ink);
-  --join-fg: #ffffff;
-  --join-shadow: 4px 4px 0 #ffffff;
-
-  --time-bg: #fff0c2;
-  --time-fg: var(--ink);
-  --time-border: var(--ink);
-  --drop-line: 2px;
-  --drop-border: var(--ink);
-  --drop-bg: #fff6e9;
-
-  color-scheme: light;
-}
-:root[data-theme='light'][data-role='student'] {
-  --primary: #ff6b1a;
-  --primary-soft: #ffe8da;
-  --primary-text: #b8460a; /* darker, so small text stays readable on white */
-  --on-primary: var(--ink);
-  --sidebar-accent: #ff9a5c;
-}
 
 /* ---------- Basics ---------- */
 *,
@@ -307,9 +102,9 @@ textarea {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
+  gap: var(--space-2);
   min-height: 46px;
-  padding: 0 1.4rem;
+  padding: 0 var(--space-5-5);
   border: var(--border-width) solid transparent;
   border-radius: var(--radius-btn);
   font-size: 0.95rem;
@@ -366,13 +161,9 @@ textarea {
   opacity: 1;
 }
 .btn-ghost {
-  background: var(--ghost-bg, transparent);
+  background: var(--ghost-bg);
   border-color: var(--border);
   color: var(--text);
-}
-:root[data-theme='light'] .page .btn-ghost,
-:root[data-theme='light'] .dialog .btn-ghost {
-  --ghost-bg: #ffffff;
 }
 .btn-danger {
   background: var(--danger);
@@ -383,7 +174,7 @@ textarea {
 }
 .btn-small {
   min-height: 34px;
-  padding: 0 0.9rem;
+  padding: 0 var(--space-3-5);
   font-size: 0.85rem;
 }
 .btn-small svg {
@@ -399,7 +190,7 @@ textarea {
   width: 40px;
   height: 40px;
   border: var(--border-width) solid var(--border);
-  border-radius: 50%;
+  border-radius: var(--radius-round);
   background: var(--surface);
   color: var(--text-muted);
   cursor: pointer;
@@ -435,7 +226,7 @@ textarea {
 /* ---------- Cards ---------- */
 .card {
   position: relative;
-  padding: 1.75rem;
+  padding: var(--space-7);
   background: var(--surface);
   border: var(--border-width) solid var(--border);
   border-radius: var(--radius);
@@ -485,7 +276,7 @@ textarea {
   position: relative;
   display: block;
   overflow: hidden;
-  border-radius: 8px;
+  border-radius: var(--radius-xs);
   background: var(--surface-2);
 }
 .skeleton::after {
@@ -520,13 +311,13 @@ textarea {
 .sk-number {
   width: 88px;
   height: 56px;
-  border-radius: 12px;
+  border-radius: var(--radius-sm);
 }
 
 /* ---------- Forms ---------- */
 .field {
   display: grid;
-  gap: 0.45rem;
+  gap: var(--space-2);
 }
 .field label {
   font-size: 0.9rem;
@@ -541,7 +332,7 @@ textarea {
 .field textarea {
   width: 100%;
   height: 48px;
-  padding: 0 1rem;
+  padding: 0 var(--space-4);
   border: var(--border-width) solid var(--field-border);
   border-radius: var(--radius-sm);
   background: var(--field);
@@ -549,7 +340,7 @@ textarea {
 .field textarea {
   height: auto;
   min-height: 104px;
-  padding: 0.75rem 1rem;
+  padding: var(--space-3) var(--space-4);
   resize: vertical;
 }
 .field select option {
@@ -569,7 +360,7 @@ textarea {
 }
 
 .alert {
-  padding: 0.7rem 0.9rem;
+  padding: var(--space-3) var(--space-3-5);
   border-radius: var(--radius-sm);
   font-size: 0.9rem;
 }
@@ -579,31 +370,152 @@ textarea {
 }
 
 /* ---------- Login page ----------
-   Always dark (index.html sets data-theme="dark"). The stage is the moving background, the shell holds the
-   heading and the role cards or form. This is the finished look: login-intro.js only animates things into these
-   positions, so the page still works with no animation at all. */
+   Always dark (index.html sets data-theme="dark"). Two halves: the logo and its birds on the left, the login on
+   the right. It is black and white until a role is hovered or chosen (see the end of tokens.css).
+   This is the finished look: login-intro.js only animates things into these positions, so the page still works
+   with no animation at all. */
 .auth-page {
   display: grid;
-  place-items: center;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
   min-height: 100vh;
   min-height: 100dvh;
-  padding: 32px 16px;
-  background: #050806;
-}
-.auth-shell {
-  position: relative;
-  z-index: 1;
-  display: grid;
-  justify-items: center;
-  gap: 1.75rem;
-  width: 100%;
-  max-width: 460px;
 }
 
-/* The role cards and the form share one spot, so the heading stays still when one turns into the other */
+/* The left half. The canvas sits above the logo, so the birds fly in front of it. */
+.auth-brand {
+  position: sticky;
+  top: 0;
+  display: grid;
+  place-items: center;
+  height: 100vh;
+  height: 100dvh;
+  padding: var(--space-8);
+  overflow: hidden;
+}
+.flock {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* The full logo */
+.logo {
+  display: grid;
+  justify-items: center;
+  width: fit-content;
+}
+.logo-nest {
+  width: clamp(150px, 15vw, 200px);
+  height: auto;
+  margin-bottom: var(--space-5);
+  color: var(--white);
+}
+.logo-word {
+  position: relative;
+  isolation: isolate; /* keeps the hover colours inside the word */
+  padding-left: 0.32em; /* the wide spacing also adds room after the last letter, so this keeps the word centred */
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-brand);
+  font-size: clamp(1.9rem, 3.2vw, 3rem);
+  font-weight: 600;
+  font-kerning: none; /* keeps the single letters and the sweep's copy of the word lined up */
+  line-height: 1.2;
+  letter-spacing: 0.32em;
+  white-space: nowrap;
+  cursor: default;
+}
+.word-letters span {
+  display: inline-block;
+}
+/* The light sweep: a soft-edged window slides across while the bright word inside slides the other way,
+   so the word stands still and only the light moves */
+.word-sweep {
+  position: absolute;
+  top: -0.7em; /* taller than the word, so its glow fades out instead of being cut off */
+  bottom: -0.7em;
+  left: 0;
+  width: 40%;
+  overflow: hidden;
+  visibility: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent, black 50%, transparent);
+  mask-image: linear-gradient(90deg, transparent, black 50%, transparent);
+}
+.word-sweep-text {
+  position: absolute;
+  top: 0.7em;
+  left: 0.32em;
+  color: var(--white);
+  text-shadow: 0 0 14px var(--white), 0 0 26px var(--white);
+}
+/* Hovering the word: a wide gradient slides sideways behind a "multiply" layer. Multiply keeps black as black and
+   turns white into the gradient, so the colour shows only inside the letters. Only transform and opacity change. */
+.word-flow {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  opacity: 0;
+  mix-blend-mode: multiply;
+  transition: opacity 0.25s ease;
+  pointer-events: none;
+}
+.word-flow span {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 300%;
+  background: var(--word-flow) 0 0 / 50% 100%;
+  animation: word-flow 3.2s linear infinite paused;
+}
+.logo-word:hover .word-flow {
+  opacity: 1;
+}
+.logo-word:hover .word-flow span {
+  animation-play-state: running;
+}
+@keyframes word-flow {
+  to {
+    transform: translateX(-50%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .word-flow span {
+    animation: none;
+  }
+}
+.logo-line {
+  justify-self: stretch;
+  height: 1px;
+  margin: var(--space-3) 0 var(--space-3-5);
+  background: var(--border-strong);
+}
+.logo-tagline {
+  padding-left: 0.42em;
+  color: var(--text-muted);
+  font-family: var(--font-brand);
+  font-size: 0.74rem;
+  font-weight: 500;
+  letter-spacing: 0.42em;
+  white-space: nowrap;
+}
+
+/* The right half */
+.auth-main {
+  display: grid;
+  place-items: center;
+  padding: var(--space-8) var(--space-6);
+  border-left: 1px solid var(--border);
+  background: var(--auth-side);
+}
+
+/* The role tiles and the form share one spot, so the page stays still when one turns into the other */
 .auth-panel {
   display: grid;
   width: 100%;
+  max-width: 420px;
 }
 .auth-panel > * {
   grid-area: 1 / 1;
@@ -614,40 +526,32 @@ textarea {
   visibility: hidden;
 }
 
-/* See-through glass: the blur softens whatever is moving behind the card */
-.auth-page .auth-card,
-.role-card {
-  border: 1px solid rgba(127, 208, 168, 0.22);
-  background: rgba(14, 20, 17, 0.68);
-  box-shadow: 0 0 0 1px rgba(127, 208, 168, 0.05), 0 0 44px rgba(63, 174, 125, 0.16), 0 24px 60px rgba(0, 0, 0, 0.5);
-  -webkit-backdrop-filter: blur(18px) saturate(140%);
-  backdrop-filter: blur(18px) saturate(140%);
-}
-
-/* Role cards */
+/* Role tiles */
 .role-picker {
   display: grid;
-  gap: 1rem;
-  align-self: start;
+  gap: var(--space-5);
+  align-self: center;
 }
 .role-title {
-  font-size: 1.15rem;
-  font-weight: 500;
+  font-size: 1.75rem;
   text-align: center;
 }
 .role-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1rem;
+  gap: var(--space-3-5);
 }
 .role-card {
   position: relative;
   display: grid;
-  gap: 0.3rem;
+  gap: var(--space-1);
   align-content: start;
   justify-items: start;
-  padding: 1.4rem;
+  padding: var(--space-5);
+  border: 1px solid var(--border);
   border-radius: var(--radius);
+  background: var(--surface-solid);
+  color: var(--text);
   text-align: left;
   cursor: pointer;
   transition: scale 0.15s ease;
@@ -655,12 +559,13 @@ textarea {
 .role-card:active {
   scale: 0.98;
 }
+/* The soft glow in the tile's own colour */
 .role-card::after {
   content: '';
   position: absolute;
   inset: -1px;
   border-radius: inherit;
-  box-shadow: 0 0 0 1px rgba(127, 208, 168, 0.5), 0 0 34px rgba(63, 174, 125, 0.35);
+  box-shadow: 0 0 0 1px var(--primary), 0 0 34px var(--glow);
   opacity: 0;
   transition: opacity 0.2s ease;
   pointer-events: none;
@@ -669,19 +574,34 @@ textarea {
 .role-card:focus-visible::after {
   opacity: 1;
 }
-/* The role used last time */
+/* The role used last time. It stays black and white, like the rest of the page. */
 .role-card[aria-pressed='true'] {
-  border-color: rgba(127, 208, 168, 0.45);
+  border-color: var(--border-strong);
 }
 .role-icon {
+  position: relative;
+  isolation: isolate;
   display: grid;
   place-items: center;
   width: 44px;
   height: 44px;
-  margin-bottom: 0.5rem;
-  border-radius: 50%;
-  background: var(--primary-soft);
-  color: var(--primary-text);
+  margin-bottom: var(--space-2);
+  border-radius: var(--radius-round);
+  background: var(--surface-2);
+}
+.role-icon::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: var(--glow);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+.role-card:hover .role-icon::before,
+.role-card:focus-visible .role-icon::before {
+  opacity: 1;
 }
 .role-icon svg {
   width: 22px;
@@ -703,26 +623,27 @@ textarea {
 .auth-card {
   z-index: 1;
   display: grid;
-  gap: 1.25rem;
-  align-self: start;
+  gap: var(--space-5);
+  align-self: center;
   width: 100%;
-  padding: 2rem;
+  padding: var(--space-7);
+  background: var(--surface-solid);
 }
 .auth-card-top {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
+  gap: var(--space-4);
 }
 .back-link {
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
+  gap: var(--space-1-5);
   min-height: 36px;
-  margin-left: -0.7rem;
-  padding: 0 0.7rem;
+  margin-left: calc(-1 * var(--space-3));
+  padding: 0 var(--space-3);
   border: 0;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: transparent;
   color: var(--text-muted);
   font-size: 0.9rem;
@@ -743,7 +664,7 @@ textarea {
 }
 .auth-head {
   display: grid;
-  gap: 0.35rem;
+  gap: var(--space-1-5);
 }
 .auth-head h2 {
   font-size: 1.7rem;
@@ -768,13 +689,19 @@ textarea {
 }
 .auth-card form {
   display: grid;
-  gap: 1rem;
+  gap: var(--space-4);
+}
+.auth-page .field input:focus {
+  box-shadow: 0 0 0 3px var(--primary-soft), 0 0 20px var(--glow);
 }
 .auth-note {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
-  gap: 1rem;
+  gap: var(--space-4);
+  padding: var(--space-3) var(--space-3-5);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
   color: var(--text-muted);
   font-size: 0.82rem;
   line-height: 1.4;
@@ -782,242 +709,30 @@ textarea {
 .auth-note .text-link {
   flex: none;
   padding: 0;
+  color: var(--text);
   font-size: 0.82rem;
-}
-.auth-page .field input {
-  background: rgba(255, 255, 255, 0.05);
-}
-
-/* Heading above the card */
-.hero {
-  display: grid;
-  justify-items: center;
-  gap: 0.2rem;
-  text-align: center;
-}
-.hero-logo {
-  width: 56px;
-  height: 56px;
-}
-.hero-word {
-  position: relative;
-  color: #f1f7f3;
-  font-size: clamp(2.75rem, 2.1rem + 3vw, 3.75rem);
-  font-weight: 700;
-  font-kerning: none; /* keeps the single letters and the sweep's copy of the word lined up */
-  letter-spacing: -0.03em;
-  text-shadow: 0 0 28px rgba(63, 174, 125, 0.5);
-  white-space: nowrap;
-}
-.word-letters span {
-  display: inline-block;
-}
-/* The light sweep: a soft-edged window slides across while the bright word inside slides the other way,
-   so the word stands still and only the light moves */
-.word-sweep {
-  position: absolute;
-  top: -0.7em; /* taller than the word, so its glow fades out instead of being cut off */
-  bottom: -0.7em;
-  left: 0;
-  width: 40%;
-  overflow: hidden;
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 50%, transparent);
-  mask-image: linear-gradient(90deg, transparent, #000 50%, transparent);
-}
-.word-sweep-text {
-  position: absolute;
-  top: 0.7em;
-  left: 0;
-  color: #ffffff;
-  text-shadow: 0 0 14px #ffffff, 0 0 24px #f0ae4b;
-}
-.hero-tagline {
-  color: var(--text-muted);
-  font-size: 1rem;
-}
-.hero-tagline span {
-  display: inline-block;
-}
-.hero-tagline span:last-child {
-  color: var(--primary-text);
-  font-weight: 500;
-}
-
-/* ---------- Login background ---------- */
-.stage {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  overflow: hidden;
-  pointer-events: none;
-}
-.stage-particles {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-}
-.stage-dot {
-  position: absolute;
-  top: calc(50% - 7px);
-  left: calc(50% - 7px);
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background: #7fd0a8;
-  box-shadow: 0 0 14px 3px rgba(63, 174, 125, 0.9), 0 0 44px 12px rgba(46, 125, 91, 0.6);
-  visibility: hidden;
-}
-.stage-light {
-  position: absolute;
-  top: calc(50% - 60vmax);
-  left: calc(50% - 60vmax);
-  width: 120vmax;
-  height: 120vmax;
-  background: radial-gradient(closest-side, rgba(46, 125, 91, 0.34), rgba(46, 125, 91, 0.1) 45%, transparent 72%);
-}
-
-/* The tilted grid of blurred UI cards.
-   The blur comes from soft text-shadow and box-shadow, not filter: blur(). A shadow is painted once, then the
-   finished picture just moves. A filter would be worked out again on every frame, which made this page very slow. */
-.stage-grid {
-  position: absolute;
-  inset: 0;
-  perspective: 1000px;
-}
-.grid-plane {
-  position: absolute;
-  top: -24%;
-  left: calc(50% - 680px);
-  display: flex;
-  gap: 20px;
-  width: 1360px;
-  opacity: 0.6;
-  transform: rotateX(56deg) rotateZ(-10deg);
-  transform-origin: 50% 100%;
-}
-.grid-col {
-  display: grid;
-  flex: 1;
-  gap: 20px;
-  align-content: start;
-  will-change: transform;
-}
-.grid-col:nth-child(even) {
-  margin-top: 70px;
-}
-.mock {
-  display: grid;
-  gap: 0.6rem;
-  align-content: start;
-  min-height: 170px;
-  padding: 1.3rem;
-  border-radius: var(--radius);
-  background: rgba(25, 40, 33, 0.85);
-  box-shadow: 0 0 7px 2px rgba(25, 40, 33, 0.85), 0 0 5px 3px rgba(127, 208, 168, 0.12);
-  color: transparent; /* only the soft shadow of the text shows */
-  text-shadow: 0 0 4px #cfe3d7;
-}
-.mock strong {
-  font-family: var(--font-head);
-  font-size: 1.25rem;
-}
-.mock-label {
-  font-size: 0.9rem;
-  text-shadow: 0 0 4px #9daaa2;
-}
-.mock-number {
-  font-family: var(--font-head);
-  font-size: 2.6rem;
-  font-weight: 700;
-  line-height: 1;
-  text-shadow: 0 0 5px #7fd0a8;
-}
-.mock-live,
-.mock-due {
-  font-size: 0.9rem;
-  font-weight: 600;
-  text-shadow: 0 0 4px #f0ae4b;
-}
-.mock-btn {
-  width: fit-content;
-  padding: 0.35rem 0.9rem;
-  border-radius: var(--radius-sm);
-  background: var(--primary);
-  box-shadow: 0 0 5px 1px var(--primary);
-  font-weight: 600;
-  text-shadow: 0 0 4px #ffffff;
-}
-.mock-line,
-.mock-bar {
-  height: 10px;
-  border-radius: 999px;
-  background: rgba(127, 208, 168, 0.22);
-  box-shadow: 0 0 4px 1px rgba(127, 208, 168, 0.22);
-}
-.mock-line.short {
-  width: 60%;
-}
-.mock-bar {
-  background: linear-gradient(90deg, #3fae7d 68%, rgba(127, 208, 168, 0.18) 68%);
-}
-.mock-avatars {
-  display: flex;
-  gap: 0.4rem;
-}
-.mock-avatars i {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: #2e7d5b;
-  box-shadow: 0 0 5px 1px #2e7d5b;
-}
-
-/* The horizon: a huge dark circle whose top edge shows at the bottom of the screen */
-.stage-arc {
-  --arc-size: max(1700px, 190vw);
-  position: absolute;
-  top: 68%;
-  left: calc(50% - var(--arc-size) / 2);
-  width: var(--arc-size);
-  height: var(--arc-size);
-}
-.arc-body {
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  background: #040705;
-  box-shadow: 0 0 0 1.5px #7fd0a8;
-}
-/* A wide soft ring of green. Plain gradients are painted once, so breathing only changes opacity and scale. */
-.arc-glow {
-  position: absolute;
-  inset: -6%;
-  background: radial-gradient(closest-side, transparent 84%, rgba(63, 174, 125, 0.75) 89.3%, rgba(63, 174, 125, 0.22) 91.5%, transparent 99%);
-  will-change: transform, opacity;
-}
-/* The warm amber sunrise at the top of the arc */
-.arc-amber {
-  position: absolute;
-  top: -110px;
-  left: calc(50% - 420px);
-  width: 840px;
-  height: 220px;
-  background: radial-gradient(closest-side, rgba(240, 174, 75, 0.9), rgba(240, 174, 75, 0.28) 50%, transparent);
-  will-change: transform, opacity;
-}
-/* The ends of the arc melt into the dark */
-.stage-arc::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background: linear-gradient(90deg, #050806, transparent 24%, transparent 76%, #050806);
 }
 
 /* Hidden until the intro takes over (see the small script in index.html) */
-.intro-pending .stage > *,
-.intro-pending .auth-shell {
+.intro-pending .auth-brand > *,
+.intro-pending .auth-main > * {
   visibility: hidden;
+}
+
+/* The dashboard fades in after logging in. theme.js adds the class for that one page load, and the black behind it
+   matches the login page, so a light-mode dashboard fades up from black too. */
+@media (prefers-reduced-motion: no-preference) {
+  .from-login {
+    background: var(--black);
+  }
+  .from-login body {
+    animation: page-fade-in 0.45s ease-out backwards;
+  }
+}
+@keyframes page-fade-in {
+  from {
+    opacity: 0;
+  }
 }
 
 /* ---------- App layout: a fixed sidebar on the left, the page beside it ---------- */
@@ -1027,13 +742,13 @@ textarea {
 .page {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: var(--space-5);
   width: 100%;
   max-width: 1280px;
   min-height: 100vh;
   min-height: 100dvh;
   margin: 0 auto;
-  padding: 32px 36px 40px;
+  padding: var(--space-8) var(--space-9) var(--space-10);
 }
 .page h1 {
   font-size: clamp(1.75rem, 1.5rem + 1vw, 2.25rem);
@@ -1047,15 +762,15 @@ textarea {
   flex-wrap: wrap;
   align-items: flex-end;
   justify-content: space-between;
-  gap: 0.75rem 1.5rem;
+  gap: var(--space-3) var(--space-6);
 }
 .page-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.6rem;
+  gap: var(--space-2-5);
 }
 .eyebrow {
-  margin-bottom: 0.2rem;
+  margin-bottom: var(--space-1);
   color: var(--eyebrow);
   font-family: var(--font-mono);
   font-size: 0.76rem;
@@ -1078,12 +793,12 @@ textarea {
 /* ---------- Sidebar: stays dark in both themes, so its colours are set here for everything inside it ---------- */
 .sidebar,
 .mobile-bar {
-  --text: #eef2f0;
-  --text-muted: #aeb8b3;
-  --border: rgba(255, 255, 255, 0.15);
+  --text: var(--sidebar-text);
+  --text-muted: var(--sidebar-muted);
+  --border: var(--sidebar-border);
   --border-width: 1px;
-  --surface: rgba(255, 255, 255, 0.05);
-  --surface-2: rgba(255, 255, 255, 0.09);
+  --surface: var(--sidebar-surface);
+  --surface-2: var(--sidebar-hover);
   --primary-text: var(--sidebar-accent); /* keeps the keyboard focus ring visible on the dark background */
   background: var(--sidebar-bg);
   color: var(--text);
@@ -1096,9 +811,9 @@ textarea {
   z-index: 40;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: var(--space-4);
   width: var(--sidebar-width);
-  padding: 0.75rem;
+  padding: var(--space-3);
   overflow-y: auto;
   border-right: 1px solid var(--sidebar-edge);
 }
@@ -1106,38 +821,38 @@ textarea {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.5rem;
-  padding-left: 0.5rem;
+  gap: var(--space-2);
+  padding-left: var(--space-2);
 }
 .brand {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--space-2);
   min-width: 0;
   color: var(--text);
-  font-family: var(--font-head);
-  font-size: 1rem;
+  font-family: var(--font-brand);
+  font-size: 0.8125rem;
   font-weight: 600;
-  letter-spacing: -0.02em;
+  letter-spacing: 0.2em;
   text-decoration: none;
+  text-transform: uppercase;
 }
 .brand-mark {
   flex: none;
-  width: 24px;
-  height: 24px;
-  color: var(--primary);
+  width: 28px;
+  height: 21px;
 }
 .sidebar-tools {
   display: flex;
   flex: none;
-  gap: 2px;
+  gap: var(--space-0-5);
 }
 .sidebar .icon-btn,
 .mobile-bar .icon-btn {
   width: 32px;
   height: 32px;
   border: 0;
-  border-radius: 8px;
+  border-radius: var(--radius-xs);
   background: none;
 }
 .sidebar-close {
@@ -1145,17 +860,17 @@ textarea {
 }
 .side-nav {
   display: grid;
-  gap: 2px;
+  gap: var(--space-0-5);
 }
 .side-link {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
+  gap: var(--space-2-5);
   width: 100%;
   min-height: 32px;
-  padding: 0.25rem 0.5rem;
+  padding: var(--space-1) var(--space-2);
   border: 0;
-  border-radius: 8px;
+  border-radius: var(--radius-xs);
   background: none;
   color: var(--text-muted);
   font-size: 0.8125rem;
@@ -1216,15 +931,15 @@ textarea {
 }
 .sidebar-foot {
   display: grid;
-  gap: 0.25rem;
+  gap: var(--space-1);
   margin-top: auto;
-  padding-top: 0.6rem;
+  padding-top: var(--space-2-5);
   border-top: 1px solid var(--border);
 }
 .user-card {
   display: grid;
   min-width: 0;
-  padding: 0.15rem 0.5rem;
+  padding: var(--space-0-5) var(--space-2);
   line-height: 1.35;
 }
 .user-card strong {
@@ -1248,13 +963,13 @@ textarea {
   position: fixed;
   inset: 0;
   z-index: 39;
-  background: rgba(3, 6, 4, 0.6);
+  background: var(--scrim);
 }
 
 kbd {
-  padding: 0.05rem 0.35rem;
+  padding: var(--space-px) var(--space-1-5);
   border: 1px solid var(--border);
-  border-radius: 6px;
+  border-radius: var(--radius-xs);
   background: var(--surface-2);
   color: var(--text-muted);
   font-family: var(--font-body);
@@ -1267,7 +982,7 @@ kbd {
 .panels {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 20px;
+  gap: var(--space-5);
 }
 .panels-wide-right {
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
@@ -1275,7 +990,7 @@ kbd {
 .split {
   display: grid;
   grid-template-columns: minmax(280px, 310px) minmax(0, 1fr);
-  gap: 20px;
+  gap: var(--space-5);
   align-items: start;
 }
 /* A list and the item picked from it stay side by side for as long as the sidebar does */
@@ -1286,7 +1001,7 @@ kbd {
 .stack {
   display: grid;
   grid-template-columns: minmax(0, 1fr); /* one long name can't push the page wider than the screen */
-  gap: 16px;
+  gap: var(--space-4);
   align-content: start;
   min-width: 0;
 }
@@ -1294,16 +1009,16 @@ kbd {
   container: panel / inline-size;
   display: flex;
   flex-direction: column;
-  gap: 0.9rem;
+  gap: var(--space-3-5);
   min-width: 0;
-  padding: 1.25rem;
+  padding: var(--space-5);
 }
 .panel-head {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 0.5rem 1rem;
+  gap: var(--space-2) var(--space-4);
   min-height: 28px;
 }
 .panel-head h2 {
@@ -1323,7 +1038,7 @@ kbd {
 .search-field input {
   width: 100%;
   height: 40px;
-  padding: 0 0.85rem;
+  padding: 0 var(--space-3-5);
   border: var(--border-width) solid var(--field-border);
   border-radius: var(--radius-sm);
   background: var(--field);
@@ -1342,8 +1057,8 @@ kbd {
 .empty-state {
   display: grid;
   justify-items: center;
-  gap: 0.5rem;
-  padding: 2.25rem 1.25rem;
+  gap: var(--space-2);
+  padding: var(--space-9) var(--space-5);
   text-align: center;
 }
 .empty-state h2 {
@@ -1354,8 +1069,8 @@ kbd {
   place-items: center;
   width: 56px;
   height: 56px;
-  margin-bottom: 0.4rem;
-  border-radius: 50%;
+  margin-bottom: var(--space-1-5);
+  border-radius: var(--radius-round);
   background: var(--primary-soft);
   color: var(--primary-text);
 }
@@ -1373,13 +1088,13 @@ kbd {
 .stat-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 16px;
+  gap: var(--space-4);
 }
 .stat-card {
   display: grid;
-  gap: 0.15rem;
+  gap: var(--space-0-5);
   align-content: start;
-  padding: 1rem 1.1rem;
+  padding: var(--space-4) var(--space-4-5);
   color: inherit;
   text-decoration: none;
 }
@@ -1418,7 +1133,7 @@ kbd {
 .rows {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: 0.6rem;
+  gap: var(--space-2-5);
   align-content: start;
   margin: 0;
   padding: 0;
@@ -1428,9 +1143,9 @@ kbd {
   position: relative;
   display: flex;
   align-items: center;
-  gap: 0.9rem;
+  gap: var(--space-3-5);
   min-width: 0;
-  padding: 0.6rem 0.85rem;
+  padding: var(--space-2-5) var(--space-3-5);
   border: var(--border-width) solid var(--border);
   border-radius: var(--radius-sm);
   background: var(--row-bg);
@@ -1446,7 +1161,7 @@ kbd {
 .row-main {
   display: grid;
   flex: 1;
-  gap: 0.05rem;
+  gap: var(--space-px);
   min-width: 0;
 }
 .row-main strong {
@@ -1464,7 +1179,7 @@ kbd {
   flex-wrap: wrap;
   align-items: center;
   justify-content: flex-end;
-  gap: 0.4rem;
+  gap: var(--space-1-5);
 }
 .row-note {
   color: var(--text-muted);
@@ -1477,7 +1192,7 @@ kbd {
   z-index: 1;
   display: flex;
   flex: none;
-  gap: 0.15rem;
+  gap: var(--space-0-5);
 }
 .row-buttons .icon-btn {
   width: 34px;
@@ -1519,9 +1234,9 @@ kbd {
 .pick-row {
   position: relative;
   display: grid;
-  gap: 0.2rem;
+  gap: var(--space-1);
   width: 100%;
-  padding: 0.7rem 0.85rem;
+  padding: var(--space-2-5) var(--space-3-5);
   border: var(--border-width) solid var(--border);
   border-radius: var(--radius-sm);
   background: var(--surface);
@@ -1550,8 +1265,8 @@ kbd {
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 0.35rem;
-  margin-top: 0.15rem;
+  gap: var(--space-1-5);
+  margin-top: var(--space-0-5);
 }
 .pick-row[aria-current='true'] {
   border-color: var(--selected-border);
@@ -1582,11 +1297,11 @@ kbd {
 .tag {
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
+  gap: var(--space-1-5);
   width: fit-content;
-  padding: 0.12rem 0.55rem;
+  padding: var(--space-0-5) var(--space-2);
   border: var(--tag-line) solid color-mix(in srgb, var(--tag-fg) var(--tag-mix), transparent);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: var(--tag-bg);
   color: var(--tag-fg);
   font-family: var(--font-mono);
@@ -1596,9 +1311,9 @@ kbd {
   text-transform: uppercase;
   white-space: nowrap;
 }
-.tag-green {
-  --tag-bg: var(--green-bg);
-  --tag-fg: var(--green-fg);
+.tag-calm {
+  --tag-bg: var(--calm-bg);
+  --tag-fg: var(--calm-fg);
 }
 .tag-amber {
   --tag-bg: var(--amber-bg);
@@ -1630,13 +1345,13 @@ kbd {
   flex: none;
   width: 8px;
   height: 8px;
-  border-radius: 50%;
+  border-radius: var(--radius-round);
   background: var(--live-dot);
 }
 .live-dot i {
   position: absolute;
   inset: 0;
-  border-radius: 50%;
+  border-radius: var(--radius-round);
   background: var(--live-dot);
 }
 
@@ -1644,16 +1359,16 @@ kbd {
 .pills {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.4rem;
+  gap: var(--space-1-5);
 }
 .pill {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: var(--space-1-5);
   min-height: 34px;
-  padding: 0 0.8rem;
+  padding: 0 var(--space-3);
   border: var(--border-width) solid var(--border);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: var(--surface);
   color: var(--text);
   font-size: 0.84rem;
@@ -1683,7 +1398,7 @@ kbd {
 
 /* ---------- The big card on the student dashboard ---------- */
 .hero-card {
-  padding: 1.35rem 1.5rem;
+  padding: var(--space-5-5) var(--space-6);
   background: var(--surface);
 }
 .hero-card.is-live {
@@ -1693,7 +1408,7 @@ kbd {
 }
 .hero-list {
   display: grid;
-  gap: 1rem;
+  gap: var(--space-4);
 }
 .hero-item {
   position: relative;
@@ -1701,24 +1416,24 @@ kbd {
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem 1.5rem;
+  gap: var(--space-4) var(--space-6);
   border-radius: var(--radius-sm);
 }
 .hero-text {
   display: grid;
   flex: 1 1 280px;
-  gap: 0.35rem;
+  gap: var(--space-1-5);
   min-width: 0;
 }
 .hero-status {
   display: inline-flex;
   align-items: center;
-  gap: 0.45rem;
+  gap: var(--space-2);
   width: fit-content;
   max-width: 100%;
-  padding: 0.18rem 0.65rem;
+  padding: var(--space-0-5) var(--space-2-5);
   border: var(--tag-line) solid var(--hero-pill-border);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: var(--hero-pill-bg);
   color: var(--hero-pill-fg);
   font-family: var(--font-mono);
@@ -1743,8 +1458,8 @@ kbd {
   opacity: 0.85;
 }
 .hero-card:not(.is-live) .hero-status {
-  background: var(--green-bg);
-  color: var(--green-fg);
+  background: var(--calm-bg);
+  color: var(--calm-fg);
 }
 .hero-note {
   flex: none;
@@ -1756,7 +1471,7 @@ kbd {
   z-index: 1; /* stays clickable above the spotlight layer */
   flex: none;
   min-height: 52px;
-  padding: 0 1.6rem;
+  padding: 0 var(--space-6);
   background: var(--join-bg);
   color: var(--join-fg);
   box-shadow: var(--join-shadow);
@@ -1769,14 +1484,14 @@ kbd {
 
 /* ---------- Assignment detail: the right side of both Assignments pages ---------- */
 .detail {
-  gap: 1rem;
+  gap: var(--space-4);
 }
 .detail-head {
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 0.75rem 1.25rem;
+  gap: var(--space-3) var(--space-5);
 }
 .detail-heading {
   flex: 1 1 240px;
@@ -1787,7 +1502,7 @@ kbd {
   overflow-wrap: anywhere;
 }
 .detail-due {
-  margin-top: 0.2rem;
+  margin-top: var(--space-1);
   color: var(--text-muted);
   font-size: 0.86rem;
 }
@@ -1800,7 +1515,7 @@ kbd {
   display: grid;
   flex: none;
   justify-items: center;
-  padding: 0.4rem 0.9rem;
+  padding: var(--space-1-5) var(--space-3-5);
   border: var(--border-width) solid var(--time-border);
   border-radius: var(--radius-sm);
   background: var(--time-bg);
@@ -1830,8 +1545,8 @@ kbd {
 .chosen-file {
   display: flex;
   align-items: center;
-  gap: 0.8rem;
-  padding: 0.7rem 0.9rem;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-3-5);
   border: var(--border-width) solid var(--border);
   border-radius: var(--radius-sm);
   background: var(--field);
@@ -1847,7 +1562,7 @@ kbd {
 .file-main {
   display: grid;
   flex: 1;
-  gap: 0.1rem;
+  gap: var(--space-0-5);
   min-width: 0;
 }
 .file-main strong {
@@ -1865,8 +1580,8 @@ kbd {
 .dropzone {
   display: grid;
   justify-items: center;
-  gap: 0.45rem;
-  padding: 1.5rem 1rem;
+  gap: var(--space-2);
+  padding: var(--space-6) var(--space-4);
   border: var(--drop-line) dashed var(--drop-border);
   border-radius: var(--radius-sm);
   background: var(--drop-bg);
@@ -1890,8 +1605,8 @@ kbd {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 0.6rem;
-  margin-top: 0.35rem;
+  gap: var(--space-2-5);
+  margin-top: var(--space-1-5);
 }
 /* Phones have nothing to drag from, so they only get the buttons */
 @media (hover: none) {
@@ -1901,12 +1616,12 @@ kbd {
 }
 .upload-progress {
   display: grid;
-  gap: 0.4rem;
+  gap: var(--space-1-5);
 }
 .progress-track {
   height: 8px;
   overflow: hidden;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: var(--surface-2);
 }
 .progress-fill {
@@ -1928,7 +1643,7 @@ kbd {
   border-collapse: collapse;
 }
 .table th {
-  padding: 0.35rem 0.5rem 0.5rem;
+  padding: var(--space-1-5) var(--space-2) var(--space-2);
   border-bottom: var(--border-width) solid var(--border);
   color: var(--text-muted);
   font-size: 0.72rem;
@@ -1938,7 +1653,7 @@ kbd {
   text-transform: uppercase;
 }
 .table td {
-  padding: 0.7rem 0.5rem;
+  padding: var(--space-3) var(--space-2);
   border-bottom: 1px solid var(--line);
   font-size: 0.88rem;
   overflow-wrap: anywhere;
@@ -1957,7 +1672,7 @@ kbd {
 }
 .cell-stack {
   display: grid;
-  gap: 0.15rem;
+  gap: var(--space-0-5);
   justify-items: start;
 }
 .table-sub {
@@ -1987,15 +1702,15 @@ kbd {
   position: relative;
   z-index: 2; /* an open date picker sits above whatever is beside the form */
   display: grid;
-  gap: 1rem;
-  padding: 1.4rem;
+  gap: var(--space-4);
+  padding: var(--space-5-5);
 }
 .form-card h2 {
   font-size: 1.3rem;
 }
 .form-card form {
   display: grid;
-  gap: 0.9rem;
+  gap: var(--space-3-5);
 }
 .form-hint {
   color: var(--text-muted);
@@ -2013,15 +1728,15 @@ kbd {
 }
 /* A warning that doesn't stop anything. Amber is kept for "Live now" and deadlines, so this one is plain. */
 .field-note {
-  padding: 0.55rem 0.8rem;
+  padding: var(--space-2) var(--space-3);
   border-left: 3px solid var(--text-muted);
-  border-radius: 6px;
+  border-radius: var(--radius-xs);
   background: var(--surface-2);
   font-size: 0.85rem;
 }
 .filter-field select {
   height: 40px;
-  padding: 0 0.8rem;
+  padding: 0 var(--space-3);
   font-size: 0.9rem;
 }
 .panel-head .filter-field {
@@ -2058,10 +1773,10 @@ kbd {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.5rem;
+  gap: var(--space-2);
   width: 100%;
   height: 48px;
-  padding: 0 0.85rem 0 1rem;
+  padding: 0 var(--space-3-5) 0 var(--space-4);
   border: var(--border-width) solid var(--field-border);
   border-radius: var(--radius-sm);
   background: var(--field);
@@ -2095,10 +1810,10 @@ kbd {
   left: 0;
   z-index: 30;
   display: grid;
-  gap: 0.6rem;
+  gap: var(--space-2-5);
   width: 292px;
   max-width: calc(100vw - 32px);
-  padding: 0.8rem;
+  padding: var(--space-3);
   border: var(--border-width) solid var(--border);
   border-radius: var(--radius);
   background: var(--surface-solid);
@@ -2112,7 +1827,7 @@ kbd {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.5rem;
+  gap: var(--space-2);
 }
 .picker-head strong {
   font-family: var(--font-head);
@@ -2126,10 +1841,10 @@ kbd {
 .picker-days {
   display: grid;
   grid-template-columns: repeat(7, minmax(0, 1fr));
-  gap: 2px;
+  gap: var(--space-0-5);
 }
 .picker-weekday {
-  padding: 0.15rem 0;
+  padding: var(--space-0-5) 0;
   color: var(--text-muted);
   font-family: var(--font-mono);
   font-size: 0.66rem;
@@ -2140,7 +1855,7 @@ kbd {
 .picker-day {
   height: 36px;
   border: 1px solid transparent;
-  border-radius: 9px;
+  border-radius: var(--radius-xs);
   background: none;
   font-size: 0.86rem;
   cursor: pointer;
@@ -2160,8 +1875,8 @@ kbd {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.35rem;
-  padding-top: 0.6rem;
+  gap: var(--space-1-5);
+  padding-top: var(--space-2-5);
   border-top: 1px solid var(--line);
   font-size: 0.86rem;
 }
@@ -2174,21 +1889,21 @@ kbd {
   width: 42px;
   height: 36px;
   padding: 0;
-  border-radius: 9px;
+  border-radius: var(--radius-xs);
   font-family: var(--font-mono);
   font-size: 0.9rem;
   text-align: center;
 }
 .picker-ampm {
   display: flex;
-  margin-left: 0.25rem;
+  margin-left: var(--space-1);
   overflow: hidden;
   border: var(--border-width) solid var(--field-border);
-  border-radius: 9px;
+  border-radius: var(--radius-xs);
 }
 .picker-ampm button {
   height: 32px;
-  padding: 0 0.5rem;
+  padding: 0 var(--space-2);
   border: 0;
   background: none;
   font-family: var(--font-mono);
@@ -2209,20 +1924,20 @@ kbd {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.5rem;
+  gap: var(--space-2);
 }
 
 /* New student's login details, shown once */
 .cred-card {
   display: grid;
-  gap: 1rem;
-  padding: 1.4rem;
+  gap: var(--space-4);
+  padding: var(--space-5-5);
   border-color: var(--glow);
 }
 .cred-head {
   display: flex;
   align-items: center;
-  gap: 0.9rem;
+  gap: var(--space-3-5);
 }
 .cred-head p {
   color: var(--text-muted);
@@ -2236,15 +1951,15 @@ kbd {
 }
 .cred-rows {
   display: grid;
-  gap: 0.5rem;
+  gap: var(--space-2);
 }
 .cred-row {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 0.25rem 1rem;
-  padding: 0.75rem 1rem;
+  gap: var(--space-1) var(--space-4);
+  padding: var(--space-3) var(--space-4);
   border: var(--border-width) solid var(--field-border);
   border-radius: var(--radius-sm);
   background: var(--field);
@@ -2267,8 +1982,8 @@ kbd {
   z-index: 1; /* above the spotlight layer */
   display: flex;
   flex-wrap: wrap;
-  gap: 0.6rem;
-  margin-top: 1rem; /* room for the "Copied!" label, so it doesn't cover the note above */
+  gap: var(--space-2-5);
+  margin-top: var(--space-4); /* room for the "Copied!" label, so it doesn't cover the note above */
 }
 .cred-done {
   margin-left: auto;
@@ -2281,8 +1996,8 @@ kbd {
   left: 0;
   width: fit-content;
   margin-inline: auto;
-  padding: 0.15rem 0.55rem;
-  border-radius: 999px;
+  padding: var(--space-0-5) var(--space-2);
+  border-radius: var(--radius-pill);
   background: var(--text);
   color: var(--bg);
   box-shadow: var(--shadow-sm);
@@ -2296,17 +2011,17 @@ kbd {
 .chip {
   display: inline-flex;
   align-items: center;
-  gap: 0.3rem;
+  gap: var(--space-1);
   width: fit-content;
-  padding: 0.15rem 0.65rem;
-  border-radius: 999px;
+  padding: var(--space-0-5) var(--space-2-5);
+  border-radius: var(--radius-pill);
   background: var(--surface-2);
   color: var(--text-muted);
   font-size: 0.8rem;
   font-weight: 500;
   white-space: nowrap;
 }
-.chip-green {
+.chip-role {
   background: var(--primary-soft);
   color: var(--primary-text);
 }
@@ -2318,13 +2033,13 @@ kbd {
   left: 50%;
   z-index: 100;
   display: grid;
-  gap: 0.5rem;
+  gap: var(--space-2);
   width: max-content;
   max-width: calc(100% - 32px);
   transform: translateX(-50%);
 }
 .toast {
-  padding: 0.75rem 1.2rem;
+  padding: var(--space-3) var(--space-5);
   border: var(--border-width) solid var(--border);
   border-radius: var(--radius-btn);
   background: var(--surface-solid);
@@ -2343,7 +2058,7 @@ kbd {
 /* ---------- Pop-ups ---------- */
 .dialog {
   width: min(420px, calc(100% - 32px));
-  padding: 1.75rem;
+  padding: var(--space-7);
   border: var(--border-width) solid var(--border);
   border-radius: var(--radius);
   background: var(--surface-solid);
@@ -2351,17 +2066,17 @@ kbd {
   box-shadow: var(--shadow-lift);
 }
 .dialog::backdrop {
-  background: rgba(3, 6, 4, 0.6);
+  background: var(--scrim);
 }
 .dialog form {
   display: grid;
-  gap: 0.75rem;
+  gap: var(--space-3);
 }
 .dialog-actions {
   display: flex;
   justify-content: flex-end;
-  gap: 0.6rem;
-  margin-top: 0.5rem;
+  gap: var(--space-2-5);
+  margin-top: var(--space-2);
 }
 /* A form in a pop-up. The whole pop-up fills the screen and scrolls, so a tall form never gets a scrollbar of its own. */
 .form-dialog {
@@ -2371,7 +2086,7 @@ kbd {
   max-width: none;
   height: 100%;
   max-height: none;
-  padding: 5vh 16px;
+  padding: 5vh var(--space-4);
   overflow-y: auto;
   border: 0;
   border-radius: 0;
@@ -2383,7 +2098,7 @@ kbd {
   margin: 0 auto;
 }
 .form-dialog form {
-  gap: 0.9rem;
+  gap: var(--space-3-5);
 }
 .form-close {
   position: absolute;
@@ -2402,8 +2117,8 @@ kbd {
 .palette-search {
   display: flex;
   align-items: center;
-  gap: 0.7rem;
-  padding: 0.5rem 1.1rem;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-4-5);
   border-bottom: 1px solid var(--line);
   color: var(--text-muted);
 }
@@ -2426,15 +2141,15 @@ kbd {
 }
 .palette-list {
   display: grid;
-  gap: 2px;
+  gap: var(--space-0-5);
   max-height: min(380px, 56vh);
   margin: 0;
-  padding: 0.5rem;
+  padding: var(--space-2);
   overflow-y: auto;
   list-style: none;
 }
 .palette-group {
-  padding: 0.6rem 0.8rem 0.2rem;
+  padding: var(--space-2-5) var(--space-3) var(--space-1);
   color: var(--text-muted);
   font-size: 0.72rem;
   font-weight: 600;
@@ -2444,7 +2159,7 @@ kbd {
 .palette-item {
   display: grid;
   min-width: 0;
-  padding: 0.55rem 0.8rem;
+  padding: var(--space-2) var(--space-3);
   border-radius: var(--radius-sm);
   cursor: pointer;
 }
@@ -2468,7 +2183,7 @@ kbd {
   font-size: 0.82rem;
 }
 .palette-empty {
-  padding: 1.5rem 0.8rem;
+  padding: var(--space-6) var(--space-3);
   color: var(--text-muted);
   font-size: 0.92rem;
   text-align: center;
@@ -2497,7 +2212,7 @@ kbd {
   }
   .page {
     min-height: 0;
-    padding: 24px 24px 40px;
+    padding: var(--space-6) var(--space-6) var(--space-10);
   }
   .split.fill {
     grid-template-columns: minmax(0, 1fr);
@@ -2508,8 +2223,8 @@ kbd {
     z-index: 30;
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    padding: 0.55rem 1rem;
+    gap: var(--space-3);
+    padding: var(--space-2) var(--space-4);
   }
   .sidebar {
     width: min(280px, 84vw);
@@ -2541,19 +2256,19 @@ kbd {
 }
 @media (max-width: 720px) {
   .page {
-    padding: 20px 16px 40px;
+    padding: var(--space-5) var(--space-4) var(--space-10);
   }
   .panel {
-    padding: 1rem;
+    padding: var(--space-4);
   }
   .form-card {
-    padding: 1.15rem;
+    padding: var(--space-4-5);
   }
   .stat-grid {
-    gap: 12px;
+    gap: var(--space-3);
   }
   .stat-card {
-    padding: 0.85rem;
+    padding: var(--space-3-5);
   }
   .stat-number {
     min-height: 2.2rem;
@@ -2586,7 +2301,7 @@ kbd {
 @container panel (max-width: 600px) {
   .table th,
   .table td {
-    padding-inline: 0.3rem;
+    padding-inline: var(--space-1);
   }
   .table td {
     font-size: 0.82rem;
@@ -2613,18 +2328,18 @@ kbd {
     display: block;
   }
   .table tr {
-    padding: 0.6rem 0;
+    padding: var(--space-2-5) 0;
     border-bottom: 1px solid var(--line);
   }
   .table td {
-    padding: 0.12rem 0;
+    padding: var(--space-0-5) 0;
     border-bottom: 0;
   }
   .table td[data-label] {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 1rem;
+    gap: var(--space-4);
     text-align: right;
   }
   .table td[data-label] .cell-stack {
@@ -2640,7 +2355,7 @@ kbd {
     display: none;
   }
   .table-action {
-    margin-top: 0.4rem;
+    margin-top: var(--space-1-5);
     text-align: left;
   }
   .table-action .btn {
@@ -2649,54 +2364,65 @@ kbd {
 }
 
 /* ---------- Login page on small screens ---------- */
-@media (max-width: 720px) {
-  /* Phones: half the grid and a lighter blur, so the login background stays smooth */
-  .grid-col:nth-child(1),
-  .grid-col:nth-child(4) {
-    display: none;
-  }
-  .grid-plane {
-    left: calc(50% - 340px);
-    width: 680px;
-  }
-  .stage-arc {
-    --arc-size: 1100px;
-    top: 76%;
-  }
-  .arc-amber {
-    top: -70px;
-    left: calc(50% - 240px);
-    width: 480px;
-    height: 140px;
-  }
-  .auth-page .auth-card,
-  .role-card {
-    -webkit-backdrop-filter: blur(10px) saturate(130%);
-    backdrop-filter: blur(10px) saturate(130%);
-  }
-}
-/* Short screens: a smaller heading, so the whole login fits without scrolling */
+/* Short laptop screens: a smaller logo and form, so the whole login fits without scrolling */
 @media (max-height: 720px) {
-  .auth-shell {
-    gap: 1rem;
-  }
-  .hero-logo {
-    width: 40px;
-    height: 40px;
-  }
-  .hero-word {
-    font-size: 2.2rem;
+  .logo-nest {
+    width: 120px;
+    margin-bottom: var(--space-3);
   }
   .auth-card {
-    gap: 1rem;
-    padding: 1.5rem;
+    gap: var(--space-4);
+    padding: var(--space-6);
+  }
+}
+/* Tablets and phones: no birds, the small logo on top and the login below.
+   The width must match the one in login-flock.js. */
+@media (max-width: 860px) {
+  .auth-page {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto 1fr;
+  }
+  .auth-brand {
+    position: static;
+    height: auto;
+    padding: var(--space-7) var(--space-4) 0;
+  }
+  .flock {
+    display: none;
+  }
+  .logo-nest {
+    width: 78px;
+    margin-bottom: var(--space-2);
+  }
+  .logo-word {
+    font-size: 1.25rem;
+  }
+  .logo-line {
+    margin: var(--space-1-5) 0 var(--space-2);
+  }
+  .logo-tagline {
+    font-size: 0.6rem;
+  }
+  .auth-main {
+    place-items: start center;
+    padding: var(--space-6) var(--space-4) var(--space-8);
+    border-left: 0;
+    background: none;
+  }
+  .role-picker,
+  .auth-card {
+    align-self: start;
   }
 }
 @media (max-width: 480px) {
   .auth-card {
-    padding: 1.5rem;
+    padding: var(--space-6);
   }
   .role-card {
-    padding: 1.1rem;
+    padding: var(--space-4);
+  }
+  .auth-note {
+    flex-wrap: wrap;
+    gap: var(--space-1) var(--space-4);
   }
 }

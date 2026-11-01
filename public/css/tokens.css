@@ -1,0 +1,286 @@
+/* ClassNest design tokens: every colour, font, radius and spacing value lives in this one file.
+   Change a value here and every page follows. style.css only ever uses these names.
+   Design rules are in .claude/skills/classnest-ui/SKILL.md */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Jost:wght@500;600&family=Outfit:wght@500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
+
+/* ---------- Dark (the default) ---------- */
+:root {
+  /* The brand: blue for admins, orange for students */
+  --black: #000000;
+  --white: #ffffff;
+  --blue: #2563ff;
+  --blue-bright: #7aa5ff; /* for text on black */
+  --blue-deep: #1a46c8; /* for text in light mode */
+  --orange: #ff6a13;
+  --orange-bright: #ff9a5c; /* for text on black */
+  --orange-deep: #ad4300; /* for text in light mode */
+
+  /* The base: black page, slightly lighter black surfaces, very thin borders */
+  --bg: var(--black);
+  --surface: rgba(18, 18, 20, 0.72); /* cards: the page shows faintly through */
+  --surface-solid: #101012; /* pop-ups, where nothing should show through */
+  --surface-2: rgba(255, 255, 255, 0.06); /* soft tracks and hovers */
+  --field: rgba(255, 255, 255, 0.04);
+  --text: #f2f2f4;
+  --text-muted: #9c9ca4;
+  --border: rgba(255, 255, 255, 0.09);
+  --border-strong: rgba(255, 255, 255, 0.22);
+  --edge: rgba(255, 255, 255, 0.04); /* the thin light along the top of a card */
+  --scrim: rgba(0, 0, 0, 0.65); /* the dimmed area behind pop-ups and the menu */
+
+  /* The accent in use. Blue here, and only these lines change for students or on the login page. */
+  --primary: var(--blue);
+  --primary-text: var(--blue-bright);
+  --on-primary: var(--white); /* text on a solid accent button */
+  --sidebar-accent: var(--blue-bright); /* the sidebar is dark in both themes, so this stays bright */
+
+  /* Status colours. They keep their meaning on every page and never use the accent. */
+  --amber: #ffbe46; /* "Live now", Pending and the last 24 hours before a deadline */
+  --peach: #ff9d85; /* Late */
+  --danger: #ff6b6b; /* Missing, and everything that goes wrong */
+  --calm: #bccdf5; /* On time, Submitted, Upcoming, Started, time left */
+  --on-danger: #1f0606;
+  --danger-soft: rgba(255, 107, 107, 0.14);
+
+  --calm-bg: rgba(188, 205, 245, 0.11);
+  --calm-fg: var(--calm);
+  --amber-bg: rgba(255, 190, 70, 0.13);
+  --amber-fg: var(--amber);
+  --peach-bg: rgba(255, 157, 133, 0.13);
+  --peach-fg: var(--peach);
+  --red-bg: var(--danger-soft);
+  --red-fg: var(--danger);
+  --quiet-bg: var(--surface-2);
+  --quiet-fg: var(--text-muted);
+  --tag-line: 1px;
+  --tag-mix: 30%; /* how much of the text colour shows in a tag's border */
+
+  --dot: rgba(255, 255, 255, 0.05); /* the faint dot grid */
+  --shine: rgba(255, 255, 255, 0.07); /* skeleton shimmer */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 12px 32px rgba(0, 0, 0, 0.3);
+
+  /* Stays dark in both themes */
+  --sidebar-width: 236px;
+  --sidebar-bg: #0a0a0b;
+  --sidebar-text: #f2f2f4;
+  --sidebar-muted: #a6a6ae;
+  --sidebar-border: rgba(255, 255, 255, 0.1);
+  --sidebar-edge: var(--sidebar-border);
+  --sidebar-surface: rgba(255, 255, 255, 0.05);
+  --sidebar-hover: rgba(255, 255, 255, 0.07);
+
+  --line: var(--border); /* the thin lines between table rows */
+  --field-border: var(--border);
+  --row-bg: transparent;
+  --ghost-bg: transparent;
+  --eyebrow: var(--primary-text);
+  --live-dot: var(--amber);
+
+  --stat-a: var(--surface);
+  --stat-b: var(--surface);
+  --stat-c: var(--surface);
+  --stat-d: var(--surface);
+  --today-text: var(--primary-text);
+
+  --selected-text: var(--text);
+  --selected-muted: var(--text-muted);
+  --selected-border: var(--primary-text);
+  --selected-shadow: none;
+
+  --hero-fg: var(--text);
+  --hero-border: var(--primary);
+  --hero-pill-bg: var(--amber-bg);
+  --hero-pill-fg: var(--amber-fg);
+  --hero-pill-border: transparent;
+  --join-bg: var(--primary);
+  --join-fg: var(--on-primary);
+
+  --time-bg: var(--calm-bg);
+  --time-fg: var(--calm-fg);
+  --time-border: transparent;
+  --drop-line: 1.5px;
+  --drop-border: var(--border);
+  --drop-bg: transparent;
+
+  /* The login page */
+  --auth-side: #070708; /* the login half, one step lighter than the black beside it */
+  --bird: #f2f2f4; /* the birds. login-flock.js reads these three, so keep them as #rrggbb */
+  --bird-admin: #4d86ff;
+  --bird-student: #ff8a3d;
+  --word-flow: linear-gradient(90deg in oklch, var(--bird-admin) 14%, var(--bird-student) 36%, var(--bird-student) 64%, var(--bird-admin) 86%); /* mostly pure blue and orange, with a short, vivid mix between them */
+
+  /* Fonts (loaded at the top of this file) */
+  --font-brand: 'Jost', system-ui, sans-serif; /* only the logo */
+  --font-head: 'Outfit', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, Consolas, monospace;
+
+  /* Corners and lines */
+  --radius: 18px;
+  --radius-sm: 12px;
+  --radius-xs: 8px;
+  --radius-btn: 999px;
+  --radius-pill: 999px;
+  --radius-round: 50%;
+  --border-width: 1px;
+
+  /* Spacing: each step is 4px, so --space-3 is 12px, and --space-3-5 is 14px. Used for padding, margins and gaps. */
+  --space-px: 0.0625rem;
+  --space-0-5: 0.125rem;
+  --space-1: 0.25rem;
+  --space-1-5: 0.375rem;
+  --space-2: 0.5rem;
+  --space-2-5: 0.625rem;
+  --space-3: 0.75rem;
+  --space-3-5: 0.875rem;
+  --space-4: 1rem;
+  --space-4-5: 1.125rem;
+  --space-5: 1.25rem;
+  --space-5-5: 1.375rem;
+  --space-6: 1.5rem;
+  --space-7: 1.75rem;
+  --space-8: 2rem;
+  --space-9: 2.25rem;
+  --space-10: 2.5rem;
+
+  color-scheme: dark;
+}
+
+/* Worked out from the accent. They are listed on every element that sets its own accent, so they follow it. */
+:root,
+.auth-page,
+.role-card {
+  --primary-soft: color-mix(in srgb, var(--primary) 18%, transparent);
+  --primary-faint: color-mix(in srgb, var(--primary) 10%, transparent);
+  --glow: color-mix(in srgb, var(--primary) 45%, transparent);
+  --spot: color-mix(in srgb, var(--primary) 12%, transparent); /* the spotlight that follows the mouse */
+  --ambient-a: color-mix(in srgb, var(--primary) 12%, transparent); /* the breathing glows */
+  --ambient-b: color-mix(in srgb, var(--primary) 8%, transparent);
+  --sidebar-active: color-mix(in srgb, var(--sidebar-accent) 16%, transparent);
+  --link: var(--primary-text);
+  --today-bg: var(--primary-soft);
+  --selected-bg: var(--primary-soft);
+  --hero-bg: linear-gradient(120deg, var(--primary-soft), var(--surface) 62%);
+  --join-shadow: 0 0 22px var(--glow);
+  --shadow-lift: 0 2px 4px rgba(0, 0, 0, 0.3), 0 20px 44px rgba(0, 0, 0, 0.45), 0 0 32px var(--primary-faint);
+}
+
+/* ---------- Students: orange. theme.js sets data-role on <html>. ---------- */
+:root[data-role='student'] {
+  --primary: var(--orange);
+  --primary-text: var(--orange-bright);
+  --on-primary: var(--black); /* white on this orange is too hard to read */
+  --sidebar-accent: var(--orange-bright);
+}
+
+/* ---------- Light mode (picked with the toggle): the mockups' style ----------
+   Cream page, thick black borders, hard offset shadows, and a deeper accent for text so it stays readable. */
+:root[data-theme='light'] {
+  --ink: #0d0d0f;
+  --bg: #fff6e9;
+  --surface: var(--white);
+  --surface-solid: var(--white);
+  --surface-2: #f8f1e4;
+  --field: var(--white);
+  --text: var(--ink);
+  --text-muted: #5a5c6a;
+  --border: var(--ink);
+  --edge: transparent;
+  --border-width: 2px;
+  --radius-btn: 12px;
+  --font-head: 'Space Grotesk', system-ui, sans-serif;
+
+  --primary-text: var(--blue-deep);
+  --glow: var(--primary);
+
+  --danger: #c4271b;
+  --danger-soft: #ffe0dc;
+  --on-danger: var(--white);
+
+  --dot: transparent;
+  --spot: transparent;
+  --shine: rgba(255, 255, 255, 0.7);
+
+  --shadow-sm: 2px 2px 0 var(--ink);
+  --shadow: 4px 4px 0 var(--ink);
+  --shadow-lift: 6px 6px 0 var(--ink);
+
+  --sidebar-bg: var(--ink);
+  --sidebar-edge: var(--ink);
+
+  --line: #e9e1d2;
+  --ghost-bg: var(--white);
+  --eyebrow: #4a4c59;
+  --live-dot: #e5484d;
+
+  --tag-line: 1.5px;
+  --tag-mix: 100%;
+  --calm-bg: #e3ebff;
+  --calm-fg: var(--ink);
+  --amber-bg: #fff0c2;
+  --amber-fg: var(--ink);
+  --peach-bg: #ffe3d6;
+  --peach-fg: var(--ink);
+  --red-bg: #ffdcd8;
+  --red-fg: var(--ink);
+  --quiet-bg: #efece4;
+  --quiet-fg: var(--ink);
+
+  --stat-a: #e3ebff;
+  --stat-b: var(--white);
+  --stat-c: #fff0c2;
+  --stat-d: #ffe3d6;
+  --today-bg: #fff0c2;
+  --today-text: var(--ink);
+
+  --selected-bg: var(--ink);
+  --selected-text: var(--white);
+  --selected-muted: #c8cad3;
+  --selected-border: var(--ink);
+  --selected-shadow: 4px 4px 0 var(--primary);
+
+  --hero-bg: var(--primary);
+  --hero-fg: var(--on-primary);
+  --hero-border: var(--ink);
+  --hero-pill-bg: var(--white);
+  --hero-pill-fg: var(--ink);
+  --hero-pill-border: var(--ink);
+  --join-bg: var(--ink);
+  --join-fg: var(--white);
+  --join-shadow: 4px 4px 0 var(--white);
+
+  --time-bg: #e3ebff;
+  --time-fg: var(--ink);
+  --time-border: var(--ink);
+  --drop-line: 2px;
+  --drop-border: var(--ink);
+  --drop-bg: #fff6e9;
+
+  color-scheme: light;
+}
+:root[data-theme='light'][data-role='student'] {
+  --primary-text: var(--orange-deep);
+  --on-primary: var(--ink);
+}
+
+/* ---------- The login page: black and white until a role is hovered or chosen ----------
+   login.js sets data-accent on <body>. Each tile always shows its own colour. */
+.auth-page {
+  --primary: var(--white);
+  --primary-text: var(--white);
+  --on-primary: var(--black);
+}
+.auth-page[data-accent='admin'],
+.role-card[data-role='admin'] {
+  --primary: var(--blue);
+  --primary-text: var(--blue-bright);
+  --on-primary: var(--white);
+}
+.auth-page[data-accent='student'],
+.role-card[data-role='student'] {
+  --primary: var(--orange);
+  --primary-text: var(--orange-bright);
+  --on-primary: var(--black);
+}

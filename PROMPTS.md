@@ -434,3 +434,39 @@ Student sidebar: Dashboard (home) and Assignments (notebook).
 
 Test it yourself quickly (no tester agent): every link, search icon, theme icon and log out, on desktop and mobile. Add this prompt to PROMPTS.md.
 ```
+
+## Prompt 23 - Rebrand Part A: colours, logo and login (2026-11-01)
+
+```
+/classnest-ui Read CLAUDE.md and PLAN.md first. Part A of the ClassNest rebrand: colours, logo and the login page. Don't change any app logic, database, API routes, sessions, upload rules, or the layout of inner pages (that is Part B).
+
+1. Design tokens: put all colours, fonts, radius and spacing as CSS variables in one file, and make every page use them, so future changes need only one place.
+
+2. Colours (remove ALL green everywhere, including inner pages, tags, buttons, charts and focus rings):
+- Base: pure black background, slightly lighter black surfaces, very thin subtle borders, soft white text, muted grey secondary text.
+- Admin accent: electric blue on all admin pages. Student accent: electric orange on all student pages. Use the accent for active nav, main buttons, focus rings, glows and highlights. Status colours stay meaningful (for example Late in red or amber, On time in a calm blue or white, never green).
+- The login page is neutral black and white until a role is hovered or chosen.
+- Light mode stays available with the same blue and orange accents.
+- Keep text readable: in light mode use a slightly deeper shade of the accents for text, so contrast stays good.
+3. Logo (original, drawn in code as SVG, no images or external assets):
+- A hand-drawn style white bird's nest made of thin twig-like strokes, with an open dark centre.
+- Below it "CLASSNEST" in uppercase, Jost font, medium-bold weight, wide letter spacing.
+- Tagline below: "LEARN · GROW · FLY" in small, wide-spaced uppercase.
+- Login: full logo. Sidebar: small nest plus the name. Browser tab icon: the nest only.
+- Remove the old logo everywhere.
+
+4. Login page (split screen, black, minimal, classy):
+- Remove the old intro completely (particles, arc, floating cards, glows).
+- LEFT panel (animation): the nest draws its strokes in, then each letter of "CLASSNEST" springs in one by one, a soft light sweep passes over the word, a thin line draws under it, and "LEARN · GROW · FLY" fades in. Hovering the word shows a moving electric-blue-to-electric-orange gradient inside the letters. Then small glowing birds fly out of the nest and form a flock (simple boids on canvas) that gently follows the mouse inside the left panel. Birds are soft white by default, turn electric blue when the Admin tile is hovered or chosen, and premium orange for Student.
+- Intro about 2 seconds, no skip button. Full intro on the first visit in a browser session, a quick version after that.
+- RIGHT panel (login): "Log in to ClassNest" and two tiles, Admin (shield icon) and Student (graduation cap icon), with a soft blue or orange glow on hover. Clicking a tile morphs it into its login form, like now, with a Back button. Dark inputs with thin borders that glow in the role colour on focus. A wrong password gives a small shake and a clear error. A bordered note box: "Students can't sign up. Your admin creates your login." Keep the "Preview error state" link.
+- After a successful login, the form fades out and the dashboard fades in smoothly.
+- Performance: around 40 to 60 birds, only transform and opacity for DOM animations, pause the canvas when the tab is hidden, and support prefers-reduced-motion (show a still flock and no letter animation).
+- Mobile: hide the bird animation, show the small logo on top and the login below.
+
+5. Safety: keep all existing form field names, element ids and JavaScript hooks that features use (login forms, autofill fix, upload zone, filters, search). Change styling and add new elements, but don't break or rename what works. If you must change one, update every place that uses it.
+
+6. Update the classnest-ui skill and CLAUDE.md with the new colours, logo and login rules, and remove every old green, old logo and old intro rule, so they never come back.
+
+Test it yourself quickly (no tester agent): the full intro and the quick version, hover colours, admin login, student login (kevin), wrong password, Back button, every inner page still works with the new colours, light and dark mode, desktop and mobile, no console errors. Then give me a short report. Add this prompt to PROMPTS.md.
+```

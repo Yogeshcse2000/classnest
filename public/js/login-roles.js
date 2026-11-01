@@ -69,6 +69,8 @@
     if (changing) return;
 
     clearForm();
+    chosenRole = null;
+    showChosenAccent();
     const roleCard = document.querySelector('.role-card[aria-pressed="true"]');
 
     if (!motionOK) {
@@ -94,6 +96,19 @@
       .set(roleCard, { opacity: 1 }, MORPH_SECONDS);
   }
 
-  roleCards.forEach((roleCard) => roleCard.addEventListener('click', () => openForm(roleCard)));
+  // Hovering a tile, or reaching it with the keyboard, shows its colour on the page and the birds
+  function previewAccent(roleCard) {
+    if (!changing) showAccent(roleCard.dataset.role);
+  }
+
+  roleCards.forEach((roleCard) => {
+    roleCard.addEventListener('click', () => openForm(roleCard));
+    roleCard.addEventListener('mouseenter', () => previewAccent(roleCard));
+    roleCard.addEventListener('mouseleave', showChosenAccent);
+    roleCard.addEventListener('focus', () => {
+      if (roleCard.matches(':focus-visible')) previewAccent(roleCard);
+    });
+    roleCard.addEventListener('blur', showChosenAccent);
+  });
   backButton.addEventListener('click', backToRoles);
 })();

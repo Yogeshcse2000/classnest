@@ -34,7 +34,8 @@
         { title: 'Assignments', url: '/student/assignments', icon: NOTEBOOK_ICON },
       ];
 
-  const LOGO = `<svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="9" fill="currentColor"/><path d="M7 15h18a9 8 0 0 1-18 0Z" fill="#fff"/><circle cx="13" cy="12" r="3" fill="#fff"/><circle cx="19.5" cy="11.5" r="3" fill="#fff" opacity=".7"/></svg>`;
+  // The small nest: the same twigs as favicon.svg. The full one is in index.html.
+  const LOGO = `<svg class="brand-mark" viewBox="0 0 32 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path stroke-width="1.25" d="M4.2 8.6C9 3.2 23 3 27.8 8.4"/><path stroke-width="1.25" d="M3.4 9.4C5.6 14 11 15.6 17 15.1C22.4 14.7 26.8 13 28.8 8.6"/><path stroke-width="1.25" d="M2.4 11.2C5 18.8 12 21.6 18 21C23.6 20.4 28 17 29.6 11"/><path stroke-width="1" d="M6 16C11 19 20.4 19.4 27 14.6"/><path stroke-width="1" d="M8.4 19.6C13 17.4 21 16 26.4 17.6"/><path stroke-width="1" d="M10.2 5.2C7 7 6 11 9.2 13.4"/><path stroke-width="1" d="M22 4.8C26 6.4 27 10.2 23.4 13"/><path stroke-width="1" d="M28 7.6L30.8 5.6"/><path stroke-width="1" d="M3.8 8.4L1.4 6.8"/></svg>`;
   const MOON_ICON = `<svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>`;
   const SUN_ICON = `<svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>`;
 
