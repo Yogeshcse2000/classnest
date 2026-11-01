@@ -80,7 +80,7 @@ function setupLogout() {
   document.querySelectorAll('[data-logout]').forEach((button) => {
     button.addEventListener('click', async () => {
       button.disabled = true;
-      button.textContent = 'Logging out…';
+      button.querySelector('span').textContent = 'Logging out…'; // only the label, so the icon stays
       try {
         await api('/api/auth/logout', { method: 'POST' });
       } finally {

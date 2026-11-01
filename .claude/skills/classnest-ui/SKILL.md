@@ -39,8 +39,14 @@ The trainer's mockups in `mockups/` set the layout and the elements of every inn
 ## One app: shared parts
 Every page, now and later, is built from these parts. Reuse them instead of making a new version.
 
-- **Sidebar:** built in one place, `sidebar.js`, and added to a page with one script tag at the top of `<body class="app">`. Logo and role badge at the top, nav links in the middle, then search and the theme toggle, the user card and Log out at the bottom. It stays dark in both themes. A new page goes in its `links` list.
-- **Mobile:** at 960px and below, the sidebar becomes a slide-out menu opened from a small bar at the top. It closes with its X button, the dimmed area, Esc or a link.
+- **Sidebar:** built in one place, `sidebar.js`, and added to a page with one script tag at the top of `<body class="app">`. It looks the same on every inner page, for both roles and in both themes, and stays dark in both. A new page goes in its `links` list, with an icon.
+  - **Top row:** logo and name on the left. On the right, a search icon and the theme icon, both plain 32px icon buttons with 18px icons. They have no text, no border and no "Ctrl K" label. Search and the theme toggle live here only, never at the bottom.
+  - **Nav links:** compact rows (32px high, 13px text), each with a 16px line icon on its left. Icons are free Lucide-style inline SVGs, and are slightly muted (75% opacity) until hovered or active.
+  - **Which icon:** Dashboard is a layout grid for admins and a home for students. Batches is layers, Students is users, Lectures is a video camera, Assignments is a notebook, Log out is a log-out arrow.
+  - **Hover:** a soft highlight (`--sidebar-hover`) that fades in over 150ms, on rows and on the top icons. It is a `::before` layer behind the item, so only its opacity animates.
+  - **Active page:** `aria-current="page"` gives a subtle fill (`--sidebar-active`), brighter text and an icon in `--sidebar-accent`. That is green in dark mode, and in light mode blue for admins and orange for students, lightened to stay clear on the dark sidebar. Never amber, and never a solid colour block.
+  - **Bottom:** a thin line, then the user card (name, then "Administrator" or the student's batch; long text ends in "…") and Log out with its icon.
+- **Mobile:** at 960px and below, the sidebar becomes a slide-out menu opened from a small bar at the top. It is the same sidebar, with its X button added to the top row, rows 40px high and icon buttons 36px, so they are easy to tap. It closes with its X button, the dimmed area, Esc, a link or the search icon.
 - **Page head:** `.page-head` with an optional `.eyebrow`, an `h1`, and `.page-actions` on the right. Pages with only a form and a list (Batches, Students, Lectures) skip it and keep a visually hidden `h1`.
 - **Form and list pages:** `.split`, with a `.form-card` on the left and a `.panel` on the right.
 - **List and detail pages:** `.split.fill`, with `.pick-row` items on the left and a `.panel.detail` on the right. The picked row has `aria-current="true"`.
@@ -94,7 +100,7 @@ The login page is the one place with these exceptions, recorded in [PLAN.md](../
 - "Live now" has a pulsing dot next to it.
 
 ### Ctrl+K search
-- Every inner page has search, opened with Ctrl+K or the Search button in the sidebar.
+- Every inner page has search, opened with Ctrl+K or the search icon at the top of the sidebar.
 - It only finds real data and pages. It never contains actions such as "Log out" or "Switch to light mode".
 - **Admin:** students (by name, username or email), batches, lectures, assignments, and pages.
 - **Student:** only the lectures and assignments of their own batch.

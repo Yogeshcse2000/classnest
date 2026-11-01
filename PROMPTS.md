@@ -410,3 +410,27 @@ Rules:
 
 Add this prompt to PROMPTS.md.
 ```
+
+## Prompt 22 - Linear-style sidebar (2026-11-01)
+
+```
+/classnest-ui Redesign only the sidebar, inspired by Linear's sidebar (style inspiration only, no copying). Don't change any page content, data or logic.
+
+1. Top row: ClassNest logo and name on the left. On the right, a medium-size search icon button (just the magnifying glass, no text, no "Ctrl K" label) that opens the search, and the theme toggle icon next to it. Both icons same size, with a soft hover highlight like Linear. Remove the big search bar and theme button from the bottom.
+2. Every nav link gets a small, clean line icon on its left (free Lucide-style icons, inline SVG, no paid assets):
+- Dashboard: layout grid
+- Batches: layers
+- Students: users
+- Lectures: video camera
+- Assignments: notebook
+- Log out: log-out arrow
+Student sidebar: Dashboard (home) and Assignments (notebook).
+
+3. Style: compact rows, smaller text, icons slightly muted. On hover a soft highlight, and the active page gets a subtle filled background with a brighter icon (the accent colour), like Linear.
+
+4. Bottom: the user card (name, role or batch) with the Log out link and its icon.
+
+5. Same sidebar on every inner page, for both roles, in dark and light mode, and the mobile slide-out menu too. Update the classnest-ui skill with these sidebar rules.
+
+Test it yourself quickly (no tester agent): every link, search icon, theme icon and log out, on desktop and mobile. Add this prompt to PROMPTS.md.
+```

@@ -48,6 +48,9 @@
   --sidebar-width: 236px;
   --sidebar-bg: #0a120d;
   --sidebar-edge: rgba(170, 225, 195, 0.13);
+  --sidebar-hover: rgba(255, 255, 255, 0.06);
+  --sidebar-active: rgba(255, 255, 255, 0.1);
+  --sidebar-accent: #84d7af; /* the active page's icon; the sidebar is dark in both themes, so it must stay bright */
 
   --line: var(--border); /* the thin lines between table rows */
   --field-border: var(--border);
@@ -143,6 +146,7 @@
 
   --sidebar-bg: #15161c;
   --sidebar-edge: #15161c;
+  --sidebar-accent: #8fa3ff;
 
   --line: #e9e1d2;
   --link: #2e4ff0;
@@ -199,6 +203,7 @@
   --primary-soft: #ffe8da;
   --primary-text: #b8460a; /* darker, so small text stays readable on white */
   --on-primary: var(--ink);
+  --sidebar-accent: #ff9a5c;
 }
 
 /* ---------- Basics ---------- */
@@ -1079,6 +1084,7 @@ textarea {
   --border-width: 1px;
   --surface: rgba(255, 255, 255, 0.05);
   --surface-2: rgba(255, 255, 255, 0.09);
+  --primary-text: var(--sidebar-accent); /* keeps the keyboard focus ring visible on the dark background */
   background: var(--sidebar-bg);
   color: var(--text);
 }
@@ -1090,17 +1096,18 @@ textarea {
   z-index: 40;
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 1rem;
   width: var(--sidebar-width);
-  padding: 1.25rem 0.9rem;
+  padding: 0.75rem;
   overflow-y: auto;
   border-right: 1px solid var(--sidebar-edge);
 }
 .sidebar-top {
   display: flex;
   align-items: center;
-  gap: 0.55rem;
-  padding: 0 0.35rem;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding-left: 0.5rem;
 }
 .brand {
   display: inline-flex;
@@ -1109,89 +1116,128 @@ textarea {
   min-width: 0;
   color: var(--text);
   font-family: var(--font-head);
-  font-size: 1.15rem;
+  font-size: 1rem;
   font-weight: 600;
   letter-spacing: -0.02em;
   text-decoration: none;
 }
 .brand-mark {
   flex: none;
-  width: 28px;
-  height: 28px;
+  width: 24px;
+  height: 24px;
   color: var(--primary);
 }
-.role-badge {
-  padding: 0.1rem 0.45rem;
-  border-radius: 6px;
-  background: var(--primary);
-  color: var(--on-primary);
-  font-family: var(--font-mono);
-  font-size: 0.64rem;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
+.sidebar-tools {
+  display: flex;
+  flex: none;
+  gap: 2px;
+}
+.sidebar .icon-btn,
+.mobile-bar .icon-btn {
+  width: 32px;
+  height: 32px;
+  border: 0;
+  border-radius: 8px;
+  background: none;
 }
 .sidebar-close {
   display: none;
-  margin-left: auto;
 }
 .side-nav {
   display: grid;
-  gap: 0.3rem;
+  gap: 2px;
 }
 .side-link {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
   width: 100%;
-  padding: 0.62rem 0.8rem;
+  min-height: 32px;
+  padding: 0.25rem 0.5rem;
   border: 0;
-  border-radius: 10px;
+  border-radius: 8px;
   background: none;
   color: var(--text-muted);
-  font-size: 0.93rem;
+  font-size: 0.8125rem;
   font-weight: 500;
   text-align: left;
   text-decoration: none;
   cursor: pointer;
   transition: scale 0.15s ease;
 }
-.side-link:hover {
-  background: var(--surface-2);
+.side-link:hover,
+.side-link[aria-current='page'] {
   color: var(--text);
 }
 .side-link:active {
   scale: 0.98;
 }
-.side-link[aria-current='page'] {
-  background: var(--primary);
-  color: var(--on-primary);
+.side-link svg {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  opacity: 0.75;
+  transition: opacity 0.15s ease;
+}
+.side-link:hover svg,
+.side-link[aria-current='page'] svg {
+  opacity: 1;
+}
+.side-link[aria-current='page'] svg {
+  color: var(--sidebar-accent);
+}
+/* The highlight is a layer behind the row or icon, so it can fade softly using opacity alone */
+.side-link,
+.sidebar .icon-btn,
+.mobile-bar .icon-btn {
+  position: relative;
+  isolation: isolate;
+}
+.side-link::before,
+.sidebar .icon-btn::before,
+.mobile-bar .icon-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: var(--sidebar-hover);
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+.side-link:hover::before,
+.sidebar .icon-btn:hover::before,
+.mobile-bar .icon-btn:hover::before {
+  opacity: 1;
+}
+.side-link[aria-current='page']::before {
+  background: var(--sidebar-active);
+  opacity: 1;
 }
 .sidebar-foot {
   display: grid;
-  gap: 0.75rem;
+  gap: 0.25rem;
   margin-top: auto;
-}
-.sidebar-tools {
-  display: flex;
-  gap: 0.5rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--border);
 }
 .user-card {
   display: grid;
-  gap: 0.05rem;
   min-width: 0;
-  padding: 0.6rem 0.8rem;
-  border: 1px solid var(--border);
-  border-radius: 12px;
+  padding: 0.15rem 0.5rem;
+  line-height: 1.35;
 }
 .user-card strong {
   overflow: hidden;
-  font-size: 0.88rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 .user-card span {
   overflow: hidden;
   color: var(--text-muted);
-  font-size: 0.78rem;
+  font-size: 0.75rem;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -1205,41 +1251,6 @@ textarea {
   background: rgba(3, 6, 4, 0.6);
 }
 
-/* The button that opens the search */
-.palette-btn {
-  display: inline-flex;
-  flex: 1;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem;
-  min-width: 0;
-  height: 40px;
-  padding: 0 0.7rem;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-btn);
-  background: var(--surface);
-  color: var(--text-muted);
-  font-size: 0.85rem;
-  cursor: pointer;
-  transition: scale 0.15s ease;
-}
-.palette-btn:hover {
-  background: var(--surface-2);
-  color: var(--text);
-}
-.palette-btn:active {
-  scale: 0.96;
-}
-.palette-btn svg {
-  flex: none;
-  width: 16px;
-  height: 16px;
-}
-.palette-btn span {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-}
 kbd {
   padding: 0.05rem 0.35rem;
   border: 1px solid var(--border);
@@ -2512,6 +2523,15 @@ kbd {
   }
   .sidebar-close {
     display: inline-grid;
+  }
+  /* Bigger rows and icons here, so they are easy to tap */
+  .side-link {
+    min-height: 40px;
+  }
+  .sidebar .icon-btn,
+  .mobile-bar .icon-btn {
+    width: 36px;
+    height: 36px;
   }
 }
 @media (max-width: 960px) and (prefers-reduced-motion: reduce) {
