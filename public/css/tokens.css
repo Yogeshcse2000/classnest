@@ -108,8 +108,9 @@
   --auth-side: #070708; /* the login half, one step lighter than the black beside it */
   --bird: #f2f2f4; /* the birds. login-flock.js reads these three, so keep them as #rrggbb */
   --bird-admin: #4d86ff;
-  --bird-student: #ff8a3d;
-  --word-flow: linear-gradient(90deg in oklch, var(--bird-admin) 14%, var(--bird-student) 36%, var(--bird-student) 64%, var(--bird-admin) 86%); /* mostly pure blue and orange, with a short, vivid mix between them */
+  --bird-student: #ff7a26;
+  /* Blue and orange meet in white. Mixed directly they turn grey or purple, and white keeps each colour's own hue. */
+  --word-flow: linear-gradient(90deg, var(--bird-admin) 12%, var(--white) 26%, var(--bird-student) 40%, var(--bird-student) 60%, var(--white) 74%, var(--bird-admin) 88%);
 
   /* Fonts (loaded at the top of this file) */
   --font-brand: 'Jost', system-ui, sans-serif; /* only the logo */

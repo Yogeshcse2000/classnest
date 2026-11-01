@@ -470,3 +470,34 @@ Test it yourself quickly (no tester agent): every link, search icon, theme icon 
 
 Test it yourself quickly (no tester agent): the full intro and the quick version, hover colours, admin login, student login (kevin), wrong password, Back button, every inner page still works with the new colours, light and dark mode, desktop and mobile, no console errors. Then give me a short report. Add this prompt to PROMPTS.md.
 ```
+
+## Prompt 24 - Cinematic login opening and premium birds (2026-11-01)
+
+```
+Change the login intro into a full-screen cinematic text reveal. Don't change the login forms, the role tiles, the logic, or any other page.
+
+1. Full-screen opening (about 3 to 4 seconds, smooth, no skip button):
+- The page starts pure black. Only the word "CLASSNEST" in the centre of the WHOLE screen, very large. No nest, no birds, and the login panel is hidden.
+- Text reveal like the 21st.dev "reveal-text" component: each letter springs in one by one with a spring effect, then a soft light sweep passes across the whole word once, for cinematic emphasis.
+- Then a thin line draws under the word from left to right, and "LEARN · GROW · FLY" fades in below it.
+
+2. Move to the login:
+- The word, line and tagline smoothly shrink and move into the centre of the LEFT panel.
+- Only after it arrives, the nest logo fades in softly above the word, and then the birds fly out of the nest and form the flock in the left panel.
+- At the same time, the right login panel slides in from the right and fades in.
+- One GSAP timeline, so everything flows together with no jumps or flicker.
+
+3. Hover on the word: show a moving electric-blue-to-electric-orange gradient inside the letters (no purple or pink).
+3b. Make the birds premium and aesthetic:
+- Draw each bird as a soft, elegant silhouette with two curved wings (like a swallow), not arrows or triangles.
+- Wings flap gently, each bird at its own slightly different speed, so the flock looks alive.
+- Vary the sizes a little, with smaller birds fainter and further away, for depth.
+- Each bird leaves a very faint, short light trail as it flies.
+- Calm, graceful motion: slower speed, smooth turns, never jittery. They glide around the logo and softly follow the mouse.
+- Fewer but nicer: around 25 to 35 birds.
+- Colour: soft white with a light glow by default, electric blue when Admin is hovered or chosen, electric orange for Student, with a smooth colour fade between them.
+
+4. Session rule stays: the full opening plays on the first visit in a browser session. After that, show the final split layout directly with a quick fade. Keep prefers-reduced-motion support (show the final layout with no movement). Mobile: a short version of the reveal, then the small logo on top and the login below.
+
+Test it yourself quickly: the full opening in a fresh InPrivate window, the quick version on a second visit, both logins still work, desktop and mobile. Add this prompt to PROMPTS.md.
+```

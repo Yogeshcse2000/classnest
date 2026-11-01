@@ -93,8 +93,13 @@ A split screen: black, minimal and classy. It is **neutral black and white until
 
 ### Left panel
 - The full logo on pure black, with a canvas of birds above it.
-- Hovering the word shows a moving electric-blue-to-electric-orange gradient inside the letters. A wide gradient slides behind a `multiply` layer, so only transform and opacity change.
-- **Birds:** 40 to 60 small glowing birds in `login-flock.js`, flying as a simple boids flock that gently follows the mouse inside the panel. They are soft white by default, electric blue when Admin is hovered or chosen, and premium orange for Student.
+- Hovering the word shows a moving electric-blue-to-electric-orange gradient inside the letters, **never purple or pink**. Blue and orange meet in white, because mixed directly they turn grey or purple. A wide gradient slides behind a `multiply` layer, so only transform and opacity change.
+- **Birds:** 25 to 35 premium birds in `login-flock.js`, flying as a simple boids flock that glides around the logo and softly follows the mouse inside the panel.
+  - Each is a soft, elegant swallow silhouette with two curved crescent wings and a forked tail, never an arrow or a triangle.
+  - Wings beat gently, each bird at its own speed. Sizes vary, and smaller birds are fainter and slower, for depth.
+  - Each bird leaves a very faint, short light trail.
+  - The motion is calm: slow speed, and a hard limit on how fast a bird can turn, so it only flies in smooth arcs. Never add random pushes, which look jittery.
+  - Soft white with a light glow by default, electric blue when Admin is hovered or chosen, electric orange for Student, with a smooth fade between them.
 
 ### Right panel
 - "Log in to ClassNest", two tiles (Admin with a shield icon, Student with a graduation cap), and a bordered note box: "Students can't sign up. Your admin creates your login."
@@ -105,21 +110,29 @@ A split screen: black, minimal and classy. It is **neutral black and white until
 - The form keeps the note box and a "Preview error state" link, which shows the login error without sending anything.
 - After a successful login the page fades out and the dashboard fades in (`login.js` leaves a note in `sessionStorage`, `theme.js` reads it, `style.css` does the fade). It only happens right after logging in.
 
-### Login intro
-- **The full intro is about 2 seconds:** the nest draws its strokes in, each letter of "CLASSNEST" springs in one by one, a soft light sweep passes over the word, a thin line draws under it, "LEARN · GROW · FLY" fades in, and the birds fly out of the nest into a flock. The login appears as the intro ends.
+### Login opening
+A full-screen cinematic text reveal of about 3.6 seconds, made with one GSAP timeline in `login-intro.js`, in this order:
+1. **The reveal:** the screen is pure black, with only "CLASSNEST", very large, in the centre of the whole screen. There is no nest, no birds and no login panel. Each letter springs in one by one.
+2. **The emphasis:** one soft light sweep passes across the whole word. A thin line then draws under it from left to right, and "LEARN · GROW · FLY" fades in below.
+3. **The move:** the word, line and tagline smoothly shrink and move into the left panel.
+4. **The arrival:** only after they arrive, the nest fades in softly above the word, and then the birds fly out of the nest. At the same time, the login panel slides in from the right and fades in.
+
+Rules for the opening:
+- The word never leaves its place in the page. It starts with a transform that shrinks to nothing, so it lands exactly where the finished layout has it, with no jump.
+- Nothing in the left panel may cut off overflow, or the large word gets clipped.
 - There is no Skip button, and clicks and keys never skip it.
-- The full intro plays once per browser session.
-- After that (for example after logging out, or in a new tab) only the quick 0.5-second version plays, with the flock already in the air.
+- The full opening plays once per browser session.
+- After that (for example after logging out, or in a new tab) the finished split layout simply fades in over 0.5 seconds, with the flock already in the air.
 - A safety limit may end it on a stalled computer, so nobody is locked out of logging in.
-- With `prefers-reduced-motion`, or if GSAP can't load, no intro plays: the page shows straight away with a still flock and no letter animation. The still flock still changes colour with the tiles.
+- With `prefers-reduced-motion`, or if GSAP can't load, no opening plays: the finished layout shows straight away with no movement and a still flock. The still flock still changes colour with the tiles.
 
 ### Login performance
-- 40 to 60 birds at most. Their glow is one shared gradient, never a blur or `shadowBlur`.
-- DOM animations use only transform and opacity. The one exception is the nest's strokes during the full intro, which animate `stroke-dashoffset`, because a line can't draw itself any other way. They are thin SVG lines in one small area, and it ends with the intro.
+- 25 to 35 birds. Their glow is one shared gradient, never a blur or `shadowBlur`.
+- DOM animations use only transform and opacity, with no exceptions.
 - The canvas stops while the tab is hidden, and never runs on tablets and phones.
 
 ### Login on phones
-At 860px and below there are no birds: the small logo sits on top and the login below it. The width in `style.css` and in `login-flock.js` must match.
+At 860px and below there are no birds. The same opening plays faster (about 2 seconds), with a word that fits the screen, then the small logo sits on top and the login below it. The width in `style.css`, `login-flock.js` and `login-intro.js` must match.
 
 ### Login exceptions
 The login page is the one place with these exceptions, recorded in [PLAN.md](../../../PLAN.md):
