@@ -95,92 +95,123 @@ textarea {
 }
 
 /* ---------- Buttons ----------
+   Three kinds, all the same size: .btn-primary, .btn-ghost (secondary) and .btn-danger.
    Hover and glow are ready-made layers that fade in. Only their opacity changes, which stays smooth at 60fps.
-   Press uses the "scale" property because GSAP already uses "transform" for the hover lift. */
+   Press uses the "scale" and "translate" properties because GSAP already uses "transform" for the hover lift.
+   GSAP also sets those two to "none" on the button itself, so the press needs !important to win.
+   "border-box" on a background starts its gradient at the outer edge, or it repeats under the top and bottom borders. */
 .btn {
+  --btn-hover: currentColor; /* the colour of the hover layer, and how strongly it shows */
+  --btn-hover-amount: 0.08;
   position: relative;
+  isolation: isolate; /* keeps the hover layer behind the label */
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: var(--space-2);
   max-width: 100%;
-  min-height: var(--control);
-  padding: 0 var(--space-5);
+  min-height: var(--btn-height);
+  padding: 0 var(--btn-pad);
   border: var(--border-width) solid transparent;
   border-radius: var(--radius-btn);
-  font-size: 0.92rem;
-  font-weight: 600;
+  font-size: var(--btn-font-size);
+  font-weight: var(--btn-font-weight);
+  line-height: 1.2;
   text-decoration: none;
   white-space: nowrap;
   cursor: pointer;
-  transition: scale 0.15s ease;
+  transition: scale 0.15s ease, translate 0.15s ease;
 }
 .btn::before,
 .btn::after {
   content: '';
   position: absolute;
-  inset: 0;
+  inset: calc(0px - var(--border-width));
   border-radius: inherit;
   opacity: 0;
   transition: opacity 0.2s ease;
   pointer-events: none;
 }
 .btn::before {
-  background: currentColor;
+  z-index: -1;
+  background: var(--btn-hover);
 }
 .btn:hover:not(:disabled)::before {
-  opacity: 0.08;
+  opacity: var(--btn-hover-amount);
 }
 .btn:active:not(:disabled) {
-  scale: 0.97;
+  scale: 0.985 !important;
+  translate: var(--btn-press-move) !important;
 }
 .btn:active:not(:disabled)::before {
-  opacity: 0.14;
+  opacity: calc(var(--btn-hover-amount) * 1.7);
 }
 .btn:disabled {
   opacity: 0.65;
   cursor: progress;
 }
+.btn svg {
+  flex: none;
+  width: 16px;
+  height: 16px;
+}
 .btn-primary {
-  border-color: var(--btn-edge, transparent);
-  background: var(--primary);
+  --btn-hover: var(--white);
+  border-color: var(--btn-edge);
+  background: var(--btn-fill) border-box;
   color: var(--on-primary);
-  box-shadow: var(--shadow-sm);
-}
-:root[data-theme='light'] .btn-primary {
-  --btn-edge: var(--ink);
-  box-shadow: var(--shadow-sm);
-}
-:root[data-theme='light'] .btn-primary::after {
-  display: none;
+  box-shadow: var(--btn-shadow);
 }
 .btn-primary::after {
-  box-shadow: 0 0 14px var(--glow), 0 0 34px var(--primary-soft);
+  box-shadow: var(--btn-glow);
 }
 .btn-primary:hover:not(:disabled)::after,
 .btn-primary:focus-visible::after {
   opacity: 1;
 }
-.btn-ghost {
-  background: var(--ghost-bg);
-  border-color: var(--border);
-  color: var(--text);
+.btn-primary:active:not(:disabled) {
+  box-shadow: var(--btn-pressed);
 }
+.btn-ghost {
+  border-color: var(--ghost-border);
+  background: var(--ghost-bg) border-box;
+  color: var(--text);
+  box-shadow: var(--ghost-shadow);
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  backdrop-filter: blur(var(--glass-blur));
+}
+.btn-ghost:hover:not(:disabled) {
+  border-color: var(--ghost-border-hover);
+}
+/* Dark with a thin red line. The red only fills in on hover. */
 .btn-danger {
-  background: var(--danger);
+  --btn-hover: var(--danger);
+  --btn-hover-amount: 1;
+  border-color: var(--danger-border);
+  background: var(--ghost-bg) border-box;
+  color: var(--danger);
+  transition: scale 0.15s ease, translate 0.15s ease, color 0.2s ease;
+}
+.btn-danger:hover:not(:disabled) {
   color: var(--on-danger);
 }
 .btn-block {
   width: 100%;
 }
-.btn-small {
-  min-height: var(--control-sm);
-  padding: 0 var(--space-3-5);
-  font-size: 0.85rem;
+/* The "+" of "+ Post assignment", in its small rounded square */
+.btn-plus {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  width: var(--btn-plus);
+  height: var(--btn-plus);
+  margin-left: calc(0px - var(--space-1));
+  border-radius: var(--radius-2xs);
+  background: color-mix(in srgb, currentColor 18%, transparent);
 }
-.btn-small svg {
-  width: 15px;
-  height: 15px;
+.btn-plus svg {
+  width: 12px;
+  height: 12px;
 }
 
 /* Icon button (light/dark toggle, delete, command palette) */
@@ -190,9 +221,9 @@ textarea {
   place-items: center;
   width: var(--control-sm);
   height: var(--control-sm);
-  border: var(--border-width) solid var(--border);
+  border: var(--border-width) solid var(--ghost-border);
   border-radius: var(--radius-sm);
-  background: var(--surface);
+  background: var(--ghost-bg) border-box;
   color: var(--text-muted);
   cursor: pointer;
   transition: scale 0.15s ease;
@@ -208,9 +239,14 @@ textarea {
   width: 18px;
   height: 18px;
 }
-.icon-btn-danger:hover {
-  background: var(--danger-soft);
+.icon-btn-danger {
+  border-color: var(--danger-border);
   color: var(--danger);
+}
+.icon-btn-danger:hover {
+  border-color: var(--danger);
+  background: var(--danger);
+  color: var(--on-danger);
 }
 
 /* Dark mode shows the sun (switch to light); light mode shows the moon */
@@ -416,6 +452,10 @@ html:has(.auth-page) {
   width: clamp(170px, 16vw, 230px);
   height: auto;
   margin-bottom: var(--space-4);
+}
+/* The glow, on the bird only. The size is in the logo's own units, so it shrinks with the logo. */
+.mark-bird {
+  filter: drop-shadow(0 0 var(--mark-blur, 5px) var(--mark-glow));
 }
 .logo-word {
   position: relative;
@@ -641,33 +681,6 @@ html:has(.auth-page) {
   justify-content: space-between;
   gap: var(--space-4);
 }
-.back-link {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-1-5);
-  min-height: 36px;
-  margin-left: calc(-1 * var(--space-3));
-  padding: 0 var(--space-3);
-  border: 0;
-  border-radius: var(--radius-pill);
-  background: transparent;
-  color: var(--text-muted);
-  font-size: 0.9rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: scale 0.15s ease;
-}
-.back-link:hover {
-  background: var(--surface-2);
-  color: var(--text);
-}
-.back-link:active {
-  scale: 0.96;
-}
-.back-link svg {
-  width: 16px;
-  height: 16px;
-}
 .auth-head {
   display: grid;
   gap: var(--space-1-5);
@@ -768,7 +781,7 @@ html:has(.auth-page) {
   min-height: 100vh;
   min-height: 100dvh;
   margin: 0 auto;
-  padding: var(--space-8) var(--space-9) var(--space-10);
+  padding: var(--space-8) var(--page-gutter) var(--space-10);
 }
 .page h1 {
   font-size: clamp(1.75rem, 1.5rem + 1vw, 2.25rem);
@@ -866,6 +879,7 @@ html:has(.auth-page) {
   --surface: var(--sidebar-surface);
   --surface-2: var(--sidebar-hover);
   --primary-text: var(--sidebar-accent); /* keeps the keyboard focus ring visible on the dark background */
+  --mark: var(--white); /* the logo stays white here in light mode too, because this bar stays dark */
   background: var(--sidebar-bg);
   color: var(--text);
 }
@@ -904,9 +918,10 @@ html:has(.auth-page) {
   text-transform: uppercase;
 }
 .brand-mark {
+  --mark-blur: 1.5px;
   flex: none;
-  width: 28px;
-  height: auto;
+  width: 24px;
+  height: 24px;
 }
 .sidebar-tools {
   display: flex;
@@ -1311,19 +1326,7 @@ kbd {
   z-index: 1;
   display: flex;
   flex: none;
-  gap: var(--space-0-5);
-}
-.row-buttons .icon-btn {
-  width: 34px;
-  height: 34px;
-  border-color: transparent;
-  background: transparent;
-}
-.row-buttons .icon-btn:hover {
-  background: var(--surface-2);
-}
-.row-buttons .icon-btn-danger:hover {
-  background: var(--danger-soft);
+  gap: var(--space-1-5);
 }
 .date-block {
   display: grid;
@@ -1588,16 +1591,9 @@ kbd {
 .btn-join {
   z-index: 1; /* stays clickable above the spotlight layer */
   flex: none;
-  min-height: var(--control);
-  padding: 0 var(--space-6);
-  background: var(--join-bg);
+  background: var(--join-bg) border-box;
   color: var(--join-fg);
   box-shadow: var(--join-shadow);
-  font-size: 1rem;
-}
-.btn-join svg {
-  width: 20px;
-  height: 20px;
 }
 
 /* ---------- Assignment detail: the right side of both Assignments pages ---------- */
@@ -1929,7 +1925,7 @@ kbd {
   display: grid;
   gap: var(--space-2-5);
   width: 292px;
-  max-width: calc(100vw - 32px);
+  max-width: calc(100vw - 2 * var(--page-gutter) - 2 * var(--card-pad));
   padding: var(--space-3);
   border: var(--border-width) solid var(--border);
   border-radius: var(--radius);
@@ -2328,7 +2324,7 @@ kbd {
   }
   .page {
     min-height: 0;
-    padding: var(--space-6) var(--space-6) var(--space-10);
+    padding-top: var(--space-6);
   }
   .split.fill {
     grid-template-columns: minmax(0, 1fr);
@@ -2372,7 +2368,7 @@ kbd {
 }
 @media (max-width: 720px) {
   .page {
-    padding: var(--space-5) var(--space-4) var(--space-10);
+    padding-top: var(--space-5);
   }
   .stat-grid {
     gap: var(--space-3);

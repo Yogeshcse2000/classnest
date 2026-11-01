@@ -22,10 +22,14 @@
   const WORD_HEIGHT_SHARE = 0.32; // and the most of its height, for wide, short windows
   const TAGLINE_START_SIZE = 0.6; // the tagline starts smaller than the word's zoom, so it stays quiet under it
   const PHONE_SPEED = 1.7; // phones play the same opening, faster
+  const BIRD_START = { x: -21, y: 34, scale: 0.86 }; // the logo's bird starts low in the nest, in the logo's own units
+  const BIRD_WIPE_START = 170; // how far down the soft edge that uncovers the bird starts, so the bird is hidden
 
   const root = document.documentElement;
   const logo = document.querySelector('.logo');
   const nest = document.getElementById('logo-nest');
+  const bird = document.getElementById('logo-bird');
+  const birdWipe = document.getElementById('logo-bird-wipe');
   const logoName = document.getElementById('logo-name');
   const word = document.getElementById('logo-word');
   const letters = gsap.utils.toArray('.word-letters span');
@@ -48,7 +52,7 @@
 
   function finish() {
     tilt.inert = false;
-    gsap.set([logo, logoName, nest, line, tagline, loginSide, sweep, sweepText, ...letters], { clearProps: 'all' });
+    gsap.set([logo, logoName, nest, bird, birdWipe, line, tagline, loginSide, sweep, sweepText, ...letters], { clearProps: 'all' });
   }
 
   // ---------- The full opening ----------
@@ -83,6 +87,8 @@
     gsap.set(tagline, { scale: TAGLINE_START_SIZE });
     gsap.set(sweep, { x: -wordWidth * 0.45, skewX: -18 });
     gsap.set(sweepText, { x: wordWidth * 0.45, skewX: 18 });
+    gsap.set(bird, { ...BIRD_START, transformOrigin: '50% 50%' });
+    gsap.set(birdWipe, { y: BIRD_WIPE_START });
 
     const timeline = gsap
       .timeline({ onComplete: finish, defaults: { ease: 'power2.out' } })
@@ -108,8 +114,11 @@
       .to(tagline, { scale: 1, duration: 0.8, ease: 'power3.inOut' }, 2.2)
 
       // 3 - 3.6s: once it has arrived, the nest fades in above the word and the login comes in from the right.
-      // The birds leave the nest as soon as it can be seen, and carry on after the opening.
-      .to(nest, { autoAlpha: 1, duration: 0.55, ease: 'none' }, 3)
+      // The logo's bird draws in from the tail up while it lifts off from the nest. Only transforms move.
+      // The flock leaves the nest as soon as it can be seen, and carries on after the opening.
+      .to(nest, { autoAlpha: 1, duration: 0.45, ease: 'none' }, 3)
+      .to(birdWipe, { y: 0, duration: 0.45, ease: 'power1.out' }, 3.1)
+      .to(bird, { x: 0, y: 0, scale: 1, duration: 0.5, ease: 'power3.out' }, 3.1)
       .call(flock.flyFromNest, null, 3.25);
 
     // A phone has no panel beside the logo, so its login simply rises into place

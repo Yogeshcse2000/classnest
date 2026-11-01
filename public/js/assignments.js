@@ -63,7 +63,7 @@ function fileHtml(student) {
 
 function actionHtml(student) {
   if (!student.submission_id) return '<span class="table-muted">Not submitted</span>';
-  return `<a class="btn btn-ghost btn-small" href="/api/admin/submissions/${student.submission_id}/download" download
+  return `<a class="btn btn-ghost" href="/api/admin/submissions/${student.submission_id}/download" download
              aria-label="Download ${escapeHtml(student.name)}'s work">Download .zip</a>`;
 }
 

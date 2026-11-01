@@ -14,8 +14,8 @@ The trainer's mockups in `mockups/` set the layout and the elements of every inn
 - **Every colour, font, radius and spacing value is a CSS variable in one file: `public/css/tokens.css`.** The fonts are loaded there too. Every page links it before `style.css`, so a future change needs only that one place.
 - `style.css` holds no raw colours at all, only `var(--...)`. Padding, margins and gaps use the `--space-*` steps, and corners use the `--radius-*` steps. Never write a colour or a spacing number inside a component.
 - The accent comes from `--primary` and `--primary-text`. Everything derived from it (soft fills, glows, the spotlight, the sidebar's active fill) is worked out from those with `color-mix`, so a role changes only those lines.
-- Only two things can't read CSS variables and keep their own colour: the three favicon files and the `theme-color` tag in `index.html`. The canvas birds read theirs from the `--bird*` tokens, and the logo reads the `--nest-*` and `--egg*` tokens.
-- One height for every control: `--control` (44px) for buttons and inputs, `--control-sm` (36px) for small buttons, filters, search boxes and icon buttons. One padding for every card: `--card-pad`.
+- Only two things can't read CSS variables and keep their own colour: the three favicon files and the `theme-color` tag in `index.html`. The canvas birds read theirs from the `--bird*` tokens, and the logo reads the `--mark*` tokens.
+- One height for every control: `--control` (44px) for inputs, `--btn-height` for every button (40px, and 44px on phones so they are easy to tap), and `--control-sm` (36px) for filters, search boxes and icon buttons. One padding for every card: `--card-pad`.
 
 ### Colours
 - **There is no green anywhere in ClassNest:** not in pages, tags, buttons, charts, focus rings or glows. Use the colours below.
@@ -38,28 +38,34 @@ The trainer's mockups in `mockups/` set the layout and the elements of every inn
 - The login page is always dark.
 
 ### Logo
-A premium 3D emblem that looks like a luxury brand mark, drawn in code as inline SVG. No images or external assets.
-- **The nest:** a round ring of smooth, thick woven bands, seen at a slight 3/4 angle from above. The bands truly pass over and under each other: the "under" bands are painted first, then a soft contact shadow, then the "over" bands on top.
-- **Depth:** every band is polished metal, bright silver along its top edge and dark graphite along its bottom. There is a darker hollow inside, a dark wall along the front and a soft shadow under the whole nest.
-- **The egg:** a small glossy egg in the hollow, with a soft highlight. It is pearl white on the login page, electric blue on admin pages and electric orange on student pages. `tokens.css` picks it with the `--egg*` tokens.
-- **Full logo (login only):** the large nest with eight bands, then "CLASSNEST", then a thin line, then "LEARN · GROW · FLY" in small, wide-spaced uppercase. It is written out in `index.html`.
+A nest with a swallow flying out of it: flat, sharp and minimal, like a luxury brand mark. It is drawn in code as inline SVG, with no images or external assets, and no 3D, metal or egg.
+- **The nest:** a shallow, wide bowl of clean, slightly curved parallel lines, all the same stroke weight, with rounded ends. The lines keep an even gap and get shorter towards the bottom, but stay wide, so the shape reads as a bowl and never as a Wi-Fi symbol.
+- **The bird:** one swallow silhouette, the same shape as the login birds, rising out of the nest at an upward angle, with its tail still inside the bowl.
+- **Colours:** the nest is white on dark and near-black on light (`--mark`). The bird (`--mark-bird`) is soft white on the login page, electric blue on admin pages and electric orange on student pages.
+- **Glow:** a very subtle soft glow on the bird only (`.mark-bird`, using `--mark-glow`), never on the nest.
+- **Full logo (login only):** the large mark with four nest lines, then "CLASSNEST", then a thin line, then "LEARN · GROW · FLY" in small, wide-spaced uppercase. It is written out in `index.html`.
 - **Wordmark:** "CLASSNEST" in uppercase, Clash Display semibold, with slightly wide letter spacing.
-- **Small logo (sidebar):** a simplified nest with five bands and no blur, plus the wordmark, because fine detail turns to mush at 24 pixels. It is in `sidebar.js`. Each copy gets its own id, because the gradients are found by id.
-- **Browser tab:** the same small nest on a black rounded square. `favicon.svg` has the pearl egg (login), `favicon-admin.svg` the blue one and `favicon-student.svg` the orange one.
-- The nest's metal is the same in both themes, and the sidebar is always dark, so it never sits on a light background.
+- **Small logo (sidebar and top bar):** the same mark, simplified to three nest lines and a slightly thicker bird, plus the wordmark, drawn on a 24-unit grid so it stays sharp at 24 pixels. It is `BRAND_MARK` in `sidebar.js`. The sidebar and top bar stay dark, so `--mark` is white there in both themes.
+- **Browser tab:** the same small logo on a rounded square. `favicon.svg` has the white bird on black (login). `favicon-admin.svg` has the blue bird and `favicon-student.svg` the orange one, and these two follow the computer's light or dark setting, because a favicon can't see the app's toggle. A change to the small logo must be made in `sidebar.js` and in all three files.
 
 ## Apple-level discipline
 - **Fonts:** Clash Display (free, from Fontshare, with a system sans-serif fallback) for the wordmark, the tagline, all headings and all big numbers, in both themes. Inter for body text. JetBrains Mono for eyebrows, tags, usernames and countdowns. No other fonts. All are loaded at the top of `tokens.css`.
 - **Headings:** Clash Display semibold. It is a wide font with narrow spaces, so headings get a little extra `word-spacing`. Page headings are 1.75rem to 2.25rem.
-- **Spacing:** 20px between sections and cards (`--space-5`). Page padding is 32px on desktop and 16px on phones.
+- **Spacing:** 20px between sections and cards (`--space-5`). Page side padding is `--page-gutter`, 20px on phones and growing with the screen to 48px on desktop, so nothing touches or overflows the edges at any width.
 - **Cards:** a consistent 18px radius (`--radius`), thin borders and `--card-pad` padding. The login page's cards, inputs and buttons are these same parts, on the same black.
-- **Buttons:** with press and focus states.
+- **Buttons:** three kinds, and every one has the same height, radius, spacing and medium-weight text. There is no small or big size. All the values are the `--btn-*` tokens. Every button has press and focus states.
+  - **Primary (`.btn-primary`):** a subtle vertical gradient from a deeper shade at the bottom to the bright accent at the top, with a thin light line along the top edge, a soft accent glow on hover, and a slight press-down on click. Blue on admin pages, orange on student pages.
+  - **Secondary (`.btn-ghost`):** dark glass with a thin border and a soft highlight on hover. Used for Cancel, Back, Download and other second choices.
+  - **Danger (`.btn-danger`, and `.icon-btn-danger` for icons):** dark with a thin red border. It turns red only on hover.
+  - **A "+":** never typed as text. It is an icon in a small rounded square (`.btn-plus`) at the start of the button, on primary and secondary buttons.
+  - **Press:** GSAP's hover lift owns `transform`, so the press uses the `scale` and `translate` properties.
+  - **Light mode:** the same three kinds with the black border, and a hard offset shadow in place of the glow. A press sinks the button into its shadow.
 
 ## One app: shared parts
 Every page, now and later, is built from these parts. Reuse them instead of making a new version.
 
 - **Sidebar:** built in one place, `sidebar.js`, and added to a page with one script tag at the top of `<body class="app">`. It looks the same on every inner page, for both roles and in both themes, and stays dark in both. A new page goes in its `links` list, with an icon.
-  - **Top row:** the small nest and name on the left. On the right, a search icon and the theme icon, both plain 32px icon buttons with 18px icons. They have no text, no border and no "Ctrl K" label. Search and the theme toggle live here only, never at the bottom.
+  - **Top row:** the small logo and name on the left. On the right, a search icon and the theme icon, both plain 32px icon buttons with 18px icons. They have no text, no border and no "Ctrl K" label. Search and the theme toggle live here only, never at the bottom.
   - **Nav links:** compact rows (32px high, 13px text), each with a 16px line icon on its left. Icons are free Lucide-style inline SVGs in muted grey (75% opacity) until hovered or active.
   - **Which icon:** Dashboard is a layout grid for admins and a home for students. Batches is layers, Students is users, Lectures is a video camera, Assignments is a notebook, Log out is a log-out arrow.
   - **Hover:** a soft highlight (`--sidebar-hover`) that fades in over 150ms, on rows and on the top icons. It is a `::before` layer behind the item, so only its opacity animates.
@@ -119,7 +125,7 @@ A full-screen cinematic text reveal of about 3.6 seconds, made with one GSAP tim
 1. **The reveal:** the screen is pure black, with only "CLASSNEST", very large, in the centre of the whole screen. There is no nest, no birds and no login panel. Each letter springs in one by one.
 2. **The emphasis:** one soft light sweep passes across the whole word. A thin line then draws under it from left to right, and "LEARN · GROW · FLY" fades in below.
 3. **The move:** the word, line and tagline smoothly shrink and move into the left panel.
-4. **The arrival:** only after they arrive, the nest fades in softly above the word, and then the birds fly out of the nest. At the same time, the login panel slides in from the right and fades in.
+4. **The arrival:** only after they arrive, the logo fades in softly above the word. Its bird draws in from the tail up and lifts off from the nest, moved only by a transform and a mask, and then the flock flies out of the nest. At the same time, the login panel slides in from the right and fades in.
 
 Rules for the opening:
 - The word never leaves its place in the page. It starts with a transform that shrinks to nothing, so it lands exactly where the finished layout has it, with no jump.

@@ -193,7 +193,7 @@ function createFlock(canvas, nest) {
     const angle = -Math.PI / 2 + (Math.random() - 0.5) * 2.2; // out of the top of the nest, in a wide fan
     const speed = (MIN_SPEED + MAX_SPEED) / 2;
     bird.x = nestBox.left - panelBox.left + nestBox.width * (0.3 + Math.random() * 0.4);
-    bird.y = nestBox.top - panelBox.top + nestBox.height * 0.4;
+    bird.y = nestBox.top - panelBox.top + nestBox.height * 0.6; // the top line of the nest
     bird.vx = Math.cos(angle) * speed;
     bird.vy = Math.sin(angle) * speed;
     bird.heading = angle;

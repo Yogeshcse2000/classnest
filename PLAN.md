@@ -32,9 +32,9 @@ Project rules are in [CLAUDE.md](CLAUDE.md). Design and animation rules are in t
 | Design tokens | Every colour, font, radius and spacing value is a CSS variable in `public/css/tokens.css`, and `style.css` only uses those names. Only the three favicon files and the `theme-color` tag keep their own colour, because they can't read CSS. |
 | Colours | Pure black base, electric blue for admins, electric orange for students. **No green anywhere.** Status colours keep their meaning: On time is a calm blue-white, Late is coral, Missing is red, Pending and Live now are amber. |
 | Theme | Dark by default. The toggle in the sidebar switches to light, and the choice is remembered. Light mode is the mockups' style: cream page, thick black borders, hard shadows, and the same blue and orange, in a deeper shade for text. Both themes use the same layout. |
-| Rebrand | Done: the colours, the font, the 3D logo, the login page and the inner pages. |
+| Rebrand | Done: the colours, the font, the logo, the buttons, the login page and the inner pages. |
 | Fonts | Clash Display (free, from Fontshare) for the wordmark, headings and big numbers. Inter for body text, JetBrains Mono for small labels. They are loaded in `tokens.css`. |
-| Logo | A 3D woven nest drawn as SVG in code, with no images. The egg is pearl on the login page, blue for admins and orange for students. The sidebar and browser tab use a simpler version with fewer bands. |
+| Logo | A flat line-art nest with a swallow flying out of it, drawn as SVG in code, with no images. The bird is soft white on the login page, blue for admins and orange for students. The sidebar and browser tab use a simpler version with fewer nest lines. |
 | Breadcrumb | On every inner page, built in `sidebar.js`, so a change there reaches all pages. The Assignments pages add the chosen assignment's name. |
 | Mockups | The trainer's mockups in `mockups/` set the layout and elements of every inner page. The name stays ClassNest, with its logo. Batches and Lectures have no mockup, so they follow the Students page: a form card and a list. |
 | Layout | Every inner page has one fixed sidebar, built in `sidebar.js`, so a change there reaches all pages. At 960px and below it becomes a slide-out menu. |

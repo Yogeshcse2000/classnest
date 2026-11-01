@@ -70,7 +70,7 @@
         }
         <div class="picker-foot">
           <button class="text-link" type="button" data-today>Today</button>
-          <button class="btn btn-primary btn-small" type="button" data-done>Done</button>
+          <button class="btn btn-primary" type="button" data-done>Done</button>
         </div>
       </div>`;
     wrapper.prepend(input);

@@ -540,3 +540,36 @@ Test it yourself quickly: the full opening in a fresh InPrivate window, the quic
 
 Test it yourself quickly (no tester agent): the login opening in a fresh InPrivate window, admin and student login, every inner page for both roles, the logo at large and small sizes, light and dark mode, desktop and mobile, no console errors. Then give me a short report. Add this prompt to PROMPTS.md.
 ```
+
+## Prompt 26 - New nest and bird logo, premium buttons (2026-11-01)
+
+```
+/classnest-ui Read CLAUDE.md first. Replace the logo and make all buttons premium. Don't change any app logic, layouts, features, or the login opening animation flow.
+A previous session started this task and stopped at the usage limit, so some files may already be changed. First run git status and git diff to see what is already done, then finish only the remaining parts. Don't redo work that is already correct.
+
+1. New logo: a nest with a bird flying out of it (original, drawn in code as SVG, no images, no 3D, no egg).
+- The nest: a shallow, wide bowl shape made of 3 to 4 clean, smooth, slightly curved parallel lines, like a refined line-art emblem. Same stroke weight, rounded line ends, perfectly balanced.
+- The bird: one elegant swallow silhouette (same style as the login page birds) rising out of the nest at an upward angle, as if just taking off.
+- Style: flat, sharp and minimal, like a luxury brand mark. White on dark, near-black in light mode.
+- The bird gets the accent colour: electric blue on admin pages, electric orange on student pages, soft white on the login page.
+- A very subtle glow on the bird only, nothing heavy.
+- Small size version (sidebar and browser tab): same mark, simplified, sharp at 24px.
+- Replace the old metallic nest and egg everywhere (login, sidebar, browser tab).
+- On the login page, keep the opening flow: the logo appears after the word moves to the left. Add one small touch: the bird draws in and lifts off from the nest.
+
+2. Premium buttons (all pages, both roles):
+- Primary buttons (like "+ Post assignment", "Create batch", "Release lecture", "Enroll student", "Upload"): a subtle vertical gradient from a deeper shade to the brighter accent, a thin light highlight line on the top edge, a soft accent glow on hover, a slight press-down effect on click. Medium height, medium-weight text, not big and heavy.
+- The "+" sits in a small rounded square inside the button.
+- Secondary buttons (like "+ Release lecture" on the dashboard, "Cancel", "Back"): dark glass style with a thin border and a soft highlight on hover.
+- Danger buttons (delete): dark with a thin red border, red only on hover.
+- Same height, radius and spacing for every button.
+- Use the electric blue accent on admin pages and the electric orange accent on student pages.
+
+3. Fix: the "+ Post assignment" button touches the right edge of the admin dashboard. Add proper right padding to the page, so nothing touches or overflows the edges at any screen width.
+
+4. Update the classnest-ui skill and CLAUDE.md with the new logo and button rules, and remove the old metallic nest and egg rules.
+
+Safety: keep all existing button ids, classes used by JavaScript, and form names. Change styling only.
+
+Test it yourself quickly (no tester agent): the logo at large and small sizes, every primary, secondary and delete button on both roles, light and dark mode, desktop and mobile. Add this prompt to PROMPTS.md.
+```
