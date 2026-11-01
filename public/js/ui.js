@@ -99,9 +99,10 @@ function deadlineTagClass(minutes) {
   return minutes < DEADLINE_SOON_MINUTES ? 'tag tag-amber' : 'tag tag-accent';
 }
 
-// A student's deadline tag, filled in by showDeadlineTags. Work that was never handed in already has a Closed tag.
+// A student's deadline tag, filled in by showDeadlineTags. Only work still to do has one: work that was handed in
+// already has a Submitted or Late tag, and work that was never handed in already has a Closed tag.
 function deadlineTagHtml({ due_at, deadline_status, submission_status }) {
-  if (deadline_status === 'closed' && submission_status === 'Not submitted') return '';
+  if (deadline_status === 'closed' || submission_status !== 'Not submitted') return '';
   return `<span class="tag" data-due="${escapeHtml(due_at)}"></span>`;
 }
 

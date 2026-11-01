@@ -422,20 +422,24 @@ html:has(.auth-page) {
   overflow-x: clip; /* without this, the browser moves the rule above from <body> to the page, where it no longer clips */
 }
 
-/* The left half. The canvas sits above the logo, so the birds fly in front of it.
+/* The left half. The canvas has a z-index below zero, so the birds fly behind the logo and never cover the letters.
+   The hover colours (see .word-flow) blend with everything in this panel, so the panel keeps its own black background.
    Nothing here may cut off overflow: the opening shows the word across the whole screen from inside this panel. */
 .auth-brand {
   position: sticky;
   top: 0;
+  isolation: isolate;
   display: grid;
   place-items: center;
   height: 100vh;
   height: 100dvh;
   padding: var(--space-8);
+  background: var(--bg);
 }
 .flock {
   position: absolute;
   inset: 0;
+  z-index: -1;
   width: 100%;
   height: 100%;
   pointer-events: none;
@@ -448,6 +452,12 @@ html:has(.auth-page) {
   justify-items: center;
   width: fit-content;
 }
+.logo-mark {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  justify-self: stretch;
+}
 .logo-nest {
   width: clamp(170px, 16vw, 230px);
   height: auto;
@@ -459,9 +469,7 @@ html:has(.auth-page) {
 }
 .logo-word {
   position: relative;
-  isolation: isolate; /* keeps the hover colours inside the word */
   padding-left: 0.14em; /* the wide spacing also adds room after the last letter, so this keeps the word centred */
-  background: var(--bg);
   color: var(--text);
   font-family: var(--font-head);
   font-size: clamp(1.9rem, 3.2vw, 3rem);
@@ -495,8 +503,11 @@ html:has(.auth-page) {
   color: var(--white);
   text-shadow: 0 0 14px var(--white), 0 0 26px var(--white);
 }
-/* Hovering the word: a wide gradient slides sideways behind a "multiply" layer. Multiply keeps black as black and
-   turns white into the gradient, so the colour shows only inside the letters. Only transform and opacity change. */
+/* Hovering the logo or the word lights up both: a wide gradient slides sideways behind a "multiply" layer on each.
+   Multiply keeps black as black and turns white into the gradient, so the colour shows only inside the lines, the bird
+   and the letters. Only transform and opacity change. Nothing between this layer and .auth-brand may become its own
+   stacking layer (with a transform, opacity or filter), or the gradient shows as a box. login-intro.js turns the hover
+   off while it animates those parts. */
 .word-flow {
   position: absolute;
   inset: 0;
@@ -515,10 +526,10 @@ html:has(.auth-page) {
   background: var(--word-flow) 0 0 / 50% 100%;
   animation: word-flow 3.2s linear infinite paused;
 }
-.logo-word:hover .word-flow {
+.logo:has(.logo-nest:hover, .logo-word:hover) .word-flow {
   opacity: 1;
 }
-.logo-word:hover .word-flow span {
+.logo:has(.logo-nest:hover, .logo-word:hover) .word-flow span {
   animation-play-state: running;
 }
 @keyframes word-flow {
@@ -1843,6 +1854,14 @@ kbd {
 .table .mono {
   font-size: var(--font-small);
 }
+/* A username stays on one line, and ends in "…" if it is very long or its row has no room */
+.table-username {
+  display: block;
+  max-width: var(--username-width);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 .table .table-name {
   font-weight: 600;
   overflow-wrap: break-word; /* a name or username stays whole unless it truly can't fit */
@@ -2472,6 +2491,9 @@ kbd {
   .table td {
     padding-inline: var(--space-1);
   }
+  .table-username {
+    max-width: var(--username-width-tight);
+  }
 }
 
 /* A table too narrow for its columns turns each row into a small block, with a label on each line.
@@ -2507,6 +2529,9 @@ kbd {
   }
   .table td[data-label] .cell-stack {
     justify-items: end;
+  }
+  .table-username {
+    max-width: none; /* it has its own line here, so only that line's width can shorten it */
   }
   .table td[data-label]::before {
     content: attr(data-label);

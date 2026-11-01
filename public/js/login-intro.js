@@ -80,7 +80,8 @@
     const sweepTravel = wordWidth * 1.5;
     const { zoom, x, y } = wordInTheMiddle();
 
-    gsap.set(logoName, { x, y, scale: zoom, pointerEvents: 'none' });
+    gsap.set(logo, { pointerEvents: 'none' }); // no hover colours until the logo has settled (see .word-flow in style.css)
+    gsap.set(logoName, { x, y, scale: zoom });
     gsap.set([nest, tagline, loginSide], { autoAlpha: 0 });
     gsap.set(letters, { autoAlpha: 0, scale: 0, y: 14, transformOrigin: '50% 70%' });
     gsap.set(line, { scaleX: 0, scaleY: 1 / zoom, transformOrigin: '0 50%' }); // stays one pixel thin at any zoom
@@ -162,6 +163,7 @@
   // The finished split layout, which simply fades in with the flock already in the air
   function playQuick() {
     tilt.inert = true;
+    gsap.set(logo, { pointerEvents: 'none' }); // no hover colours until the logo has settled (see .word-flow in style.css)
     gsap.set([logo, loginSide], { autoAlpha: 0 });
     root.classList.remove('intro-pending');
     flock.flyAtOnce();

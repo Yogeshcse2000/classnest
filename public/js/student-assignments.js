@@ -82,17 +82,19 @@ function countdownText(milliseconds) {
   return days ? `${days}d ${clock}` : clock;
 }
 
-// A wrong clock on this computer changes nothing, because clockGap cancels it out
+// A wrong clock on this computer changes nothing, because clockGap cancels it out.
+// Once work is handed in, the deadline is no longer urgent, so the box keeps its calm colour.
 function showCountdown() {
   showDeadlineTags(clockGap);
   if (!dueAt) return;
   const left = new Date(dueAt).getTime() - (Date.now() + clockGap);
   const closed = left <= 0;
-  const urgent = !closed && left < DEADLINE_URGENT_MINUTES * 60000;
+  const handedIn = !currentWork.hidden;
+  const urgent = !closed && !handedIn && left < DEADLINE_URGENT_MINUTES * 60000;
   countdown.textContent = closed ? 'Closed' : countdownText(left);
   timeBox.classList.toggle('is-closed', closed);
   timeBox.classList.toggle('is-urgent', urgent);
-  timeBox.classList.toggle('is-soon', !closed && !urgent && left < DEADLINE_SOON_MINUTES * 60000);
+  timeBox.classList.toggle('is-soon', !closed && !handedIn && !urgent && left < DEADLINE_SOON_MINUTES * 60000);
   element('late-note').hidden = !closed;
 }
 

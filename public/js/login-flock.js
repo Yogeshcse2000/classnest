@@ -6,7 +6,7 @@
 function createFlock(canvas, nest) {
   const ctx = canvas.getContext('2d');
   const panel = canvas.parentElement;
-  const logo = nest.parentElement;
+  const logo = nest.closest('.logo');
   const wideScreen = window.matchMedia('(min-width: 861px)'); // no birds on tablets and phones (same width as style.css)
 
   const BIRD_COUNT = 30;

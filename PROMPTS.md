@@ -629,3 +629,19 @@ Safety: keep all ids and classes used by JavaScript. Change styling only.
 
 Test it yourself quickly (no tester agent): use the demo data to see every deadline colour and every status tag, check both roles, light and dark mode, desktop and mobile. Add this prompt to PROMPTS.md.
 ```
+
+## Prompt 29 - Logo hover, birds behind the brand, submitted work and usernames (2026-11-01)
+
+```
+/classnest-ui Small changes only. Don't change layouts, features, logic, or the login flow.
+
+1. Logo hover on the login page: give the nest-and-bird logo the same hover effect as the "CLASSNEST" word. When the cursor is over the logo, a moving electric-blue-to-electric-orange gradient flows through the logo's lines and the bird, with the same speed, colours and soft glow as the word. When the cursor leaves, it smoothly returns to white. Hovering either the logo or the word lights up both together.
+
+2. Birds behind the brand: the flock must fly behind the logo, the word and the tagline (lower layer), so they never cover the letters.
+
+3. Submitted work: once a student has submitted an assignment, don't show the red or amber urgency tag or pulse for it. Show the "Submitted" tag instead (or "Late" if it was late).
+
+4. Students table: usernames must never break across lines (for example "kabir." / "singh"). Keep each username on one line, and shorten with "…" if there's really no space.
+
+Safety: keep all ids and classes used by JavaScript. Don't run browser tests. Just make sure there are no code errors. Add this prompt to PROMPTS.md.
+```

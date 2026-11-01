@@ -26,7 +26,7 @@ let students = [];
 
 // ---------- Student list ----------
 
-// <wbr> marks a spot where the browser may wrap, so a long email or username breaks at a dot or @, not inside a word
+// <wbr> marks a spot where the browser may wrap, so a long email breaks at a dot or @, not inside a word
 function wrapAtDots(value) {
   return escapeHtml(value).replace(/[.@]/g, '$&<wbr>');
 }
@@ -37,7 +37,7 @@ function studentRowHtml(student) {
       <td class="table-name">${escapeHtml(student.name)}</td>
       <td class="table-muted" data-label="Email">${wrapAtDots(student.email || '')}</td>
       <td data-label="Batch">${escapeHtml(student.batch_name)}</td>
-      <td data-label="Username"><span class="mono">${wrapAtDots(student.username)}</span></td>
+      <td data-label="Username"><span class="mono table-username" title="${escapeHtml(student.username)}">${escapeHtml(student.username)}</span></td>
       <td class="table-action">
         <button class="btn btn-ghost" type="button" data-reset="${student.id}"
                 aria-label="Reset password for ${escapeHtml(student.name)}">Reset password</button>

@@ -82,7 +82,7 @@ Every page, now and later, is built from these parts. Reuse them instead of maki
 - **Stat cards:** an icon inside a small rounded square (`.stat-icon`), the big number in Clash Display, the label below it in semibold 16px, then a short note in regular grey 14px, so each card is easy to scan. On hover, `.stat-glow` lets a soft accent glow and a faint dot pattern rise from the bottom, using only transform and opacity.
 - **Panels:** `.panel-head` holds the title, then a `.count` like `(6)`, and on the right a search box, filter or `.text-link`.
 - **Rows:** `.row-card` for lectures and assignments, with a `.date-block` for anything on a date. The row for today gets `.is-today`.
-- **Tables:** `.table` inside a `.panel`, with uppercase column names. Give every cell except the first a `data-label`. When the panel gets narrow, on a phone or beside a list on a small laptop, each row turns into labelled lines.
+- **Tables:** `.table` inside a `.panel`, with uppercase column names. Give every cell except the first a `data-label`. When the panel gets narrow, on a phone or beside a list on a small laptop, each row turns into labelled lines. A username in the Students table stays on one line (`.table-username`) and ends in "…" only when there is no room.
 - **Tags:** every status is a `.tag` from `tagHtml()`, the same on every page for both roles. Tags are always filled, with readable text: a strong tint on dark, and solid colour with a black border on light.
 
 | Style | Used for |
@@ -95,7 +95,7 @@ Every page, now and later, is built from these parts. Reuse them instead of maki
 | quiet (grey) | Closed, Done, Not started |
 | calm (a soft blue-white) | Upcoming, Started |
 
-- **Deadlines:** time left is always a tag, never plain text. `deadlineTagClass()` in `ui.js` picks the colour, and after the deadline the tag is a grey "Closed". On student pages, `deadlineTagHtml()` makes the tag and `showDeadlineTags()` fills it in by the server's clock, so it changes by itself. The big "Time left" box follows the same colours (`.is-soon`, `.is-urgent`, `.is-closed`). The pulse changes only opacity, stops with reduced motion, and must never restart on a countdown tick.
+- **Deadlines:** time left is always a tag, never plain text. `deadlineTagClass()` in `ui.js` picks the colour, and after the deadline the tag is a grey "Closed". On student pages, `deadlineTagHtml()` makes the tag and `showDeadlineTags()` fills it in by the server's clock, so it changes by itself. The big "Time left" box follows the same colours (`.is-soon`, `.is-urgent`, `.is-closed`). The pulse changes only opacity, stops with reduced motion, and must never restart on a countdown tick. Once a student has handed work in, it has no deadline tag, only its Submitted or Late tag, and the big box keeps its calm colour.
 - **Filters:** `.pill` buttons with a count, and `aria-pressed` on the active one.
 - **Dates:** every date on a form uses the picker (`data-picker="date"` or `"datetime"`), never the browser's own. Dates in the page use `formatDateTime()`, like "Nov 4, 4:38 AM IST", always in India time and always labelled IST.
 - **Time ago:** `timeAgo()`, like "10 min ago", "1 h ago", "Yesterday".
@@ -107,8 +107,8 @@ Every page, now and later, is built from these parts. Reuse them instead of maki
 A split screen: black, minimal and classy. It is **neutral black and white until a role is hovered or chosen**. Then the accent, the focus rings and the birds take that role's colour. `login.js` sets `data-accent` on `<body>`, and `tokens.css` does the rest. Don't put `data-role` on the login page's `<html>`: `login.js` finds its tiles with `[data-role]`.
 
 ### Left panel
-- The full logo on pure black, with a canvas of birds above it.
-- Hovering the word shows a moving electric-blue-to-electric-orange gradient inside the letters, **never purple or pink**. Blue and orange meet in white, because mixed directly they turn grey or purple. A wide gradient slides behind a `multiply` layer, so only transform and opacity change.
+- The full logo on pure black, with a canvas of birds on a lower layer, so they fly behind the logo, the word and the tagline and never cover them.
+- Hovering the logo or the word lights up both together: a moving electric-blue-to-electric-orange gradient inside the logo's lines, its bird and the letters, **never purple or pink**. Blue and orange meet in white, because mixed directly they turn grey or purple. A wide gradient slides behind a `multiply` layer (`.word-flow`) on each, so only transform and opacity change. Multiply blends with the whole left panel, so nothing between that layer and `.auth-brand` may have a transform, opacity or filter once the page has settled, or the gradient shows as a box.
 - **Birds:** 25 to 35 premium birds in `login-flock.js`, flying as a simple boids flock that glides around the logo and softly follows the mouse inside the panel.
   - Each is a soft, elegant swallow silhouette with two curved crescent wings and a forked tail, never an arrow or a triangle.
   - Wings beat gently, each bird at its own speed. Sizes vary, and smaller birds are fainter and slower, for depth.
