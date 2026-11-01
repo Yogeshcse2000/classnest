@@ -630,6 +630,21 @@ Safety: keep all ids and classes used by JavaScript. Change styling only.
 Test it yourself quickly (no tester agent): use the demo data to see every deadline colour and every status tag, check both roles, light and dark mode, desktop and mobile. Add this prompt to PROMPTS.md.
 ```
 
+## Prompt 30 - Full pre-submission test (2026-11-01)
+
+```
+Use the tester agent to run a FULL test of ClassNest before submission. Use a copy of the database and a test uploads folder, so my real data stays clean.
+
+Check all 14 must-have items from PLAN.md, as admin AND as student:
+- Admin: login and protected pages, create and delete batches, enroll students with credentials, reset password, release lectures, post assignments, see who submitted and who is late, download zips.
+- Student: login, sees only their own batch, "Join live" opens Meet in a new tab, deadlines and time left, zip upload (only .zip, size limit, late flag, re-upload).
+- Core: data survives a server restart, and npm start runs the whole app.
+- Security: protected API routes, hashed passwords, no .env, node_modules or uploads in Git.
+- Every button on every page works, in light and dark mode, on desktop and mobile, with no console errors.
+
+Don't fix anything. Give me a short pass/fail report with clear steps for each bug. Add this prompt to PROMPTS.md.
+```
+
 ## Prompt 29 - Logo hover, birds behind the brand, submitted work and usernames (2026-11-01)
 
 ```
