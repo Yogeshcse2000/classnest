@@ -591,3 +591,41 @@ Read CLAUDE.md and PLAN.md first. Two small additions. Don't change the design, 
 
 Test it yourself quickly (no tester agent): reset a password and log in with the new one, run the seed twice to check nothing duplicates, and check both dashboards show the demo data. Add this prompt to PROMPTS.md.
 ```
+
+## Prompt 28 - Small UI polish: deadlines, lectures, tags and readability (2026-11-01)
+
+```
+/classnest-ui Read CLAUDE.md first. Small UI polish only. Don't change layouts, features, logic, data, or the login flow.
+
+1. Login opening:
+- Make the big "CLASSNEST" word in the opening about 20% smaller. Keep the animation, timing and the move to the left exactly the same.
+
+2. Deadlines easy to notice (student dashboard, student assignments page, admin assignments page):
+- Show "time left" inside a small coloured tag, not as plain text.
+- More than 24 hours left: neutral tag with the role accent colour.
+- Less than 24 hours: amber tag.
+- Less than 6 hours: red tag with a very soft pulse.
+- After the deadline: grey "Closed" tag.
+- On the student submit page, the big "Time left" box uses the same colour rule.
+
+3. Lectures easy to notice:
+- In upcoming lectures, make the time part bold (for example "Starts in **2 hours**").
+- The "Live now" card stands out clearly from the other cards: a slightly brighter border in the accent colour, a soft glow, a pulsing red "LIVE" dot, and the "Join live" button as the biggest, brightest button on the page.
+
+4. Status tags, the same everywhere for both roles (no green):
+- Pending: amber.
+- Submitted and On time: the role accent colour (blue for admin, orange for student).
+- Late: red.
+- Missing: grey with a red outline.
+- Closed: grey.
+- Use filled tags with readable text, not just outlined grey ones.
+
+5. Readability:
+- Make muted grey text a little brighter (good contrast on black) and slightly bigger (at least 14px).
+- Card labels, numbers and sub-lines must look clearly different (size and weight), so each card is easy to scan.
+- Check the same in light mode.
+
+Safety: keep all ids and classes used by JavaScript. Change styling only.
+
+Test it yourself quickly (no tester agent): use the demo data to see every deadline colour and every status tag, check both roles, light and dark mode, desktop and mobile. Add this prompt to PROMPTS.md.
+```

@@ -24,7 +24,7 @@
   --surface-2: rgba(255, 255, 255, 0.06); /* soft tracks and hovers */
   --field: rgba(255, 255, 255, 0.04);
   --text: #f2f2f4;
-  --text-muted: #9c9ca4;
+  --text-muted: #b6b6be;
   --border: rgba(255, 255, 255, 0.09);
   --border-strong: rgba(255, 255, 255, 0.22);
   --edge: rgba(255, 255, 255, 0.04); /* the thin light along the top of a card */
@@ -36,26 +36,24 @@
   --on-primary: var(--white); /* text on a solid accent button */
   --sidebar-accent: var(--blue-bright); /* the sidebar is dark in both themes, so this stays bright */
 
-  /* Status colours. They keep their meaning on every page and never use the accent. */
+  /* Status colours. They keep their meaning on every page. Submitted and On time use the role's accent (--accent-bg). */
   --amber: #ffbe46; /* "Live now", Pending and the last 24 hours before a deadline */
-  --peach: #ff9d85; /* Late */
-  --danger: #ff6b6b; /* Missing, and everything that goes wrong */
-  --calm: #bccdf5; /* On time, Submitted, Upcoming, Started, time left */
+  --danger: #ff6b6b; /* Late, the last 6 hours before a deadline, and everything that goes wrong */
+  --calm: #bccdf5; /* Upcoming, Started */
   --on-danger: #1f0606;
   --danger-soft: rgba(255, 107, 107, 0.14);
 
-  --calm-bg: rgba(188, 205, 245, 0.11);
+  --calm-bg: rgba(188, 205, 245, 0.22);
   --calm-fg: var(--calm);
-  --amber-bg: rgba(255, 190, 70, 0.13);
+  --amber-bg: rgba(255, 190, 70, 0.24);
   --amber-fg: var(--amber);
-  --peach-bg: rgba(255, 157, 133, 0.13);
-  --peach-fg: var(--peach);
-  --red-bg: var(--danger-soft);
-  --red-fg: var(--danger);
-  --quiet-bg: var(--surface-2);
-  --quiet-fg: var(--text-muted);
+  --red-bg: rgba(255, 107, 107, 0.26);
+  --red-fg: #ff9e9e;
+  --quiet-bg: rgba(255, 255, 255, 0.13);
+  --quiet-fg: #d2d2d8;
   --tag-line: 1px;
-  --tag-mix: 30%; /* how much of the text colour shows in a tag's border */
+  --tag-edge: color-mix(in srgb, currentColor 30%, transparent);
+  --tag-pulse: 0 0 10px var(--danger); /* the soft pulse in a deadline's last 6 hours */
 
   --dot: rgba(255, 255, 255, 0.05); /* the faint dot grid */
   --shine: rgba(255, 255, 255, 0.07); /* skeleton shimmer */
@@ -66,7 +64,7 @@
   --sidebar-width: 236px;
   --sidebar-bg: #0a0a0b;
   --sidebar-text: #f2f2f4;
-  --sidebar-muted: #a6a6ae;
+  --sidebar-muted: #bcbcc4;
   --sidebar-border: rgba(255, 255, 255, 0.1);
   --sidebar-edge: var(--sidebar-border);
   --sidebar-surface: rgba(255, 255, 255, 0.05);
@@ -77,7 +75,7 @@
   --row-bg: transparent;
   --ghost-bg: linear-gradient(to bottom, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.03)); /* dark glass */
   --eyebrow: var(--primary-text);
-  --live-dot: var(--amber);
+  --live-dot: var(--danger);
 
   --stat-a: var(--surface);
   --stat-b: var(--surface);
@@ -91,15 +89,20 @@
   --selected-shadow: none;
 
   --hero-fg: var(--text);
-  --hero-border: var(--primary);
+  --hero-border: var(--primary-text);
   --hero-pill-bg: var(--amber-bg);
   --hero-pill-fg: var(--amber-fg);
   --hero-pill-border: transparent;
-  --join-bg: var(--btn-fill);
+  /* "Join live class": the one button that is bigger and brighter than the rest */
+  --join-height: 3.25rem;
+  --join-pad: var(--space-8);
+  --join-font-size: 1.0625rem;
+  --join-edge: transparent;
   --join-fg: var(--on-primary);
+  --join-hover: var(--white);
 
-  --time-bg: var(--calm-bg);
-  --time-fg: var(--calm-fg);
+  --time-bg: var(--accent-bg);
+  --time-fg: var(--accent-fg);
   --time-border: transparent;
   --drop-line: 1.5px;
   --drop-border: var(--border);
@@ -136,6 +139,8 @@
   --font-head: 'Clash Display', system-ui, sans-serif; /* the wordmark, headings and big numbers */
   --font-body: 'Inter', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, Consolas, monospace;
+  --font-small: 0.875rem; /* the smallest size for grey text */
+  --font-tag: 0.75rem;
 
   /* Corners and lines */
   --radius: 18px;
@@ -189,8 +194,12 @@
   --link: var(--primary-text);
   --today-bg: var(--primary-soft);
   --selected-bg: var(--primary-soft);
+  --accent-bg: color-mix(in srgb, var(--primary) 26%, transparent); /* Submitted, On time and a far-off deadline */
+  --accent-fg: var(--primary-text);
   --hero-bg: linear-gradient(120deg, var(--primary-soft), var(--surface) 62%);
-  --join-shadow: var(--btn-shadow), 0 0 22px var(--glow);
+  --hero-glow: 0 0 44px var(--primary-soft);
+  --join-bg: linear-gradient(to top, var(--primary), color-mix(in srgb, var(--primary) 84%, var(--white)));
+  --join-shadow: var(--btn-shadow), 0 0 32px var(--glow);
   --btn-fill: linear-gradient(to top, color-mix(in srgb, var(--primary) 82%, var(--black)), var(--primary)); /* deeper at the bottom, bright at the top */
   --btn-shadow: inset 0 1px 0 var(--btn-shine), var(--shadow-sm);
   --btn-glow: 0 0 18px var(--primary-soft), 0 0 6px var(--primary-faint);
@@ -232,7 +241,7 @@
   --surface-2: #f8f1e4;
   --field: var(--white);
   --text: var(--ink);
-  --text-muted: #5a5c6a;
+  --text-muted: #4a4c59;
   --border: var(--ink);
   --edge: transparent;
   --border-width: 2px;
@@ -267,19 +276,19 @@
   --line: #e9e1d2;
   --ghost-bg: var(--white);
   --eyebrow: #4a4c59;
-  --live-dot: #e5484d;
 
   --tag-line: 1.5px;
-  --tag-mix: 100%;
-  --calm-bg: #e3ebff;
+  --tag-edge: var(--ink);
+  --tag-pulse: 0 0 0 2px var(--danger);
+  --accent-bg: var(--primary);
+  --accent-fg: var(--on-primary);
+  --calm-bg: #d6e2ff;
   --calm-fg: var(--ink);
-  --amber-bg: #fff0c2;
+  --amber-bg: #ffc94d;
   --amber-fg: var(--ink);
-  --peach-bg: #ffe3d6;
-  --peach-fg: var(--ink);
-  --red-bg: #ffdcd8;
-  --red-fg: var(--ink);
-  --quiet-bg: #efece4;
+  --red-bg: var(--danger);
+  --red-fg: var(--white);
+  --quiet-bg: #e3e1da;
   --quiet-fg: var(--ink);
 
   --stat-a: #e3ebff;
@@ -298,15 +307,16 @@
   --hero-bg: var(--primary);
   --hero-fg: var(--on-primary);
   --hero-border: var(--ink);
+  --hero-glow: 6px 6px 0 var(--ink);
   --hero-pill-bg: var(--white);
   --hero-pill-fg: var(--ink);
   --hero-pill-border: var(--ink);
-  --join-bg: var(--ink);
-  --join-fg: var(--white);
-  --join-shadow: 4px 4px 0 var(--white);
+  --join-bg: var(--white);
+  --join-fg: var(--ink);
+  --join-edge: var(--ink);
+  --join-hover: var(--primary);
+  --join-shadow: 4px 4px 0 var(--ink);
 
-  --time-bg: #e3ebff;
-  --time-fg: var(--ink);
   --time-border: var(--ink);
   --drop-line: 2px;
   --drop-border: var(--ink);

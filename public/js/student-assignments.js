@@ -4,7 +4,6 @@
 
 const REFRESH_MS = 30000; // deadlines can change, so ask the server again every 30 seconds
 const COUNTDOWN_MS = 250; // checked often, so a timer running slightly early or late can't make a second stall or skip
-const DAY_MS = 24 * 60 * 60 * 1000;
 const MAX_SIZE = 10 * 1024 * 1024; // 10 MB
 
 const CLIPBOARD_ICON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 2h6v4H9zM9 12h6M9 16h4"/></svg>`;
@@ -43,7 +42,7 @@ function assignmentRowHtml(assignment) {
       <button class="pick-row" type="button" data-select="${assignment.id}">
         <strong>${escapeHtml(assignment.title)}</strong>
         <span>Due ${formatDateTime(assignment.due_at)}</span>
-        <span class="pick-foot">${assignmentTagHtml(assignment)}</span>
+        <span class="pick-foot">${assignmentTagHtml(assignment)}${deadlineTagHtml(assignment)}</span>
       </button>
     </li>`;
 }
@@ -67,6 +66,7 @@ function showList(assignments) {
     shownList = html;
     list.innerHTML = html;
     list.removeAttribute('aria-busy');
+    showDeadlineTags(clockGap);
   }
   markSelected();
 }
@@ -84,12 +84,15 @@ function countdownText(milliseconds) {
 
 // A wrong clock on this computer changes nothing, because clockGap cancels it out
 function showCountdown() {
+  showDeadlineTags(clockGap);
   if (!dueAt) return;
   const left = new Date(dueAt).getTime() - (Date.now() + clockGap);
   const closed = left <= 0;
+  const urgent = !closed && left < DEADLINE_URGENT_MINUTES * 60000;
   countdown.textContent = closed ? 'Closed' : countdownText(left);
   timeBox.classList.toggle('is-closed', closed);
-  timeBox.classList.toggle('is-soon', !closed && left <= DAY_MS);
+  timeBox.classList.toggle('is-urgent', urgent);
+  timeBox.classList.toggle('is-soon', !closed && !urgent && left < DEADLINE_SOON_MINUTES * 60000);
   element('late-note').hidden = !closed;
 }
 

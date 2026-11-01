@@ -18,8 +18,8 @@
   const FONT_WAIT_MS = 1000; // the screen is black meanwhile, and the word must be measured in its real font
   const MAX_INTRO_MS = 6000; // even on a very slow computer, the login appears after this much visible time
 
-  const WORD_WIDTH_SHARE = 0.82; // how much of the screen's width the large word fills
-  const WORD_HEIGHT_SHARE = 0.32; // and the most of its height, for wide, short windows
+  const WORD_WIDTH_SHARE = 0.656; // how much of the screen's width the large word fills
+  const WORD_HEIGHT_SHARE = 0.256; // and the most of its height, for wide, short windows
   const TAGLINE_START_SIZE = 0.6; // the tagline starts smaller than the word's zoom, so it stays quiet under it
   const PHONE_SPEED = 1.7; // phones play the same opening, faster
   const BIRD_START = { x: -21, y: 34, scale: 0.86 }; // the logo's bird starts low in the nest, in the logo's own units

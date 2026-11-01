@@ -37,11 +37,9 @@ function showCountdowns() {
     text.textContent = startedText(-minutesFromNow(text.dataset.since));
   });
   document.querySelectorAll('[data-starts]').forEach((text) => {
-    text.textContent = `starts in ${durationText(Math.max(0, minutesFromNow(text.dataset.starts)))}`;
+    text.textContent = durationText(Math.max(0, minutesFromNow(text.dataset.starts)));
   });
-  document.querySelectorAll('[data-due]').forEach((text) => {
-    text.textContent = timeLeftText(Math.max(0, minutesFromNow(text.dataset.due))).toLowerCase();
-  });
+  showDeadlineTags(clockGap);
 }
 
 // ---------- Building the page ----------
@@ -75,7 +73,7 @@ function nextLectureHtml(lecture, today) {
   return `
     <div class="hero-item" id="lecture-${lecture.id}">
       <div class="hero-text">
-        <span class="hero-status"><span><b>Next lecture</b> · <span data-starts="${escapeHtml(lecture.starts_at)}"></span></span></span>
+        <span class="hero-status"><span><b>Next lecture</b> · starts in <b class="time-bold" data-starts="${escapeHtml(lecture.starts_at)}"></b></span></span>
         <strong class="hero-title">${escapeHtml(lecture.title)}</strong>
         <span class="hero-when">${whenText(lecture, today)}</span>
       </div>
@@ -96,6 +94,7 @@ function upcomingRowHtml(lecture, today) {
       <div class="row-main">
         <strong>${escapeHtml(lecture.title)}</strong>
         <span>${formatTime(lecture.starts_at)} IST · Google Meet</span>
+        <span>Starts in <b class="time-bold" data-starts="${escapeHtml(lecture.starts_at)}"></b></span>
       </div>
       <span class="row-note">Join opens at start</span>
     </li>`;
@@ -109,13 +108,12 @@ function upcomingHtml({ live, upcoming }, today) {
 }
 
 function assignmentRowHtml(assignment) {
-  const left = assignment.deadline_status === 'closed' ? '' : ` · <span data-due="${escapeHtml(assignment.due_at)}"></span>`;
   return `
     <li>
       <a class="row-card row-link" href="/student/assignments?assignment=${assignment.id}">
         <span class="row-main">
           <strong>${escapeHtml(assignment.title)}</strong>
-          <span>Due ${formatDateTime(assignment.due_at)}${left}</span>
+          <span class="row-due">Due ${formatDateTime(assignment.due_at)}${deadlineTagHtml(assignment)}</span>
         </span>
         <span class="row-side">${assignmentTagHtml(assignment)}</span>
       </a>

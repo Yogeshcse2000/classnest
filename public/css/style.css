@@ -722,14 +722,14 @@ html:has(.auth-page) {
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   color: var(--text-muted);
-  font-size: 0.82rem;
+  font-size: var(--font-small);
   line-height: 1.4;
 }
 .auth-note .text-link {
   flex: none;
   padding: 0;
   color: var(--text);
-  font-size: 0.82rem;
+  font-size: var(--font-small);
 }
 
 /* Hidden until the intro takes over (see the small script in index.html). The whole login half goes, with its
@@ -810,7 +810,7 @@ html:has(.auth-page) {
 .crumbs {
   min-height: 1.25rem;
   color: var(--text-muted);
-  font-size: 0.8125rem;
+  font-size: var(--font-small);
 }
 .crumbs ol {
   display: flex;
@@ -852,7 +852,7 @@ html:has(.auth-page) {
   margin-bottom: var(--space-1);
   color: var(--eyebrow);
   font-family: var(--font-mono);
-  font-size: 0.76rem;
+  font-size: var(--font-small);
   font-weight: 500;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -954,7 +954,7 @@ html:has(.auth-page) {
   border-radius: var(--radius-xs);
   background: none;
   color: var(--text-muted);
-  font-size: 0.8125rem;
+  font-size: var(--font-small);
   font-weight: 500;
   text-align: left;
   text-decoration: none;
@@ -1025,7 +1025,7 @@ html:has(.auth-page) {
 }
 .user-card strong {
   overflow: hidden;
-  font-size: 0.8125rem;
+  font-size: 0.9375rem;
   font-weight: 600;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -1033,7 +1033,7 @@ html:has(.auth-page) {
 .user-card span {
   overflow: hidden;
   color: var(--text-muted);
-  font-size: 0.75rem;
+  font-size: var(--font-small);
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -1054,7 +1054,7 @@ kbd {
   background: var(--surface-2);
   color: var(--text-muted);
   font-family: var(--font-body);
-  font-size: 0.68rem;
+  font-size: var(--font-small);
   font-weight: 500;
   white-space: nowrap;
 }
@@ -1107,7 +1107,7 @@ kbd {
 .count {
   color: var(--text-muted);
   font-family: var(--font-mono);
-  font-size: 0.82rem;
+  font-size: var(--font-small);
   font-weight: 500;
   letter-spacing: 0;
 }
@@ -1172,7 +1172,7 @@ kbd {
 }
 .stat-card {
   display: grid;
-  gap: var(--space-0-5);
+  gap: var(--space-1);
   align-content: start;
   color: inherit;
   text-decoration: none;
@@ -1212,20 +1212,21 @@ kbd {
 }
 .stat-number {
   display: block;
-  min-height: 2.6rem;
+  min-height: 3rem;
   font-family: var(--font-head);
-  font-size: 2.25rem;
+  font-size: 2.625rem;
   font-weight: 600;
   line-height: 1.15;
 }
 .stat-label {
-  font-size: 0.86rem;
+  font-size: 1rem;
   font-weight: 600;
 }
 .stat-note {
-  min-height: 1.2rem;
+  min-height: 1.3rem;
   color: var(--text-muted);
-  font-size: 0.8rem;
+  font-size: var(--font-small);
+  font-weight: 400;
 }
 /* On hover, a soft glow and a faint dot pattern rise from the bottom of the card. Only transform and opacity change. */
 .stat-glow {
@@ -1299,13 +1300,24 @@ kbd {
   min-width: 0;
 }
 .row-main strong {
-  font-size: 0.96rem;
+  font-size: 1rem;
   font-weight: 600;
   overflow-wrap: anywhere;
 }
-.row-main span {
+.row-main > span {
   color: var(--text-muted);
-  font-size: 0.8rem;
+  font-size: var(--font-small);
+}
+/* The due date with the time-left tag under it, the same on every row */
+.row-main .row-due {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-1);
+}
+/* The part of a line to notice first, like the "2 hours" of "Starts in 2 hours" */
+.time-bold {
+  color: var(--text);
+  font-weight: 600;
 }
 .row-side {
   display: flex;
@@ -1317,8 +1329,8 @@ kbd {
 }
 .row-note {
   color: var(--text-muted);
-  font-size: 0.76rem;
-  font-weight: 600;
+  font-size: var(--font-small);
+  font-weight: 500;
   white-space: nowrap;
 }
 .row-buttons {
@@ -1338,14 +1350,13 @@ kbd {
 .date-block span {
   color: var(--text-muted);
   font-family: var(--font-mono);
-  font-size: 0.64rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
+  font-size: var(--font-small);
+  font-weight: 500;
   text-transform: uppercase;
 }
 .date-block strong {
   font-family: var(--font-head);
-  font-size: 1.3rem;
+  font-size: 1.5rem;
   font-weight: 600;
 }
 .is-today .date-block span {
@@ -1374,13 +1385,13 @@ kbd {
   scale: 0.99;
 }
 .pick-row strong {
-  font-size: 0.96rem;
+  font-size: 1rem;
   font-weight: 600;
   overflow-wrap: anywhere;
 }
 .pick-row > span {
   color: var(--text-muted);
-  font-size: 0.8rem;
+  font-size: var(--font-small);
 }
 .pick-row .pick-foot {
   display: flex;
@@ -1401,7 +1412,7 @@ kbd {
 }
 .pick-count {
   font-family: var(--font-mono);
-  font-size: 0.72rem;
+  font-size: var(--font-small);
   font-weight: 500;
 }
 
@@ -1421,17 +1432,21 @@ kbd {
   align-items: center;
   gap: var(--space-1-5);
   width: fit-content;
-  padding: var(--space-0-5) var(--space-2);
-  border: var(--tag-line) solid color-mix(in srgb, var(--tag-fg) var(--tag-mix), transparent);
+  padding: var(--space-0-5) var(--space-2-5);
+  border: var(--tag-line) solid var(--tag-edge);
   border-radius: var(--radius-pill);
   background: var(--tag-bg);
   color: var(--tag-fg);
   font-family: var(--font-mono);
-  font-size: 0.68rem;
+  font-size: var(--font-tag);
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   white-space: nowrap;
+}
+.tag-accent {
+  --tag-bg: var(--accent-bg);
+  --tag-fg: var(--accent-fg);
 }
 .tag-calm {
   --tag-bg: var(--calm-bg);
@@ -1441,17 +1456,44 @@ kbd {
   --tag-bg: var(--amber-bg);
   --tag-fg: var(--amber-fg);
 }
-.tag-peach {
-  --tag-bg: var(--peach-bg);
-  --tag-fg: var(--peach-fg);
-}
 .tag-red {
   --tag-bg: var(--red-bg);
   --tag-fg: var(--red-fg);
 }
-.tag-quiet {
+.tag-quiet,
+.tag-missing {
   --tag-bg: var(--quiet-bg);
   --tag-fg: var(--quiet-fg);
+}
+.tag-missing {
+  border-color: var(--danger);
+}
+/* A deadline's last 6 hours: a very soft pulse on a layer around the tag or the "Time left" box. Only opacity changes. */
+.tag-urgent,
+.time-box.is-urgent {
+  position: relative;
+}
+.tag-urgent::after,
+.time-box.is-urgent::after {
+  content: '';
+  position: absolute;
+  inset: calc(0px - var(--tag-line));
+  border-radius: inherit;
+  box-shadow: var(--tag-pulse);
+  opacity: 0;
+  animation: deadline-pulse 2.6s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes deadline-pulse {
+  50% {
+    opacity: 0.7;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tag-urgent::after,
+  .time-box.is-urgent::after {
+    animation: none;
+  }
 }
 .tag-batch {
   --tag-bg: transparent;
@@ -1493,7 +1535,7 @@ kbd {
   border-radius: var(--radius-pill);
   background: var(--surface);
   color: var(--text);
-  font-size: 0.84rem;
+  font-size: var(--font-small);
   font-weight: 600;
   cursor: pointer;
   transition: scale 0.15s ease;
@@ -1507,7 +1549,7 @@ kbd {
 .pill span {
   color: var(--text-muted);
   font-family: var(--font-mono);
-  font-size: 0.74rem;
+  font-size: var(--font-small);
 }
 .pill[aria-pressed='true'] {
   border-color: var(--primary);
@@ -1526,6 +1568,7 @@ kbd {
   border-color: var(--hero-border);
   background: var(--hero-bg);
   color: var(--hero-fg);
+  box-shadow: var(--shadow), var(--hero-glow);
 }
 .hero-list {
   display: grid;
@@ -1558,13 +1601,21 @@ kbd {
   background: var(--hero-pill-bg);
   color: var(--hero-pill-fg);
   font-family: var(--font-mono);
-  font-size: 0.74rem;
-  font-weight: 500;
+  font-size: var(--font-tag);
+  font-weight: 400;
 }
 .hero-status b {
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
+}
+.hero-status .time-bold {
+  letter-spacing: normal;
+  text-transform: none;
+}
+.hero-status .live-dot {
+  width: 10px;
+  height: 10px;
 }
 .hero-title {
   font-family: var(--font-head);
@@ -1585,15 +1636,25 @@ kbd {
 .hero-note {
   flex: none;
   color: var(--text-muted);
-  font-size: 0.85rem;
-  font-weight: 600;
+  font-size: var(--font-small);
+  font-weight: 500;
 }
 .btn-join {
+  --btn-hover: var(--join-hover);
   z-index: 1; /* stays clickable above the spotlight layer */
   flex: none;
+  min-height: var(--join-height);
+  padding: 0 var(--join-pad);
+  border-color: var(--join-edge);
   background: var(--join-bg) border-box;
   color: var(--join-fg);
   box-shadow: var(--join-shadow);
+  font-size: var(--join-font-size);
+  font-weight: 600;
+}
+.btn-join svg {
+  width: 20px;
+  height: 20px;
 }
 
 /* ---------- Assignment detail: the right side of both Assignments pages ---------- */
@@ -1618,7 +1679,7 @@ kbd {
 .detail-due {
   margin-top: var(--space-1);
   color: var(--text-muted);
-  font-size: 0.86rem;
+  font-size: var(--font-small);
 }
 .full-text {
   font-size: 0.94rem;
@@ -1636,7 +1697,7 @@ kbd {
   color: var(--time-fg);
 }
 .time-box span {
-  font-size: 0.68rem;
+  font-size: var(--font-tag);
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -1650,6 +1711,10 @@ kbd {
 .time-box.is-soon {
   background: var(--amber-bg);
   color: var(--amber-fg);
+}
+.time-box.is-urgent {
+  background: var(--red-bg);
+  color: var(--red-fg);
 }
 .time-box.is-closed {
   background: var(--quiet-bg);
@@ -1684,7 +1749,7 @@ kbd {
 }
 .file-main span {
   color: var(--text-muted);
-  font-size: 0.84rem;
+  font-size: var(--font-small);
   overflow-wrap: anywhere;
 }
 .chosen-file .btn {
@@ -1760,26 +1825,27 @@ kbd {
   padding: var(--space-1-5) var(--space-2) var(--space-2);
   border-bottom: var(--border-width) solid var(--border);
   color: var(--text-muted);
-  font-size: 0.72rem;
+  font-size: var(--font-small);
   font-weight: 600;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.03em;
   text-align: left;
   text-transform: uppercase;
 }
 .table td {
   padding: var(--space-3) var(--space-2);
   border-bottom: 1px solid var(--line);
-  font-size: 0.88rem;
+  font-size: var(--font-small);
   overflow-wrap: anywhere;
 }
 .table tbody tr {
   position: relative;
 }
 .table .mono {
-  font-size: 0.82rem;
+  font-size: var(--font-small);
 }
-.table-name {
+.table .table-name {
   font-weight: 600;
+  overflow-wrap: break-word; /* a name or username stays whole unless it truly can't fit */
 }
 .table-link {
   color: inherit;
@@ -1792,7 +1858,7 @@ kbd {
 .table-sub {
   display: block;
   color: var(--text-muted);
-  font-size: 0.78rem;
+  font-size: var(--font-small);
   font-weight: 400;
 }
 .table-muted {
@@ -1827,7 +1893,7 @@ kbd {
 }
 .form-hint {
   color: var(--text-muted);
-  font-size: 0.85rem;
+  font-size: var(--font-small);
 }
 .field-error {
   color: var(--danger);
@@ -1960,8 +2026,8 @@ kbd {
   padding: var(--space-0-5) 0;
   color: var(--text-muted);
   font-family: var(--font-mono);
-  font-size: 0.66rem;
-  font-weight: 600;
+  font-size: var(--font-small);
+  font-weight: 500;
   text-align: center;
   text-transform: uppercase;
 }
@@ -1991,7 +2057,7 @@ kbd {
   gap: var(--space-1-5);
   padding-top: var(--space-2-5);
   border-top: 1px solid var(--line);
-  font-size: 0.86rem;
+  font-size: var(--font-small);
 }
 .picker-time-label {
   margin-right: auto;
@@ -2031,7 +2097,7 @@ kbd {
 .picker-zone {
   color: var(--text-muted);
   font-family: var(--font-mono);
-  font-size: 0.7rem;
+  font-size: var(--font-small);
 }
 .picker-foot {
   display: flex;
@@ -2078,7 +2144,7 @@ kbd {
 }
 .cred-row span {
   color: var(--text-muted);
-  font-size: 0.85rem;
+  font-size: var(--font-small);
 }
 .cred-row strong {
   font-size: 1.05rem;
@@ -2087,7 +2153,7 @@ kbd {
 }
 .cred-note {
   color: var(--text-muted);
-  font-size: 0.85rem;
+  font-size: var(--font-small);
 }
 .cred-actions {
   position: relative;
@@ -2129,7 +2195,7 @@ kbd {
   border-radius: var(--radius-pill);
   background: var(--surface-2);
   color: var(--text-muted);
-  font-size: 0.8rem;
+  font-size: var(--font-small);
   font-weight: 500;
   white-space: nowrap;
 }
@@ -2263,7 +2329,7 @@ kbd {
 .palette-group {
   padding: var(--space-2-5) var(--space-3) var(--space-1);
   color: var(--text-muted);
-  font-size: 0.72rem;
+  font-size: var(--font-small);
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -2292,7 +2358,7 @@ kbd {
 }
 .palette-detail {
   color: var(--text-muted);
-  font-size: 0.82rem;
+  font-size: var(--font-small);
 }
 .palette-empty {
   padding: var(--space-6) var(--space-3);
@@ -2406,12 +2472,6 @@ kbd {
   .table td {
     padding-inline: var(--space-1);
   }
-  .table td {
-    font-size: 0.82rem;
-  }
-  .table .mono {
-    font-size: 0.76rem;
-  }
 }
 
 /* A table too narrow for its columns turns each row into a small block, with a label on each line.
@@ -2452,7 +2512,7 @@ kbd {
     content: attr(data-label);
     flex: none;
     color: var(--text-muted);
-    font-size: 0.82rem;
+    font-size: var(--font-small);
   }
   .table-action:empty {
     display: none;

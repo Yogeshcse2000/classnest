@@ -44,7 +44,7 @@ function lectureRowHtml(lecture, today) {
         ${dateBlockHtml(lecture.starts_at, today)}
         <span class="row-main">
           <strong>${escapeHtml(lecture.title)}</strong>
-          <span>${escapeHtml(lecture.batch_name)} · ${formatTime(lecture.starts_at)} IST</span>
+          <span>${escapeHtml(lecture.batch_name)} · <b class="time-bold">${formatTime(lecture.starts_at)} IST</b></span>
         </span>
         ${live}
       </a>

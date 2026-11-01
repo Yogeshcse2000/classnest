@@ -22,10 +22,10 @@ let shownRows = null;
 
 // ---------- The list ----------
 
-// Amber for the last 24 hours, "Closed" once the deadline has passed
+// The time left in its deadline colour, "Closed" once the deadline has passed
 function statusHtml(assignment) {
   if (assignment.deadline_status === 'closed') return tagHtml('Closed', 'quiet');
-  return tagHtml(timeLeftText(assignment.minutes_left), assignment.deadline_status === 'soon' ? 'amber' : 'calm');
+  return `<span class="${deadlineTagClass(assignment.minutes_left)}">${timeLeftText(assignment.minutes_left)}</span>`;
 }
 
 function assignmentRowHtml(assignment) {

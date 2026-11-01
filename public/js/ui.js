@@ -79,7 +79,7 @@ function timeLeftText(minutes) {
   return minutes < 1 ? 'Less than a minute left' : `${durationText(minutes)} left`;
 }
 
-// Every status in the app is a tag. style is calm, amber, peach, red or quiet.
+// Every status in the app is a tag. style is accent, calm, amber, red, missing or quiet.
 function tagHtml(text, style) {
   return `<span class="tag tag-${style}">${text}</span>`;
 }
@@ -87,6 +87,32 @@ function tagHtml(text, style) {
 // The tag with a pulsing dot
 function liveTagHtml(text) {
   return `<span class="tag tag-amber"><span class="live-dot" aria-hidden="true"><i></i></span>${text}</span>`;
+}
+
+// The time left picks a deadline's colour: red with a soft pulse for the last 6 hours, amber for the last 24, and the
+// role's accent before that. The big "Time left" box on the student's Assignments page uses the same limits.
+const DEADLINE_URGENT_MINUTES = 6 * 60;
+const DEADLINE_SOON_MINUTES = 24 * 60;
+
+function deadlineTagClass(minutes) {
+  if (minutes < DEADLINE_URGENT_MINUTES) return 'tag tag-red tag-urgent';
+  return minutes < DEADLINE_SOON_MINUTES ? 'tag tag-amber' : 'tag tag-accent';
+}
+
+// A student's deadline tag, filled in by showDeadlineTags. Work that was never handed in already has a Closed tag.
+function deadlineTagHtml({ due_at, deadline_status, submission_status }) {
+  if (deadline_status === 'closed' && submission_status === 'Not submitted') return '';
+  return `<span class="tag" data-due="${escapeHtml(due_at)}"></span>`;
+}
+
+// Fills in every deadline tag on the page by the server's clock, so a tag changes colour by itself as time passes.
+// Only the words and class change, so the soft pulse carries on smoothly.
+function showDeadlineTags(clockGap) {
+  document.querySelectorAll('[data-due]').forEach((tag) => {
+    const minutes = Math.floor((new Date(tag.dataset.due).getTime() - (Date.now() + clockGap)) / 60000);
+    tag.className = minutes < 0 ? 'tag tag-quiet' : deadlineTagClass(minutes);
+    tag.textContent = minutes < 0 ? 'Closed' : timeLeftText(minutes);
+  });
 }
 
 // 120 -> "2h", 45 -> "45m", 2880 -> "2d"
@@ -97,15 +123,15 @@ function shortDuration(minutes) {
 
 // A student's work as the admin sees it. minutesLate adds how late it was, like "Late · 2h".
 function submissionTagHtml(status, minutesLate = 0) {
-  if (status === 'Submitted') return tagHtml('On time', 'calm');
-  if (status === 'Late') return tagHtml(minutesLate ? `Late · ${shortDuration(minutesLate)}` : 'Late', 'peach');
-  return tagHtml('Missing', 'red');
+  if (status === 'Submitted') return tagHtml('On time', 'accent');
+  if (status === 'Late') return tagHtml(minutesLate ? `Late · ${shortDuration(minutesLate)}` : 'Late', 'red');
+  return tagHtml('Missing', 'missing');
 }
 
 // An assignment as a student sees it: their work first, then the deadline
 function assignmentTagHtml({ submission_status, deadline_status }) {
-  if (submission_status === 'Submitted') return tagHtml('Submitted', 'calm');
-  if (submission_status === 'Late') return tagHtml('Late', 'peach');
+  if (submission_status === 'Submitted') return tagHtml('Submitted', 'accent');
+  if (submission_status === 'Late') return tagHtml('Late', 'red');
   return deadline_status === 'closed' ? tagHtml('Closed', 'quiet') : tagHtml('Pending', 'amber');
 }
 

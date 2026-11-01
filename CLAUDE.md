@@ -16,7 +16,7 @@
 - Everything must be **100% free**: no paid services, APIs, libraries or hosting.
 
 ## Design
-- The design follows the **classnest-ui** skill ([SKILL.md](.claude/skills/classnest-ui/SKILL.md)): a pure black theme, electric blue for admins and electric orange for students, Clash Display for the wordmark, headings and big numbers with Inter for body text, a flat, minimal logo of a line-art nest with a swallow flying out of it in the role's colour (drawn as SVG in code), premium buttons in three kinds (primary, secondary and danger) that all share one size, a split-screen login with a flock of birds, and premium dark inner pages with a breadcrumb on every page.
+- The design follows the **classnest-ui** skill ([SKILL.md](.claude/skills/classnest-ui/SKILL.md)): a pure black theme, electric blue for admins and electric orange for students, Clash Display for the wordmark, headings and big numbers with Inter for body text, a flat, minimal logo of a line-art nest with a swallow flying out of it in the role's colour (drawn as SVG in code), premium buttons in three kinds (primary, secondary and danger) that all share one size, except the bigger "Join live class" button, a split-screen login with a flock of birds, and premium dark inner pages with a breadcrumb on every page.
 - There is no green anywhere. Light mode stays available, with the same accents in a deeper shade for text.
 - The skill is the single source of design and animation rules. Use it whenever creating or changing any page, component or style.
 - Every colour, font, radius and spacing value lives in one file, [tokens.css](public/css/tokens.css). Never write one directly in `style.css`.

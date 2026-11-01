@@ -21,8 +21,9 @@ The trainer's mockups in `mockups/` set the layout and the elements of every inn
 - **There is no green anywhere in ClassNest:** not in pages, tags, buttons, charts, focus rings or glows. Use the colours below.
 - **Base:** pure black background, slightly lighter black surfaces, very thin subtle borders, soft white text, muted grey secondary text.
 - **Admin accent:** electric blue on every admin page. **Student accent:** electric orange on every student page. `theme.js` sets `data-role` on `<html>`, and `tokens.css` picks the colour from it.
-- The accent is for the active nav item, main buttons, focus rings, glows and highlights. Solid orange takes black text, because white on it is too hard to read.
-- **Status colours keep their meaning and never use the accent** (see the Tags table).
+- The accent is for the active nav item, main buttons, focus rings, glows, highlights, and the tags for Submitted, On time and a far-off deadline. Solid orange takes black text, because white on it is too hard to read.
+- **Status colours keep their meaning on every page, for both roles** (see the Tags table).
+- **Grey text is never below 14px** (`--font-small`), in both themes. The one exception is the login tagline, which is part of the logo. `--text-muted` is bright enough for good contrast on black and on cream.
 
 ### Dark (the default)
 - Black, rich and ambient, with very faint accent glows that breathe, and a faint dot grid.
@@ -53,7 +54,8 @@ A nest with a swallow flying out of it: flat, sharp and minimal, like a luxury b
 - **Headings:** Clash Display semibold. It is a wide font with narrow spaces, so headings get a little extra `word-spacing`. Page headings are 1.75rem to 2.25rem.
 - **Spacing:** 20px between sections and cards (`--space-5`). Page side padding is `--page-gutter`, 20px on phones and growing with the screen to 48px on desktop, so nothing touches or overflows the edges at any width.
 - **Cards:** a consistent 18px radius (`--radius`), thin borders and `--card-pad` padding. The login page's cards, inputs and buttons are these same parts, on the same black.
-- **Buttons:** three kinds, and every one has the same height, radius, spacing and medium-weight text. There is no small or big size. All the values are the `--btn-*` tokens. Every button has press and focus states.
+- **Buttons:** three kinds, and every one has the same height, radius, spacing and medium-weight text. There is no small or big size, with one exception: "Join live class" (`.btn-join`). All the values are the `--btn-*` tokens. Every button has press and focus states.
+  - **Join live (`.btn-join`, using the `--join-*` tokens):** the one bigger, brighter button, 52px high with semibold text, because joining a live class is the most urgent thing a student can do. In light mode it is white on the accent card.
   - **Primary (`.btn-primary`):** a subtle vertical gradient from a deeper shade at the bottom to the bright accent at the top, with a thin light line along the top edge, a soft accent glow on hover, and a slight press-down on click. Blue on admin pages, orange on student pages.
   - **Secondary (`.btn-ghost`):** dark glass with a thin border and a soft highlight on hover. Used for Cancel, Back, Download and other second choices.
   - **Danger (`.btn-danger`, and `.icon-btn-danger` for icons):** dark with a thin red border. It turns red only on hover.
@@ -66,7 +68,7 @@ Every page, now and later, is built from these parts. Reuse them instead of maki
 
 - **Sidebar:** built in one place, `sidebar.js`, and added to a page with one script tag at the top of `<body class="app">`. It looks the same on every inner page, for both roles and in both themes, and stays dark in both. A new page goes in its `links` list, with an icon.
   - **Top row:** the small logo and name on the left. On the right, a search icon and the theme icon, both plain 32px icon buttons with 18px icons. They have no text, no border and no "Ctrl K" label. Search and the theme toggle live here only, never at the bottom.
-  - **Nav links:** compact rows (32px high, 13px text), each with a 16px line icon on its left. Icons are free Lucide-style inline SVGs in muted grey (75% opacity) until hovered or active.
+  - **Nav links:** compact rows (32px high, 14px text), each with a 16px line icon on its left. Icons are free Lucide-style inline SVGs in muted grey (75% opacity) until hovered or active.
   - **Which icon:** Dashboard is a layout grid for admins and a home for students. Batches is layers, Students is users, Lectures is a video camera, Assignments is a notebook, Log out is a log-out arrow.
   - **Hover:** a soft highlight (`--sidebar-hover`) that fades in over 150ms, on rows and on the top icons. It is a `::before` layer behind the item, so only its opacity animates.
   - **Active page:** `aria-current="page"` gives a subtle tinted fill (`--sidebar-active`), brighter text and an icon in `--sidebar-accent`: blue for admins and orange for students, in both themes, kept bright so it stays clear on the dark sidebar. Never a solid colour block.
@@ -77,20 +79,23 @@ Every page, now and later, is built from these parts. Reuse them instead of maki
 - **Form and list pages:** `.split`, with a `.form-card` on the left and a `.panel` on the right.
 - **List and detail pages:** `.split.fill`, with `.pick-row` items on the left and a `.panel.detail` on the right. The picked row has `aria-current="true"`.
 - **Dashboards:** `.stat-grid` of four `.stat-card`s, then `.panels` of two `.panel`s.
-- **Stat cards:** an icon inside a small rounded square (`.stat-icon`), the big number in Clash Display, the label below it, then a short note. On hover, `.stat-glow` lets a soft accent glow and a faint dot pattern rise from the bottom, using only transform and opacity.
+- **Stat cards:** an icon inside a small rounded square (`.stat-icon`), the big number in Clash Display, the label below it in semibold 16px, then a short note in regular grey 14px, so each card is easy to scan. On hover, `.stat-glow` lets a soft accent glow and a faint dot pattern rise from the bottom, using only transform and opacity.
 - **Panels:** `.panel-head` holds the title, then a `.count` like `(6)`, and on the right a search box, filter or `.text-link`.
 - **Rows:** `.row-card` for lectures and assignments, with a `.date-block` for anything on a date. The row for today gets `.is-today`.
 - **Tables:** `.table` inside a `.panel`, with uppercase column names. Give every cell except the first a `data-label`. When the panel gets narrow, on a phone or beside a list on a small laptop, each row turns into labelled lines.
-- **Tags:** every status is a `.tag` from `tagHtml()`, using one of five pairs of colours:
+- **Tags:** every status is a `.tag` from `tagHtml()`, the same on every page for both roles. Tags are always filled, with readable text: a strong tint on dark, and solid colour with a black border on light.
 
-| Colour | Used for |
+| Style | Used for |
 |---|---|
-| calm (a soft blue-white) | On time, Submitted, Upcoming, Started, time left |
-| amber | Pending, Live now, the last 24 hours before a deadline |
-| peach (a soft coral) | Late, with how late it was on the admin's table, like "Late · 2h" |
-| red | Missing |
-| quiet | Closed, Done, Not started |
+| accent (blue for admins, orange for students) | On time, Submitted, more than 24 hours left |
+| amber | Pending, Live now, less than 24 hours left |
+| red | Late, with how late it was on the admin's table, like "Late · 2h" |
+| red with `.tag-urgent` (a very soft pulse) | less than 6 hours left |
+| missing (grey with a red outline) | Missing |
+| quiet (grey) | Closed, Done, Not started |
+| calm (a soft blue-white) | Upcoming, Started |
 
+- **Deadlines:** time left is always a tag, never plain text. `deadlineTagClass()` in `ui.js` picks the colour, and after the deadline the tag is a grey "Closed". On student pages, `deadlineTagHtml()` makes the tag and `showDeadlineTags()` fills it in by the server's clock, so it changes by itself. The big "Time left" box follows the same colours (`.is-soon`, `.is-urgent`, `.is-closed`). The pulse changes only opacity, stops with reduced motion, and must never restart on a countdown tick.
 - **Filters:** `.pill` buttons with a count, and `aria-pressed` on the active one.
 - **Dates:** every date on a form uses the picker (`data-picker="date"` or `"datetime"`), never the browser's own. Dates in the page use `formatDateTime()`, like "Nov 4, 4:38 AM IST", always in India time and always labelled IST.
 - **Time ago:** `timeAgo()`, like "10 min ago", "1 h ago", "Yesterday".
@@ -122,7 +127,7 @@ A split screen: black, minimal and classy. It is **neutral black and white until
 
 ### Login opening
 A full-screen cinematic text reveal of about 3.6 seconds, made with one GSAP timeline in `login-intro.js`, in this order:
-1. **The reveal:** the screen is pure black, with only "CLASSNEST", very large, in the centre of the whole screen. There is no nest, no birds and no login panel. Each letter springs in one by one.
+1. **The reveal:** the screen is pure black, with only "CLASSNEST", very large (about two thirds of the screen's width), in the centre of the whole screen. There is no nest, no birds and no login panel. Each letter springs in one by one.
 2. **The emphasis:** one soft light sweep passes across the whole word. A thin line then draws under it from left to right, and "LEARN · GROW · FLY" fades in below.
 3. **The move:** the word, line and tagline smoothly shrink and move into the left panel.
 4. **The arrival:** only after they arrive, the logo fades in softly above the word. Its bird draws in from the tail up and lifts off from the nest, moved only by a transform and a mask, and then the flock flies out of the nest. At the same time, the login panel slides in from the right and fades in.
@@ -156,7 +161,9 @@ The login page is the one place with these exceptions, recorded in [PLAN.md](../
 - Empty states are friendly: a short helpful message, not a blank area.
 - Cards and buttons lift smoothly on hover.
 - Numbers on dashboards count up when they appear.
-- "Live now" has a pulsing dot next to it.
+- "Live now" has a pulsing red dot next to it.
+- **The student's "Live now" card** stands out from every other card: a brighter accent border and a soft glow (a hard shadow on the accent background in light mode), the pulsing red dot, and the "Join live class" button.
+- **Upcoming lectures:** the time is the part to notice, so it is bold (`.time-bold`), like "Starts in **2 hours**".
 
 ### Ctrl+K search
 - Every inner page has search, opened with Ctrl+K or the search icon at the top of the sidebar.
