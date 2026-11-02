@@ -196,4 +196,4 @@ When a stage is finished, run the [tester subagent](.claude/agents/tester.md), a
 - [x] **11. Student side:** dashboard, batch lectures with a "Join" button, assignments.
 - [x] **12. Uploads:** `.zip` submit and re-upload (replaces old file), "Late" badge, admin can see and download.
 - [x] **13. Dashboards + polish:** match the mockups (sidebar layout, stat cards, date blocks, tags, filter pills, custom date picker, light mode), GSAP count-up, hover lift, pulsing live dot, friendly empty states.
-- [ ] **14. Final check:** test as admin and student, security review, README.
+- [x] **14. Final check:** test as admin and student, security review, README.

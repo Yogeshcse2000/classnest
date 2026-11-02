@@ -630,6 +630,22 @@ Safety: keep all ids and classes used by JavaScript. Change styling only.
 Test it yourself quickly (no tester agent): use the demo data to see every deadline colour and every status tag, check both roles, light and dark mode, desktop and mobile. Add this prompt to PROMPTS.md.
 ```
 
+## Prompt 29 - Logo hover, birds behind the brand, submitted work and usernames (2026-11-01)
+
+```
+/classnest-ui Small changes only. Don't change layouts, features, logic, or the login flow.
+
+1. Logo hover on the login page: give the nest-and-bird logo the same hover effect as the "CLASSNEST" word. When the cursor is over the logo, a moving electric-blue-to-electric-orange gradient flows through the logo's lines and the bird, with the same speed, colours and soft glow as the word. When the cursor leaves, it smoothly returns to white. Hovering either the logo or the word lights up both together.
+
+2. Birds behind the brand: the flock must fly behind the logo, the word and the tagline (lower layer), so they never cover the letters.
+
+3. Submitted work: once a student has submitted an assignment, don't show the red or amber urgency tag or pulse for it. Show the "Submitted" tag instead (or "Late" if it was late).
+
+4. Students table: usernames must never break across lines (for example "kabir." / "singh"). Keep each username on one line, and shorten with "…" if there's really no space.
+
+Safety: keep all ids and classes used by JavaScript. Don't run browser tests. Just make sure there are no code errors. Add this prompt to PROMPTS.md.
+```
+
 ## Prompt 30 - Full pre-submission test (2026-11-01)
 
 ```
@@ -645,18 +661,26 @@ Check all 14 must-have items from PLAN.md, as admin AND as student:
 Don't fix anything. Give me a short pass/fail report with clear steps for each bug. Add this prompt to PROMPTS.md.
 ```
 
-## Prompt 29 - Logo hover, birds behind the brand, submitted work and usernames (2026-11-01)
+## Prompt 31 - Final submission docs (2026-11-02)
 
 ```
-/classnest-ui Small changes only. Don't change layouts, features, logic, or the login flow.
+Read CLAUDE.md, PLAN.md and IDEAS.md first. Write the final submission docs. Don't change any app code.
 
-1. Logo hover on the login page: give the nest-and-bird logo the same hover effect as the "CLASSNEST" word. When the cursor is over the logo, a moving electric-blue-to-electric-orange gradient flows through the logo's lines and the bird, with the same speed, colours and soft glow as the word. When the cursor leaves, it smoothly returns to white. Hovering either the logo or the word lights up both together.
+1. README.md, clear and well formatted:
+- Title "ClassNest" with the tagline "LEARN · GROW · FLY" and a one-paragraph description (an LMS for BrightPath Academy: admin runs batches, lectures and assignments; students join live classes and upload .zip work).
+- Features list for Admin and Student.
+- Tech stack: Node.js, Express, SQLite (better-sqlite3), vanilla HTML/CSS/JS, GSAP, bcrypt, express-session, multer.
+- Install and run, step by step for Windows: npm install, copy .env.example to .env, npm run seed, npm run seed:demo (optional demo data), npm start, open localhost:3000.
+- Demo logins: the admin email and password from .env.example, and the demo students with password Demo@1234.
+- "How I used Claude Code": CLAUDE.md (project rules), PLAN.md (stage plan), the classnest-ui skill (design system), the tester agent (pre-submission testing), and PROMPTS.md (every prompt in order).
+- Design note: "The design is my own, as allowed by my trainer. All mockup screens and buttons are included."
+- Folder structure (short), upload rules (only .zip, 10 MB, late flag), and Future ideas from IDEAS.md.
 
-2. Birds behind the brand: the flock must fly behind the logo, the word and the tagline (lower layer), so they never cover the letters.
+2. .env.example: make sure it has safe demo values only (for example ADMIN_EMAIL=admin@classnest.local and a demo ADMIN_PASSWORD like ClassNest@Demo1, plus every other variable the app needs). Never copy anything from my real .env.
 
-3. Submitted work: once a student has submitted an assignment, don't show the red or amber urgency tag or pulse for it. Show the "Submitted" tag instead (or "Late" if it was late).
+3. PROMPTS.md: check every prompt is in order, numbered, has a short title and date, and every code block is closed. Don't change the prompt text itself. Remove any secret if one appears.
 
-4. Students table: usernames must never break across lines (for example "kabir." / "singh"). Keep each username on one line, and shorten with "…" if there's really no space.
+4. Tick step 14 in PLAN.md.
 
-Safety: keep all ids and classes used by JavaScript. Don't run browser tests. Just make sure there are no code errors. Add this prompt to PROMPTS.md.
+Add this prompt to PROMPTS.md.
 ```
