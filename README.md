@@ -63,6 +63,17 @@ You need [Node.js](https://nodejs.org) installed. Open a terminal in the project
    ```
 6. Open <http://localhost:3000> in your browser.
 
+### If npm install fails
+
+If `better-sqlite3` fails with a `node-gyp` or Visual Studio error, run:
+
+```
+npm install better-sqlite3@latest
+npm install
+```
+
+If it still fails, install Node.js 22 LTS from [nodejs.org](https://nodejs.org) and try again.
+
 ## Demo logins
 
 | Role | Login | Password |
