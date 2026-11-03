@@ -1,6 +1,5 @@
 // All SQL for the admins table lives here.
-// Functions are async so this file can later be swapped for Postgres
-// without changing the code that calls it.
+// Functions are async, so the code that calls them does not care which database is behind them.
 
 const db = require('../db');
 
@@ -10,14 +9,16 @@ function cleanEmail(email) {
 }
 
 async function findAdminByEmail(email) {
-  return db.prepare('SELECT * FROM admins WHERE email = ?').get(cleanEmail(email));
+  const { rows } = await db.query('SELECT * FROM admins WHERE email = $1', [cleanEmail(email)]);
+  return rows[0];
 }
 
 async function createAdmin({ name, email, passwordHash }) {
-  const result = db
-    .prepare('INSERT INTO admins (name, email, password_hash, created_at) VALUES (?, ?, ?, ?)')
-    .run(name, cleanEmail(email), passwordHash, new Date().toISOString());
-  return result.lastInsertRowid;
+  const { rows } = await db.query(
+    'INSERT INTO admins (name, email, password_hash, created_at) VALUES ($1, $2, $3, $4) RETURNING id',
+    [name, cleanEmail(email), passwordHash, new Date().toISOString()]
+  );
+  return rows[0].id;
 }
 
 module.exports = { findAdminByEmail, createAdmin };

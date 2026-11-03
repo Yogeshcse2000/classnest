@@ -9,39 +9,42 @@ const SELECT_LECTURE = `
   JOIN batches b ON b.id = l.batch_id`;
 
 async function listLectures() {
-  return db.prepare(`${SELECT_LECTURE} ORDER BY l.starts_at, l.id`).all();
+  const { rows } = await db.query(`${SELECT_LECTURE} ORDER BY l.starts_at, l.id`);
+  return rows;
 }
 
 // One batch's lectures, earliest first
 async function listBatchLectures(batchId) {
-  return db.prepare(`${SELECT_LECTURE} WHERE l.batch_id = ? ORDER BY l.starts_at, l.id`).all(batchId);
+  const { rows } = await db.query(`${SELECT_LECTURE} WHERE l.batch_id = $1 ORDER BY l.starts_at, l.id`, [batchId]);
+  return rows;
 }
 
 async function findLectureById(id) {
-  return db.prepare(`${SELECT_LECTURE} WHERE l.id = ?`).get(id);
+  const { rows } = await db.query(`${SELECT_LECTURE} WHERE l.id = $1`, [id]);
+  return rows[0];
 }
 
 async function createLecture({ batchId, title, meetLink, startsAt, durationMinutes }) {
-  const result = db
-    .prepare(
-      'INSERT INTO lectures (batch_id, title, meet_link, starts_at, duration_minutes, created_at) VALUES (?, ?, ?, ?, ?, ?)'
-    )
-    .run(batchId, title, meetLink, startsAt, durationMinutes, new Date().toISOString());
-  return result.lastInsertRowid;
+  const { rows } = await db.query(
+    `INSERT INTO lectures (batch_id, title, meet_link, starts_at, duration_minutes, created_at)
+     VALUES ($1, $2, $3, $4, $5, $6) RETURNING id`,
+    [batchId, title, meetLink, startsAt, durationMinutes, new Date().toISOString()]
+  );
+  return rows[0].id;
 }
 
 async function updateLecture(id, { batchId, title, meetLink, startsAt }) {
-  db.prepare('UPDATE lectures SET batch_id = ?, title = ?, meet_link = ?, starts_at = ? WHERE id = ?').run(
+  await db.query('UPDATE lectures SET batch_id = $1, title = $2, meet_link = $3, starts_at = $4 WHERE id = $5', [
     batchId,
     title,
     meetLink,
     startsAt,
-    id
-  );
+    id,
+  ]);
 }
 
 async function deleteLecture(id) {
-  db.prepare('DELETE FROM lectures WHERE id = ?').run(id);
+  await db.query('DELETE FROM lectures WHERE id = $1', [id]);
 }
 
 module.exports = {

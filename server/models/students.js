@@ -14,54 +14,61 @@ const SELECT_STUDENT = `
   JOIN batches b ON b.id = s.batch_id`;
 
 async function findStudentByUsername(username) {
-  return db.prepare('SELECT * FROM students WHERE username = ?').get(clean(username));
+  const { rows } = await db.query('SELECT * FROM students WHERE username = $1', [clean(username)]);
+  return rows[0];
 }
 
 async function findStudentByEmail(email) {
-  return db.prepare('SELECT id FROM students WHERE email = ?').get(clean(email));
+  const { rows } = await db.query('SELECT id FROM students WHERE email = $1', [clean(email)]);
+  return rows[0];
 }
 
 async function usernameTaken(username) {
-  return Boolean(db.prepare('SELECT 1 FROM students WHERE username = ?').get(clean(username)));
+  const { rows } = await db.query('SELECT 1 FROM students WHERE username = $1', [clean(username)]);
+  return rows.length > 0;
 }
 
 async function listStudents() {
-  return db.prepare(`${SELECT_STUDENT} ORDER BY s.id DESC`).all();
+  const { rows } = await db.query(`${SELECT_STUDENT} ORDER BY s.id DESC`);
+  return rows;
 }
 
 async function countStudents() {
-  return db.prepare('SELECT COUNT(*) AS n FROM students').get().n;
+  const { rows } = await db.query('SELECT COUNT(*)::int AS n FROM students');
+  return rows[0].n;
 }
 
 // created_at is saved in one ISO format, so comparing it as text gives the right answer
 async function countStudentsSince(date) {
-  return db.prepare('SELECT COUNT(*) AS n FROM students WHERE created_at >= ?').get(date).n;
+  const { rows } = await db.query('SELECT COUNT(*)::int AS n FROM students WHERE created_at >= $1', [date]);
+  return rows[0].n;
 }
 
 async function findStudentById(id) {
-  return db.prepare(`${SELECT_STUDENT} WHERE s.id = ?`).get(id);
+  const { rows } = await db.query(`${SELECT_STUDENT} WHERE s.id = $1`, [id]);
+  return rows[0];
 }
 
-// The database's unique rules have the final say. If they refuse this student, the error
-// gets a "duplicate" field saying what clashed ('email' or 'username'), so routes never need to know about SQLite.
+// The database's unique rules have the final say. If they refuse this student (Postgres error 23505), the error
+// gets a "duplicate" field saying what clashed ('email' or 'username'), so routes never need to know about Postgres.
 async function createStudent({ name, username, email, passwordHash, batchId }) {
   try {
-    const result = db
-      .prepare(
-        'INSERT INTO students (name, username, email, password_hash, batch_id, created_at) VALUES (?, ?, ?, ?, ?, ?)'
-      )
-      .run(name, clean(username), clean(email), passwordHash, batchId, new Date().toISOString());
-    return result.lastInsertRowid;
+    const { rows } = await db.query(
+      `INSERT INTO students (name, username, email, password_hash, batch_id, created_at)
+       VALUES ($1, $2, $3, $4, $5, $6) RETURNING id`,
+      [name, clean(username), clean(email), passwordHash, batchId, new Date().toISOString()]
+    );
+    return rows[0].id;
   } catch (error) {
-    if (error.code === 'SQLITE_CONSTRAINT_UNIQUE') {
-      error.duplicate = error.message.includes('students.email') ? 'email' : 'username';
+    if (error.code === '23505') {
+      error.duplicate = String(error.constraint).includes('email') ? 'email' : 'username';
     }
     throw error;
   }
 }
 
 async function updateStudentPassword(id, passwordHash) {
-  db.prepare('UPDATE students SET password_hash = ? WHERE id = ?').run(passwordHash, id);
+  await db.query('UPDATE students SET password_hash = $1 WHERE id = $2', [passwordHash, id]);
 }
 
 module.exports = {

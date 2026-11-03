@@ -684,3 +684,16 @@ Read CLAUDE.md, PLAN.md and IDEAS.md first. Write the final submission docs. Don
 
 Add this prompt to PROMPTS.md.
 ```
+
+## Prompt 32 - Bonus B1: move the database to Supabase Postgres (2026-11-03)
+
+```
+We are on the "bonus" branch. Bonus B1: move the database from SQLite to Supabase Postgres.
+- Read DATABASE_URL from .env. Never print, log or commit it.
+- Use the "pg" package. Change only the code in server/models/ and the database setup, so routes and pages keep working the same.
+- Create the same 6 tables in Postgres, and make npm run seed and npm run seed:demo work with it.
+- Keep zip uploads on local disk for now (Supabase Storage comes later).
+- Add DATABASE_URL to .env.example with a fake placeholder value only.
+- Do not change the design or any other feature.
+- Test it yourself: start the server, log in as admin and as a demo student, and check that batches, lectures, assignments and submissions load. Then add this prompt to PROMPTS.md with the next number and today's date.
+```

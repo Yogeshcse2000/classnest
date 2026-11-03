@@ -95,7 +95,7 @@ router.post('/:id/reset-password', async (req, res) => {
 
   const password = generateTempPassword();
   await updateStudentPassword(id, await bcrypt.hash(password, 10));
-  endStudentSessions(id);
+  await endStudentSessions(id);
 
   res.json({ student, credentials: { username: student.username, password } });
 });

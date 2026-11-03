@@ -1,93 +1,117 @@
-// Opens the SQLite database file and makes sure all tables exist.
+// Connects to the Supabase Postgres database and makes sure all tables exist.
 // Other files get the database with: const db = require('./db');
+// and then run SQL with: await db.query('SELECT ... WHERE id = $1', [id]);
 
-const fs = require('fs');
-const path = require('path');
-const Database = require('better-sqlite3');
+const { Pool } = require('pg');
 
-// Where the database file lives (data/classnest.db by default)
-const dbPath = path.resolve(__dirname, '..', process.env.DB_PATH || 'data/classnest.db');
+// The address (with password) of the database. It lives in .env only and is never printed or logged.
+const connectionString = process.env.DATABASE_URL;
+if (!connectionString) {
+  console.error('DATABASE_URL is missing. Add it to your .env file (see .env.example).');
+  process.exit(1);
+}
 
-// Create the data/ folder if it is missing, then open (or create) the file
-fs.mkdirSync(path.dirname(dbPath), { recursive: true });
-const db = new Database(dbPath);
+// Supabase needs an encrypted connection. A database on your own computer does not.
+const isLocal = /@(localhost|127\.0\.0\.1)[:/]/.test(connectionString);
 
-// SQLite only checks links between tables (foreign keys) when this is on
-db.pragma('foreign_keys = ON');
+const pool = new Pool({
+  connectionString,
+  ssl: isLocal ? false : { rejectUnauthorized: false },
+  max: 5,
+  allowExitOnIdle: true, // lets the seed scripts finish instead of waiting for idle connections
+});
+
+// An idle connection can drop (for example when the internet blips). Log only the message, never the address.
+pool.on('error', (error) => console.error('Database connection problem:', error.message));
 
 // "IF NOT EXISTS" means: create the table the first time, skip it after that.
 // So restarting the server never wipes your data.
-// Dates are saved as ISO text, e.g. 2026-10-30T14:00:00.000Z
-db.exec(`
+// Dates are saved as ISO text, e.g. 2026-10-30T14:00:00.000Z, so sorting them as text gives the right order.
+// is_late is 0 or 1. expires_at is a time in milliseconds, which is why it needs BIGINT.
+const ready = pool
+  .query(
+    `
   CREATE TABLE IF NOT EXISTS admins (
-    id            INTEGER PRIMARY KEY AUTOINCREMENT,
-    name          TEXT    NOT NULL,
-    email         TEXT    NOT NULL UNIQUE,
-    password_hash TEXT    NOT NULL,
-    created_at    TEXT    NOT NULL
+    id            SERIAL PRIMARY KEY,
+    name          TEXT NOT NULL,
+    email         TEXT NOT NULL UNIQUE,
+    password_hash TEXT NOT NULL,
+    created_at    TEXT NOT NULL
   );
 
   CREATE TABLE IF NOT EXISTS batches (
-    id          INTEGER PRIMARY KEY AUTOINCREMENT,
-    name        TEXT    NOT NULL,
+    id          SERIAL PRIMARY KEY,
+    name        TEXT NOT NULL,
     description TEXT,
     start_date  TEXT,
-    created_at  TEXT    NOT NULL
+    created_at  TEXT NOT NULL
   );
 
   CREATE TABLE IF NOT EXISTS students (
-    id            INTEGER PRIMARY KEY AUTOINCREMENT,
-    name          TEXT    NOT NULL,
-    username      TEXT    NOT NULL UNIQUE,
-    email         TEXT    UNIQUE,
-    password_hash TEXT    NOT NULL,
+    id            SERIAL PRIMARY KEY,
+    name          TEXT NOT NULL,
+    username      TEXT NOT NULL UNIQUE,
+    email         TEXT UNIQUE,
+    password_hash TEXT NOT NULL,
     batch_id      INTEGER NOT NULL REFERENCES batches(id),
-    created_at    TEXT    NOT NULL
+    created_at    TEXT NOT NULL
   );
 
   CREATE TABLE IF NOT EXISTS lectures (
-    id               INTEGER PRIMARY KEY AUTOINCREMENT,
+    id               SERIAL PRIMARY KEY,
     batch_id         INTEGER NOT NULL REFERENCES batches(id),
-    title            TEXT    NOT NULL,
-    meet_link        TEXT    NOT NULL,
-    starts_at        TEXT    NOT NULL,
+    title            TEXT NOT NULL,
+    meet_link        TEXT NOT NULL,
+    starts_at        TEXT NOT NULL,
     duration_minutes INTEGER NOT NULL,
-    created_at       TEXT    NOT NULL
+    created_at       TEXT NOT NULL
   );
 
   CREATE TABLE IF NOT EXISTS assignments (
-    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    id          SERIAL PRIMARY KEY,
     batch_id    INTEGER NOT NULL REFERENCES batches(id),
-    title       TEXT    NOT NULL,
+    title       TEXT NOT NULL,
     description TEXT,
-    due_at      TEXT    NOT NULL,
-    created_at  TEXT    NOT NULL
+    due_at      TEXT NOT NULL,
+    created_at  TEXT NOT NULL
   );
 
   CREATE TABLE IF NOT EXISTS submissions (
-    id            INTEGER PRIMARY KEY AUTOINCREMENT,
+    id            SERIAL PRIMARY KEY,
     assignment_id INTEGER NOT NULL REFERENCES assignments(id),
     student_id    INTEGER NOT NULL REFERENCES students(id),
-    file_path     TEXT    NOT NULL,
-    original_name TEXT    NOT NULL,
-    submitted_at  TEXT    NOT NULL,
+    file_path     TEXT NOT NULL,
+    original_name TEXT NOT NULL,
+    submitted_at  TEXT NOT NULL,
     is_late       INTEGER NOT NULL DEFAULT 0,
     UNIQUE (assignment_id, student_id)
   );
 
-  -- Who is logged in. expires_at is a time in milliseconds.
+  -- Who is logged in
   CREATE TABLE IF NOT EXISTS sessions (
-    sid        TEXT    PRIMARY KEY,
-    data       TEXT    NOT NULL,
-    expires_at INTEGER NOT NULL
+    sid        TEXT   PRIMARY KEY,
+    data       TEXT   NOT NULL,
+    expires_at BIGINT NOT NULL
   );
-`);
+`
+  )
+  .catch((error) => {
+    console.error('Could not set up the database:', error.message);
+    console.error('Check that DATABASE_URL in your .env file is correct.');
+    process.exit(1);
+  });
 
-// "CREATE TABLE IF NOT EXISTS" skips a table that is already there, so a database from before Stage 7 gets this
-// column here, once. Adding a column leaves every existing row as it was.
-const submissionColumns = db.prepare('PRAGMA table_info(submissions)').all();
-if (!submissionColumns.some((column) => column.name === 'is_late')) {
-  db.exec('ALTER TABLE submissions ADD COLUMN is_late INTEGER NOT NULL DEFAULT 0');
+// Runs one SQL statement once the tables exist. $1, $2 ... in the text are filled from the params list.
+// Gives back the usual pg result: result.rows is the list of rows, result.rowCount how many were changed.
+async function query(text, params) {
+  await ready;
+  return pool.query(text, params);
 }
 
-module.exports = db;
+// For steps that must run together as one unit (a transaction): gives back a connection to use, then release() it.
+async function getClient() {
+  await ready;
+  return pool.connect();
+}
+
+module.exports = { query, getClient, ready };

@@ -11,7 +11,7 @@ function cleanQuery(value) {
   return typeof value === 'string' ? value.trim().slice(0, MAX_QUERY_LENGTH) : '';
 }
 
-// In LIKE, % and _ are wildcards. Escape them, so typing "100%" looks for exactly that.
+// In ILIKE (a search that ignores capital letters), % and _ are wildcards. Escape them, so typing "100%" looks for exactly that.
 function contains(query) {
   return `%${query.replace(/[\\%_]/g, '\\$&')}%`;
 }
@@ -28,56 +28,63 @@ const SELECT_ASSIGNMENT = `
 
 // Only the columns search needs (never the password hash)
 async function searchStudents(query) {
-  const text = contains(query);
-  return db
-    .prepare(
-      `SELECT id, name, username, email
-       FROM students
-       WHERE name LIKE ? ESCAPE '\\' OR username LIKE ? ESCAPE '\\' OR email LIKE ? ESCAPE '\\'
-       ORDER BY name
-       LIMIT ?`
-    )
-    .all(text, text, text, MAX_RESULTS);
+  const { rows } = await db.query(
+    `SELECT id, name, username, email
+     FROM students
+     WHERE name ILIKE $1 ESCAPE '\\' OR username ILIKE $1 ESCAPE '\\' OR email ILIKE $1 ESCAPE '\\'
+     ORDER BY name
+     LIMIT $2`,
+    [contains(query), MAX_RESULTS]
+  );
+  return rows;
 }
 
 async function searchBatches(query) {
-  return db
-    .prepare(
-      `SELECT b.id, b.name, (SELECT COUNT(*) FROM students s WHERE s.batch_id = b.id) AS student_count
-       FROM batches b
-       WHERE b.name LIKE ? ESCAPE '\\'
-       ORDER BY b.name
-       LIMIT ?`
-    )
-    .all(contains(query), MAX_RESULTS);
+  const { rows } = await db.query(
+    `SELECT b.id, b.name, (SELECT COUNT(*) FROM students s WHERE s.batch_id = b.id)::int AS student_count
+     FROM batches b
+     WHERE b.name ILIKE $1 ESCAPE '\\'
+     ORDER BY b.name
+     LIMIT $2`,
+    [contains(query), MAX_RESULTS]
+  );
+  return rows;
 }
 
 // Admins: lectures from every batch
 async function searchLectures(query) {
-  return db
-    .prepare(`${SELECT_LECTURE} WHERE l.title LIKE ? ESCAPE '\\' ORDER BY l.starts_at DESC LIMIT ?`)
-    .all(contains(query), MAX_RESULTS);
+  const { rows } = await db.query(
+    `${SELECT_LECTURE} WHERE l.title ILIKE $1 ESCAPE '\\' ORDER BY l.starts_at DESC LIMIT $2`,
+    [contains(query), MAX_RESULTS]
+  );
+  return rows;
 }
 
 // Admins: assignments from every batch
 async function searchAssignments(query) {
-  return db
-    .prepare(`${SELECT_ASSIGNMENT} WHERE a.title LIKE ? ESCAPE '\\' ORDER BY a.due_at DESC LIMIT ?`)
-    .all(contains(query), MAX_RESULTS);
+  const { rows } = await db.query(
+    `${SELECT_ASSIGNMENT} WHERE a.title ILIKE $1 ESCAPE '\\' ORDER BY a.due_at DESC LIMIT $2`,
+    [contains(query), MAX_RESULTS]
+  );
+  return rows;
 }
 
 // Students: only the lectures of one batch
 async function searchBatchLectures(query, batchId) {
-  return db
-    .prepare(`${SELECT_LECTURE} WHERE l.batch_id = ? AND l.title LIKE ? ESCAPE '\\' ORDER BY l.starts_at DESC LIMIT ?`)
-    .all(batchId, contains(query), MAX_RESULTS);
+  const { rows } = await db.query(
+    `${SELECT_LECTURE} WHERE l.batch_id = $1 AND l.title ILIKE $2 ESCAPE '\\' ORDER BY l.starts_at DESC LIMIT $3`,
+    [batchId, contains(query), MAX_RESULTS]
+  );
+  return rows;
 }
 
 // Students: only the assignments of one batch
 async function searchBatchAssignments(query, batchId) {
-  return db
-    .prepare(`${SELECT_ASSIGNMENT} WHERE a.batch_id = ? AND a.title LIKE ? ESCAPE '\\' ORDER BY a.due_at DESC LIMIT ?`)
-    .all(batchId, contains(query), MAX_RESULTS);
+  const { rows } = await db.query(
+    `${SELECT_ASSIGNMENT} WHERE a.batch_id = $1 AND a.title ILIKE $2 ESCAPE '\\' ORDER BY a.due_at DESC LIMIT $3`,
+    [batchId, contains(query), MAX_RESULTS]
+  );
+  return rows;
 }
 
 module.exports = {
