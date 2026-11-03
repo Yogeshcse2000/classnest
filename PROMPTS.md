@@ -697,3 +697,14 @@ We are on the "bonus" branch. Bonus B1: move the database from SQLite to Supabas
 - Do not change the design or any other feature.
 - Test it yourself: start the server, log in as admin and as a demo student, and check that batches, lectures, assignments and submissions load. Then add this prompt to PROMPTS.md with the next number and today's date.
 ```
+
+## Prompt 33 - Update README and PLAN for Supabase Postgres (2026-11-03)
+
+```
+We are on the "bonus" branch. Update README.md and PLAN.md for the move to Supabase Postgres:
+- Replace SQLite and better-sqlite3 with Supabase Postgres and the "pg" package everywhere, including the tech stack, folder structure and install steps. Remove the better-sqlite3 troubleshooting note.
+- Install steps: say you need a free Supabase project, and to put its Session pooler connection string in DATABASE_URL in .env.
+- Add a "Live demo" line near the top:https://classnest-cepb.onrender.com (free tier, first load can take about 50 seconds).
+- Never write any real password or connection string.
+- Change nothing else, and add this prompt to PROMPTS.md with the next number and today's date.
+```

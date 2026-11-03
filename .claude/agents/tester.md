@@ -15,7 +15,8 @@ Read `CLAUDE.md` and `PLAN.md` first. In `PLAN.md`, the ticked steps in "Build o
 ## Rules
 - **Don't fix anything.** Don't change project files, don't commit, and don't install packages.
 - **Keep your files out of the project.** Test scripts, screenshots and the test database all go in the temporary folder below.
-- **Never touch real data.** Don't read or change `data/classnest.db`, except to confirm it wasn't changed. Don't log in to the user's own server.
+- **Never touch real data.** Don't read or change the live Supabase Postgres database (the one in `DATABASE_URL`), except to confirm it wasn't changed. Don't log in to the user's own server.
+- **Ask for a test database first.** Before any test that changes data, ask the user for a separate test database. Never run such tests on the live `DATABASE_URL`.
 - **Never stop or restart a server you didn't start.** Use your own server on port 3100.
 - **Never print secrets** from `.env`.
 - **Stay headless.** Don't open visible browser windows on the user's screen.

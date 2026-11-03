@@ -12,7 +12,7 @@
 ## Tech stack
 - **Frontend:** vanilla HTML, CSS and JavaScript (no frameworks).
 - **Backend:** Node.js + Express.
-- **Database:** SQLite.
+- **Database:** Supabase Postgres (free tier).
 - Everything must be **100% free**: no paid services, APIs, libraries or hosting.
 
 ## Design

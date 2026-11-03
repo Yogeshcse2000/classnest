@@ -52,19 +52,19 @@ Project rules are in [CLAUDE.md](CLAUDE.md). Design and animation rules are in t
 | Downloads | Only a logged-in admin, through `/api/admin/submissions/:id/download`. The `uploads/` folder is outside `public/`, and students have no download route, not even for their own work. Files download as `username_assignment-title.zip`. |
 | Moving an assignment | Once students have submitted work, an assignment can't move to another batch, because the submissions view lists the assignment's batch and their work would disappear from it. |
 | Grading | **None** for now. |
-| Running | Fully on a laptop with `npm start`. May be deployed for free later. |
+| Running | Deployed on Render's free tier (https://classnest-cepb.onrender.com), with the database on Supabase Postgres. Locally, `npm start`. |
 | Google Meet | Admin pastes a Meet link. No Google API. |
 | First admin | Created by `npm run seed` using details from `.env`. |
 | Demo data | `npm run seed:demo` adds a demo admin, 2 batches, 6 students, lectures, assignments and submissions. It only adds, and skips whatever already exists, by batch name, username, title, or assignment and student. Everyone in it has the password `Demo@1234`, so it is for a laptop only, never a deployed site. Dates are set the first time only, so running it again does not make the demo lecture live again. |
 | Adding students | Admin creates the account with a temporary password. |
 
-## Keeping it easy to move later (Postgres + online file storage)
+## Keeping it easy to move later (online file storage)
 
 1. **All SQL lives in `server/models/`.** Routes call functions like `getBatches()` and never write SQL themselves.
-2. **Model functions are `async`**, even though SQLite does not need it, so Postgres can drop in without changing routes.
+2. **Model functions are `async`**, because the `pg` package talks to Supabase Postgres over the network.
 3. **Plain, standard SQL.** Dates are stored as ISO text, e.g. `2026-10-30T14:00:00Z`.
 4. **All file handling goes through `server/storage.js`** (save, delete, get). Today it uses the `uploads/` folder.
-5. **Settings come from `.env`** (port, database path, uploads path, secrets).
+5. **Settings come from `.env`** (port, `DATABASE_URL`, uploads path, secrets).
 
 ## Folder structure
 
@@ -72,7 +72,7 @@ Project rules are in [CLAUDE.md](CLAUDE.md). Design and animation rules are in t
 classnest/
 ├── server/
 │   ├── server.js            ← starts the server, connects everything
-│   ├── db.js                ← opens SQLite, creates tables
+│   ├── db.js                ← connects to Supabase Postgres, creates tables
 │   ├── seed.js              ← creates the first admin
 │   ├── seed-demo.js         ← adds demo data (safe to run again)
 │   ├── session.js           ← login sessions, saved in the sessions table
@@ -115,7 +115,6 @@ classnest/
 │                               login.js, login-roles.js, login-intro.js, login-flock.js,
 │                               admin.js, batches.js, students.js, schedule.js, lectures.js,
 │                               assignments.js, student.js, student-assignments.js
-├── data/                    ← classnest.db (git-ignored)
 ├── uploads/                 ← student .zip files (git-ignored)
 ├── .env                     ← secrets (git-ignored)
 ├── .env.example             ← list of settings, no real secrets (committed)
@@ -163,7 +162,7 @@ Worked out by the server, not stored:
 | Package | Job |
 |---|---|
 | `express` | the web server |
-| `better-sqlite3` | talks to the SQLite database |
+| `pg` | talks to the Supabase Postgres database |
 | `bcryptjs` | password hashing |
 | `express-session` | login sessions (cookies) |
 | `multer` | receives uploaded files (.zip only, size limit) |

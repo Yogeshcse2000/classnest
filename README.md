@@ -2,6 +2,8 @@
 
 **LEARN · GROW · FLY**
 
+**Live demo:** https://classnest-cepb.onrender.com (free tier, first load can take about 50 seconds)
+
 ClassNest is a Learning Management System (LMS) for BrightPath Academy. An admin runs the academy: creates batches, enrolls students, schedules live lectures with a Google Meet link and posts assignments. Students log in to see only their own batch, join live classes with one click and upload their assignment work as a `.zip` file.
 
 ## Features
@@ -28,7 +30,7 @@ Both roles get dark and light mode, and the layout works on phones.
 ## Tech stack
 
 - Node.js and Express
-- SQLite with `better-sqlite3`
+- Supabase Postgres with the `pg` package
 - Vanilla HTML, CSS and JavaScript (no frameworks)
 - GSAP for animations
 - `bcryptjs` for password hashing (the pure-JavaScript version of bcrypt)
@@ -39,7 +41,7 @@ Everything used is free.
 
 ## Install and run (Windows)
 
-You need [Node.js](https://nodejs.org) installed. Open a terminal in the project folder, then:
+You need [Node.js](https://nodejs.org) installed and a free [Supabase](https://supabase.com) project. Open a terminal in the project folder, then:
 
 1. Install the packages:
    ```
@@ -49,6 +51,7 @@ You need [Node.js](https://nodejs.org) installed. Open a terminal in the project
    ```
    copy .env.example .env
    ```
+   Then open `.env` and put your Supabase project's **Session pooler** connection string in `DATABASE_URL`. Never share or commit it.
 3. Create the first admin account:
    ```
    npm run seed
@@ -62,17 +65,6 @@ You need [Node.js](https://nodejs.org) installed. Open a terminal in the project
    npm start
    ```
 6. Open <http://localhost:3000> in your browser.
-
-### If npm install fails
-
-If `better-sqlite3` fails with a `node-gyp` or Visual Studio error, run:
-
-```
-npm install better-sqlite3@latest
-npm install
-```
-
-If it still fails, install Node.js 22 LTS from [nodejs.org](https://nodejs.org) and try again.
 
 ## Demo logins
 
@@ -107,7 +99,6 @@ classnest/
 ├── pages/        ← admin and student pages (login required)
 ├── public/       ← login page, CSS, JavaScript
 ├── mockups/      ← the trainer's mockup screens
-├── data/         ← SQLite database (not in Git)
 ├── uploads/      ← student .zip files (not in Git)
 ├── .env.example  ← settings template
 ├── CLAUDE.md, PLAN.md, PROMPTS.md, IDEAS.md
@@ -126,4 +117,4 @@ classnest/
 
 - WhatsApp access and alerts through OpenClaw: ask "who submitted today's assignment?" and get an answer from ClassNest's data, and get a message when a student submits late or a new lecture is released.
 - The next lecture currently shows in both the "Next lecture" card and the "Upcoming lectures" list. This is a design choice, not a bug, but it could be cleaned up.
-- Grading, and free online hosting (All SQL lives in server/models/, so the database can be swapped for Postgres later.)
+- Grading, and free online hosting (All SQL lives in server/models/.)
