@@ -48,8 +48,8 @@ Project rules are in [CLAUDE.md](CLAUDE.md). Design and animation rules are in t
 | Re-uploading | Allowed. The newest file **replaces** the old one (old file is deleted). `submitted_at` and `is_late` change with it. The new file is saved first and the old one deleted last, so a failure leaves the old submission whole. |
 | After the deadline | Uploads still allowed, but shown as **"Late"**. Never blocked. |
 | Late | Saved in `submissions.is_late` when the upload arrives, using the server's clock. Moving a deadline later doesn't change work already handed in. Only a new upload does. |
-| Upload rules | One file, `.zip` only, 10 MB at most, checked on the server by name and by its first 4 bytes (`PK` plus what kind of zip it is). The file is held in memory until every check passes, so a refused or half-finished upload never reaches the disk. Files are saved under a random name, and the student's file name is only kept in the database for display. Nothing is ever unzipped or run. |
-| Downloads | Only a logged-in admin, through `/api/admin/submissions/:id/download`. The `uploads/` folder is outside `public/`, and students have no download route, not even for their own work. Files download as `username_assignment-title.zip`. |
+| Upload rules | One file, `.zip` only, 10 MB at most, checked on the server by name and by its first 4 bytes (`PK` plus what kind of zip it is). The file is held in memory until every check passes, so a refused or half-finished upload never reaches Storage. Files are saved in Supabase Storage under a random name, and the student's file name is only kept in the database for display. Nothing is ever unzipped or run. |
+| Downloads | Only a logged-in admin, through `/api/admin/submissions/:id/download`. Files live in the private Supabase Storage bucket `submissions`. The server fetches the file and sends it, so no public or signed link is ever given out. Students have no download route, not even for their own work. Files download as `username_assignment-title.zip`. |
 | Moving an assignment | Once students have submitted work, an assignment can't move to another batch, because the submissions view lists the assignment's batch and their work would disappear from it. |
 | Grading | **None** for now. |
 | Running | Deployed on Render's free tier (https://classnest-cepb.onrender.com), with the database on Supabase Postgres. Locally, `npm start`. |
@@ -63,8 +63,8 @@ Project rules are in [CLAUDE.md](CLAUDE.md). Design and animation rules are in t
 1. **All SQL lives in `server/models/`.** Routes call functions like `getBatches()` and never write SQL themselves.
 2. **Model functions are `async`**, because the `pg` package talks to Supabase Postgres over the network.
 3. **Plain, standard SQL.** Dates are stored as ISO text, e.g. `2026-10-30T14:00:00Z`.
-4. **All file handling goes through `server/storage.js`** (save, delete, get). Today it uses the `uploads/` folder.
-5. **Settings come from `.env`** (port, `DATABASE_URL`, uploads path, secrets).
+4. **All file handling goes through `server/storage.js`** (save, delete, get). Uploads live in a private Supabase Storage bucket called `submissions`.
+5. **Settings come from `.env`** (port, `DATABASE_URL`, `SUPABASE_URL`, `SUPABASE_SECRET_KEY`, secrets).
 
 ## Folder structure
 
@@ -76,7 +76,7 @@ classnest/
 │   ├── seed.js              ← creates the first admin
 │   ├── seed-demo.js         ← adds demo data (safe to run again)
 │   ├── session.js           ← login sessions, saved in the sessions table
-│   ├── storage.js           ← save / delete / get uploaded files
+│   ├── storage.js           ← save / delete / get uploaded files (Supabase Storage)
 │   ├── utils/
 │   │   ├── credentials.js   ← makes usernames and temporary passwords
 │   │   ├── dates.js         ← India time ↔ UTC, lecture status, time left
@@ -115,7 +115,6 @@ classnest/
 │                               login.js, login-roles.js, login-intro.js, login-flock.js,
 │                               admin.js, batches.js, students.js, schedule.js, lectures.js,
 │                               assignments.js, student.js, student-assignments.js
-├── uploads/                 ← student .zip files (git-ignored)
 ├── .env                     ← secrets (git-ignored)
 ├── .env.example             ← list of settings, no real secrets (committed)
 └── package.json

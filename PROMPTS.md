@@ -708,3 +708,17 @@ We are on the "bonus" branch. Update README.md and PLAN.md for the move to Supab
 - Never write any real password or connection string.
 - Change nothing else, and add this prompt to PROMPTS.md with the next number and today's date.
 ```
+
+## Prompt 34 - Bonus B3: move zip uploads to Supabase Storage (2026-11-03)
+
+```
+We are on the "bonus" branch. Bonus B3: move zip uploads from local disk to Supabase Storage.
+- Use the private bucket "submissions". Read SUPABASE_URL and SUPABASE_SECRET_KEY from .env. Never print, log or commit them.
+- Keep every upload rule the same: .zip only, PK magic bytes check, 10MB limit, late flag, re-upload replaces the old file, random safe file names.
+- Admin download must still be admin-only: the server fetches the file from Storage and sends it. Never give out public or long-lived links.
+- Make npm run seed:demo upload its demo zips to Storage too.
+- Add SUPABASE_URL and SUPABASE_SECRET_KEY to .env.example with fake placeholders only. Update README.md and PLAN.md to say uploads are in Supabase Storage.
+- Change nothing else. Test it yourself (no tester agent): upload, re-upload, admin download, and a rejected non-zip. Then add this prompt to PROMPTS.md with the next number and today's date.
+
+At the end, tell me which new environment variables I must add on Render.
+```

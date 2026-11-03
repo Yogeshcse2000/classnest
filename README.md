@@ -35,7 +35,7 @@ Both roles get dark and light mode, and the layout works on phones.
 - GSAP for animations
 - `bcryptjs` for password hashing (the pure-JavaScript version of bcrypt)
 - `express-session` for logins
-- `multer` for file uploads
+- `multer` for file uploads, and Supabase Storage (a private bucket) to keep them
 
 Everything used is free.
 
@@ -51,7 +51,7 @@ You need [Node.js](https://nodejs.org) installed and a free [Supabase](https://s
    ```
    copy .env.example .env
    ```
-   Then open `.env` and put your Supabase project's **Session pooler** connection string in `DATABASE_URL`. Never share or commit it.
+   Then open `.env` and put your Supabase project's **Session pooler** connection string in `DATABASE_URL`. Also add `SUPABASE_URL` and `SUPABASE_SECRET_KEY` (Supabase: Project Settings > API), which ClassNest uses to keep uploaded files in Supabase Storage. The private `submissions` bucket is created for you. Never share or commit these.
 3. Create the first admin account:
    ```
    npm run seed
@@ -99,7 +99,6 @@ classnest/
 ├── pages/        ← admin and student pages (login required)
 ├── public/       ← login page, CSS, JavaScript
 ├── mockups/      ← the trainer's mockup screens
-├── uploads/      ← student .zip files (not in Git)
 ├── .env.example  ← settings template
 ├── CLAUDE.md, PLAN.md, PROMPTS.md, IDEAS.md
 └── package.json
@@ -111,7 +110,7 @@ classnest/
 - 10 MB at most. The server checks the file name and the file's first bytes, not just the extension.
 - Uploading after the deadline is allowed but flagged **Late**.
 - Uploading again replaces the old file.
-- Files are stored outside `public/` under random names. Only admins can download them. Nothing is ever unzipped or run.
+- Files are stored in a private Supabase Storage bucket (`submissions`) under random names, never in `public/`. Only admins can download them, and the server fetches each file for them, so no public or long-lived link exists. Nothing is ever unzipped or run.
 
 ## Future ideas
 
